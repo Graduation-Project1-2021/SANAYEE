@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "535433281849",
+    "project_id": "fir-flutter-8fc68",
+    "storage_bucket": "fir-flutter-8fc68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535433281849:android:21d334eae26ebbc9ce28e8",
+        "android_client_info": {
+          "package_name": "com.example.flutterphone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535433281849-tt947mu3flpgnp29pmgieohet4iib1eu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutterphone",
+            "certificate_hash": "7df2458c086a7d084ded55593cd7d86de53ae246"
+          }
+        },
+        {
+          "client_id": "535433281849-g3or2daeqmig2sggu7s4rth3j68vs0o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ4ujSvJOzrmRg32wIpzOKdLDNzyBBMPg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535433281849-g3or2daeqmig2sggu7s4rth3j68vs0o6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "535433281849-ma6q6mq9duqsis65u7idsihqfs2mbjg8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.ios.firbase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
