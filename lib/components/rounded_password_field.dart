@@ -27,7 +27,7 @@ class RoundedPasswordField extends StatelessWidget {
           fontFamily: 'Changa',
         ),
         decoration: InputDecoration(
-
+          errorText: 'vfggggggggg',
           hintText: text,
           suffixIcon: Icon(
             Icons.lock,
@@ -40,6 +40,7 @@ class RoundedPasswordField extends StatelessWidget {
           ),
           border: InputBorder.none,
         ),
+
       ),
     );
   }

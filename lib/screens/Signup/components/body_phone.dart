@@ -59,6 +59,7 @@ class _RoudedPhone extends State<RoudedPhone> {
           children: <Widget>[
             codeSent ? Padding(
                 padding: EdgeInsets.only(left: 25.0, right: 25.0),
+
                 child: TextFormField(
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(hintText: 'Enter OTP'),

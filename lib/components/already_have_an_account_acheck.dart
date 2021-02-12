@@ -18,7 +18,7 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Text(
-            login ? "إنشاء حساب جديد               " : "تسجيل الدخول               ",
+            login ? " ليس لديك حساب ؟ إنشاء حساب جديد    " : "  لديك حساب بالفعل ؟ تسجيل الدخول",
             textAlign: TextAlign.right,
             style: TextStyle(
               color: kPrimaryColor,
@@ -28,17 +28,6 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-
-          login ? "ليس لديك حساب ؟   " : "  لديك حساب بالفعل ؟",
-          textAlign: TextAlign.right,
-          style: TextStyle(
-            color: kPrimaryColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Changa',),
-        ),
-
       ],
     );
   }

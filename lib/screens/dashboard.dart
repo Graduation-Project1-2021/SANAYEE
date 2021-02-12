@@ -14,7 +14,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: RaisedButton(
           child: Text('Signout'),
           onPressed: () {
-            AuthService().signOut();
+
           },
         )
       )
