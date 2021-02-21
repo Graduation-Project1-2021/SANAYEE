@@ -1,14 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/Inside_the_app/inside.dart';
-import 'package:flutterphone/screens/Signup/signup_screen.dart';
-import 'package:flutterphone/screens/dashboard.dart';
-import 'package:flutterphone/screens/loginpage.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutterphone/screens/Signup/sign_phone.dart';
-import 'package:flutterphone/screens/Signup/components/body.dart';
-
-
+import 'package:flutterphone/screens/signuser_screen.dart';
 
 class AuthService {
   User user;
@@ -22,7 +15,7 @@ class AuthService {
             print(snapshot.data.toString());
             return InsideAPP();
           } else {
-            return SignUpScreen();
+            return SignuserScreen();
           }
         });
   }
