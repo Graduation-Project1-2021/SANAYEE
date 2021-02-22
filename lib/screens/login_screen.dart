@@ -1,5 +1,4 @@
 import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
-import 'package:flutterphone/Worker/profile_page.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+String IP4="172.19.162.78";
 
 FocusNode myFocusNode = new FocusNode();
 
@@ -38,51 +38,54 @@ class _Body extends State<LoginScreen> {
   }
 
   Future getdata()async{
-    var url='https://192.168.1.8/testlocalhost/login.php';
+    var url='https://'+IP4+'/testlocalhost/login.php';
     var ressponse=await http.get(url);
     return json.decode(ressponse.body);
   }
+  Future senddata() async {
+    print('hi hi hi');
+    var url = 'https://'+IP4+'/testlocalhost/login.php';
+    var ressponse = await http.post(url, body: {
+      "name": nameController.text,
+      "pass": passController.text,
+    });
+    massage = json.decode(ressponse.body);
+    if (massage == 'userlogin') {
+      print('login is sucssefully');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return InsideAPP();
+          },
+        ),
+      );
+    }
+    else if (massage == 'workerlogin') {
+      print('worker login sucssefully');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return PROFILE(name:nameController.text);
+            //  return ProfilePage(nameController.text);
+
+          },
+        ),
+      );
+    }
+    else {
+      print('NO NO NO');
+      setState(() {
+        login_Sucsess = false;
+        Pass_Null = true;
+        Name_Null = true;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    Future senddata() async {
-      print('hi hi hi');
-      var url = 'https://192.168.1.8/testlocalhost/login.php';
-      var ressponse = await http.post(url, body: {
-        "name": nameController.text,
-        "pass": passController.text,
-      });
-      massage = json.decode(ressponse.body);
-      if (massage == 'userlogin') {
-        print('login is sucssefully');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return InsideAPP();
-            },
-          ),
-        );
-      }
-      else if (massage == 'workerlogin') {
-        print('worker login sucssefully');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PROFILE(name:nameController.text);
-            },
-          ),
-        );
-      }
-      else {
-        print('NO NO NO');
-        setState(() {
-          login_Sucsess = false;
-          Pass_Null = true;
-          Name_Null = true;
-        });
-      }
-    }
+
     Size size = MediaQuery
         .of(context)
         .size;

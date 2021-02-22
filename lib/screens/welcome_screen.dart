@@ -1,7 +1,6 @@
 import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/Worker/profile_page.dart';
 import 'package:flutterphone/components/rounded_button.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +8,6 @@ import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/signworker_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutterphone/screens/login_screen.dart';
-import 's.dart';
 class WelcomeScreen extends StatefulWidget {
   @override
 

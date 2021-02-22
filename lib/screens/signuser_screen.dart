@@ -15,6 +15,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'login_screen.dart';
+String IP4="172.19.162.78";
 List<String>name=<String>[];
 var arr=new List(10);
 class SignuserScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _Body extends State<SignuserScreen> {
 
   bool codeSent = false;
   Future getdata()async{
-    var url='https://192.168.1.8/testlocalhost/getNameforusers.php';
+    var url='https://'+IP4+'/testlocalhost/getNameforusers.php';
     var ressponse=await http.get(url);
     String massage= json.decode(ressponse.body);
     if(massage=='userlogin'){
@@ -795,7 +796,7 @@ class _Body extends State<SignuserScreen> {
     _file = File(image_file.path);
     base64 = base64Encode(_file.readAsBytesSync());
     imagename = _file.path.split('/').last;
-    var url = 'https://192.168.1.8/testlocalhost/signup.php';
+    var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
       "name": nameController.text,
       "pass": passController.text,

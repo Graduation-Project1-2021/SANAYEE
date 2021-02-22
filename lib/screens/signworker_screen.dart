@@ -18,7 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'login_screen.dart';
-
+String IP4="172.19.162.78";
 class SignWorker extends StatefulWidget {
   @override
 
@@ -972,7 +972,7 @@ class _Sign_Worker extends State<SignWorker> {
     imagename = _file.path
         .split('/')
         .last;
-    var url = 'https://192.168.1.8/testlocalhost/signup.php';
+    var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
       "name": nameController.text,
       "pass": passController.text,

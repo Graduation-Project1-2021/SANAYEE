@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/Worker/profile_page.dart';
 import '../constants.dart';
-import 'Profile_worker.dart';
 import 'change_pass.dart';
 import 'edit_profile.dart';
-
-import 'changepassword.dart';
+import 'PROFILE_PAGE_WORKER.dart';
 
 //import 'edit_profile.dart';
 //import 'changePassword.dart';
@@ -57,10 +54,7 @@ class _SettingsPageState extends State<SettingPage> {
           child: IconButton(
             alignment: Alignment.topRight,
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          ProfilePage(widget.name)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => PROFILE(name:widget.name)));
 
             },
             icon: Icon(
@@ -70,13 +64,13 @@ class _SettingsPageState extends State<SettingPage> {
             ),
           ),
         ),
-            Container(
-              margin: EdgeInsets.fromLTRB(1, 40, 300, 1),
-              child: Text(
-                'الإعدادت',
-                style:TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
-              ),
-            ),
+            // Container(
+            //   margin: EdgeInsets.fromLTRB(1, 40, 300, 1),
+            //   child: Text(
+            //     'الإعدادت',
+            //     style:TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
+            //   ),
+            // ),
             Container(
               margin: EdgeInsets.fromLTRB(80, 130, 50, 1),
               child: Text(

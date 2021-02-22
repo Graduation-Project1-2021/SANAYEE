@@ -9,12 +9,20 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import 'GET_IMGS.dart';
 import 'IMG_BIG.dart';
-import 'Show_IMG.dart';
+String  name="";
+String  phone="";
+String  image="";
+String  Work="";
+String  Experiance="";
+String  Information="";
+String  token="";
+String IP4="172.19.162.78";
 
 class PROFILE extends StatefulWidget {
   final name;
-  PROFILE({this.name});
+   PROFILE({this.name});
   _PROFILE createState() =>  _PROFILE();
 }
 class  _PROFILE extends State< PROFILE> {
@@ -22,9 +30,9 @@ class  _PROFILE extends State< PROFILE> {
     super.initState();
   }
   Future getWorker()async{
-    var url='https://192.168.1.8/testlocalhost/getworker.php';
+    var url='https://'+IP4+'/testlocalhost/getworker.php';
     var ressponse=await http.post(url,body: {
-      "name": 'SAMAR',
+      "name": widget.name,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
@@ -34,32 +42,90 @@ class  _PROFILE extends State< PROFILE> {
   Widget build(BuildContext context) {
     return  Directionality( textDirection: TextDirection.rtl,
        child:Scaffold(
-         appBar: PreferredSize(
-         preferredSize: Size.fromHeight(0.0), // here the desired height
-          child: AppBar(
-            flexibleSpace: Image(
-              image: AssetImage('assets/icons/ho_top.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),),
+         // appBar: PreferredSize(
+         // preferredSize: Size.fromHeight(0.0), // here the desired height
+         //  child: AppBar(
+         //    flexibleSpace: Image(
+         //      image: AssetImage('assets/icons/ho_top.jpg'),
+         //      fit: BoxFit.cover,
+         //    ),
+         //  ),),
         // backgroundColor: Colors.lightBlueAccent,
         body: Form(
          // child: SingleChildScrollView(
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // Stack(
-              // children:[Container(
-              //   height: 200,
-              //   decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //       image: AssetImage('assets/icons/ho.jpg'),
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // ),],),
+              Stack(
+              children:[Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/icons/ho.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(0, 40, 0, 30),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(100, 0, 1, 0),
+                        child: IconButton(
+                          alignment: Alignment.topRight,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));},
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
+                        ),
+                      ),
+                      // Container(
+                      //   child: SingleChildScrollView(
+                      //     child:Text("ggff"),
+                      //   ),
+                      // )
+                      Container(
+                        margin: EdgeInsets.fromLTRB(1, 0, 210, 0),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)));},
+                          icon: Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                            size: 30.0,
+                          ),
+                        ),),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 100,right: 20),
+                  child: InkWell(
+                    child: RadialProgress(
+                      width: 4,
+                      progressColor: Colors.white,
+                      goalCompleted: 0.7,
+                      child:CircleAvatar(
+                        backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+image),
+                        radius: 45.0,
+                      ),
+                    ),
+                  ),),
                   Container(
                     height: 500,
+                    margin: EdgeInsets.only(top:240),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
+                      ),
+                    ),
+
                    child:FutureBuilder(
                   future: getWorker(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -67,6 +133,14 @@ class  _PROFILE extends State< PROFILE> {
                       return ListView.builder(
                         itemCount: 1,
                         itemBuilder: (context, index) {
+                          name=snapshot.data[0]['name'];
+                          phone=snapshot.data[index]['phone'];
+                          image=snapshot.data[index]['image'];
+                          Work=snapshot.data[index]['Work'];
+                          Experiance=snapshot.data[index]['Experiance'];
+                          Information=snapshot.data[index]['Information'];
+                          token=snapshot.data[index]['token'];
+                             print(snapshot.data[index]['name']);
                           return Profile_worker(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         },
                       );
@@ -75,10 +149,7 @@ class  _PROFILE extends State< PROFILE> {
                   },
                 ),
               ),
-
-
-
-              ],),),),);
+       ], ),],),),),);
 
 
 
@@ -113,7 +184,7 @@ class _Profile_woeker extends State<Profile_worker> {
     super.initState();
   }
   Future getImages() async {
-    var url = 'https://192.168.1.8/testlocalhost/Show_EXP.php';
+    var url = 'https://'+IP4+'/testlocalhost/Show_EXP.php';
     var ressponse = await http.post(url, body: {
       "phone": '+978456',
     });
@@ -126,49 +197,28 @@ class _Profile_woeker extends State<Profile_worker> {
   Widget build(BuildContext context) {
     return Column(
       children:<Widget>[
-        Stack(children: [
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            height: 150,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/icons/ho_but.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 30),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(100, 0, 1, 0),
-                  child: IconButton(
-                    alignment: Alignment.topRight,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));},
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(1, 0, 210, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingPage(name:widget.name,phone:widget.phone,image:widget.image,Work:widget.Work,Experiance:widget.Experiance,Information:widget.Information,token:widget.token)));},
-                    icon: Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                  ),),
-              ],
-            ),
-          ),
-        ],),
+
+        // Stack(children: [
+        //   // Positioned(
+        //   //   top: -20,
+        //   //   bottom: 0.0,
+        //   //   child:
+        //   //   Container(
+        //   //     margin: EdgeInsets.fromLTRB(100, 0, 1, 0),
+        //   //     child: IconButton(
+        //   //       alignment: Alignment.topRight,
+        //   //       onPressed: () {
+        //   //         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));},
+        //   //       icon: Icon(
+        //   //         Icons.arrow_back,
+        //   //         color: Colors.black,
+        //   //         size: 30.0,
+        //   //       ),
+        //   //     ),
+        //   //   ),
+        //   // ),
+        //
+        // ],),
 
         SingleChildScrollView(
           child: Column(
@@ -184,7 +234,7 @@ class _Profile_woeker extends State<Profile_worker> {
                   itemCount: 1,
                   itemBuilder: (context, index) {
                     int num =snapshot.data.length-4;
-                    return myAlbum('https://192.168.1.8/testlocalhost/upload/'+snapshot.data[index]['images'],'https://192.168.1.8/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://192.168.1.8/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://192.168.1.8/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
+                    return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
                   },
                 );
               }
@@ -235,7 +285,7 @@ class _Profile_woeker extends State<Profile_worker> {
     String imagename = _file.path.split('/').last;
     print("hiiii");
     print(imagename);
-    var url = 'https://192.168.1.8/testlocalhost/EXP_Image.php';
+    var url = 'https://'+IP4+'/testlocalhost/EXP_Image.php';
     // final uri=Uri.parse("https://192.168.2.111/testlocalhost/signup.php");
     var response = await http.post(url, body: {
 
@@ -264,23 +314,6 @@ class _Profile_woeker extends State<Profile_worker> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(10.0),
-            //   child: Image.asset(
-            //     'assets/icons/ho.jpg', height: 80,
-            //     width: 80,
-            //     fit: BoxFit.cover,),
-            // ),
-            // Container(
-            //   margin: EdgeInsets.only(top:5,bottom: 200),
-            //   padding: EdgeInsets.only(top:5,),
-            //   child:ClipRRect(
-            //     borderRadius: BorderRadius.circular(10.0),
-            //     child: Image.asset(
-            //       'assets/icons/ho.jpg', height: 80,
-            //       width: 80,
-            //       fit: BoxFit.cover,),
-            //   ),),
             Container(
               // margin: EdgeInsets.only(top:5,right: 30,),
               child:Row(
@@ -310,18 +343,9 @@ class _Profile_woeker extends State<Profile_worker> {
             Container(
               child:Row(
                 children: <Widget>[
-                  // Container(
-                  //   margin: EdgeInsets.only(right: 10,bottom: 10),
-                  //   child:ClipRRect(
-                  //     borderRadius: BorderRadius.circular(10.0),
-                  //     child: Image.asset(
-                  //       'assets/icons/ho.jpg', height: 110,
-                  //       width: 110,
-                  //       fit: BoxFit.cover,),
-                  //   ),),
                   GestureDetector(
                     onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone,name:widget.name)));
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 10,bottom: 10),

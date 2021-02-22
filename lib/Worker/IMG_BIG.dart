@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'GET_IMGS.dart';
+String IP4="172.19.162.78";
+
 class IMG extends StatefulWidget {
   final  imageName;
   final  int index;
@@ -15,7 +18,7 @@ class IMG extends StatefulWidget {
 class  _Get_Images extends State<IMG> {
 
   Future Delete()async{
-    var url='https://192.168.1.8/testlocalhost/delete_IMG.php';
+    var url='https://'+IP4+'/testlocalhost/delete_IMG.php';
     var ressponse=await http.post(url,body: {
       "id": widget.id,
     });
@@ -26,7 +29,7 @@ class  _Get_Images extends State<IMG> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: Colors.black,
         child: Column(
           children: <Widget>[
             Container(
@@ -36,7 +39,7 @@ class  _Get_Images extends State<IMG> {
                 onPressed: () { Navigator.pop(context);},
                 icon: Icon(
                   Icons.close,
-                  color: Colors.black,
+                  color: Colors.white,
                   size: 35.0,
                 ),
               ),
@@ -47,7 +50,7 @@ class  _Get_Images extends State<IMG> {
                 child: Container(margin:EdgeInsets.symmetric(vertical:100),
                   height: 100,
                   decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://192.168.1.8/testlocalhost/upload/'+widget.imageName),
+                        image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.imageName),
                         fit: BoxFit.cover,
                     ),
                   ),
@@ -56,7 +59,7 @@ class  _Get_Images extends State<IMG> {
             ),
 
             Container(
-              margin: EdgeInsets.fromLTRB(310, 0, 1, 20),
+              margin: EdgeInsets.fromLTRB(310, 0, 10, 20),
               child: IconButton(
                 alignment: Alignment.topRight,
                 onPressed: () {
@@ -66,8 +69,8 @@ class  _Get_Images extends State<IMG> {
                   //Delete();
                    },
                 icon: Icon(
-                  Icons.delete,
-                  color: Colors.black,
+                  Icons.delete_forever_rounded,
+                  color: Colors.white,
                   size: 50.0,
                 ),
               ),
@@ -148,7 +151,8 @@ class  _Get_Images extends State<IMG> {
                 ),),
               onPressed: () {
                 Delete();
-                Navigator.of(context).pop();
+                print("dsd");
+                Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone)));
               },
             ),),
           ],

@@ -7,8 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import '../constants.dart';
-
-
+String IP4="172.19.162.78";
 FocusNode myFocusNode = new FocusNode();
 bool Pass_Null=true;
 bool Pass_R=true;
@@ -494,7 +493,7 @@ class  _Editpasswordpage extends State< Editpassword> {
     print(widget.name);
     print(password.text);
     print(newpass.text);
-    var url = 'https://192.168.1.8/testlocalhost/edit_pass.php';
+    var url = 'https://'+IP4+'/testlocalhost/edit_pass.php';
     var response = await http.post(url, body: {
       "name":widget.name,
       "pass":password.text,

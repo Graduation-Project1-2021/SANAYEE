@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 
 var nameController = "";
+String IP4="172.19.162.78";
 
 FocusNode myFocusNode = new FocusNode();
 class SettingsUI extends StatefulWidget {
@@ -316,7 +317,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
 
   // var url = 'https://192.168.2.100/testlocalhost/edit.php';
-   var url = 'https://192.168.1.8/testlocalhost/edit.php';
+   var url = 'https://'+IP4+'/testlocalhost/edit.php';
    if(image_file==null){
      print("image null");
      var response = await http.post(url, body: {
@@ -353,7 +354,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Center(
       child:Stack (children: <Widget>[
         CircleAvatar(
-          backgroundImage: image_file==null? NetworkImage('https://192.168.1.8/testlocalhost/upload/'+widget.image):FileImage(File(image_file.path)),
+          backgroundImage: image_file==null? NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image):FileImage(File(image_file.path)),
           radius: 60.0,
         ),
         Positioned(
