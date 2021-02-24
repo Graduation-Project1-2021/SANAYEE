@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import '../constants.dart';
-String IP4="172.19.162.78";
+String IP4="192.168.1.8";
 FocusNode myFocusNode = new FocusNode();
 bool Pass_Null=true;
 bool Pass_R=true;

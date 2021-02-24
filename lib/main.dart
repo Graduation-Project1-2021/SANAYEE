@@ -8,6 +8,8 @@ import 'dart:io';
 import 'package:flutterphone/screens/slider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'LoginScreen.dart';
+
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -35,8 +37,8 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-       // home: Get_Images(),
-      home: WelcomeScreen(),
+       home: WelcomeScreen(),
+      // home: WelcomeScreen(),
     );
   }
 }

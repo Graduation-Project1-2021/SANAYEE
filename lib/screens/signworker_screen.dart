@@ -18,7 +18,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'login_screen.dart';
-String IP4="172.19.162.78";
+String IP4="192.168.1.8";
+String _verificationCode;
+String smscode ;
 class SignWorker extends StatefulWidget {
   @override
 
@@ -52,6 +54,7 @@ class _Sign_Worker extends State<SignWorker> {
   bool Invaled_Phone=true;
   bool _showPassword1 = false;
   bool _showPassword2 = false;
+  bool invalid_OTP=false;
   bool Feild1 = true;
   bool Feild2 = true;
   bool Feild3 = true;
@@ -710,7 +713,7 @@ class _Sign_Worker extends State<SignWorker> {
 
                                       ),),
                                   ),
-                                  codeSent?Container(
+                                  invalid_OTP?Container(
                                     margin: EdgeInsets.only(top: 20),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(29),
@@ -728,11 +731,12 @@ class _Sign_Worker extends State<SignWorker> {
                                             if (formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
                                             if(Phone){
-                                              verifyPhone(phoneNo);
+                                              _verifyPhone(phoneNo);
                                               setState(() {
 
                                               });
-                                            }}
+                                            }
+                                          }
                                       ),
                                     ),
 
@@ -754,11 +758,18 @@ class _Sign_Worker extends State<SignWorker> {
                                             if (formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
                                             if(Phone){
-                                              verifyPhone(phoneNo);
+                                              _verifyPhone(phoneNo);
                                               setState(() {
 
                                               });
-                                            }}
+                                            }
+                                            //   if(Phone){
+                                            //   verifyPhone(phoneNo);
+                                            //   setState(() {
+                                            //
+                                            //   });
+                                            // }
+                                          }
                                       ),
                                     ),
                                   ),
@@ -808,7 +819,7 @@ class _Sign_Worker extends State<SignWorker> {
                             child: FlatButton(
                               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                               color: Camone,
-                              onPressed: (){
+                              onPressed: () async{
                                 if (formKey.currentState.validate()) {print('validate');}
                                 else{print('not validate');}
                                 if(card1){
@@ -822,8 +833,29 @@ class _Sign_Worker extends State<SignWorker> {
                                   card2=false;card3=true;
                                 }}
                                 else{
-                                  if(Phone){
-                                     codeSent ? AuthService().signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                                  if(Phone && codeSent){
+                                    try {
+                                      await FirebaseAuth.instance
+                                          .signInWithCredential(PhoneAuthProvider.credential(
+                                          verificationId: _verificationCode, smsCode: smscode))
+                                          .then((value) async {
+                                        if (value.user != null) {
+                                          senddata();
+
+                                          Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                                                  (route) => false);
+                                        }
+                                      });
+                                    } catch (e) {
+                                      invalid_OTP=true;
+                                      // FocusScope.of(context).unfocus();
+                                      // _scaffoldkey.currentState
+                                      //     .showSnackBar(SnackBar(content: Text('invalid OTP')));
+                                    }
+
+                                    // _verifyPhone(phoneNo);
                                   }
                                 }
                                 // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
@@ -865,37 +897,40 @@ class _Sign_Worker extends State<SignWorker> {
     );
 
   }
-  Future<void> verifyPhone(phoneNo) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      AuthService().signIn(authResult);
-    };
-
-    final PhoneVerificationFailed verificationfailed =
-        (FirebaseAuthException authException) {
-      print('${authException.message}');
-      String c=authException.code;
-      if(c=='invalid-phone-number'){setState(() {Invaled_Phone=false;});}
-    };
-
-    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
-      this.verificationId = verId;
-      setState(() {
-        this.codeSent = true;
-      });
-    };
-
-    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
-      this.verificationId = verId;
-    };
-
+  _verifyPhone(String phone) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        timeout: const Duration(seconds: 5),
-        verificationCompleted: verified,
-        verificationFailed: verificationfailed,
-        codeSent: smsSent,
-        codeAutoRetrievalTimeout: autoTimeout);
+        phoneNumber: phone,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance
+              .signInWithCredential(credential)
+              .then((value) async {
+            if (value.user != null) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => InsideAPP()),
+                      (route) => false);
+            }
+          });
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          String c=e.code;
+          if(c=='invalid-phone-number'){setState(() {Invaled_Phone=false;});}
+          print(e.message);
+        },
+        codeSent: (String verficationID, int resendToken) {
+          setState(() {
+            _verificationCode = verficationID;
+            codeSent=true;Invaled_Phone=true;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationID) {
+          setState(() {
+            _verificationCode = verificationID;
+          });
+        },
+        timeout: Duration(seconds: 120));
   }
+
   Widget image_profile(){
     return Center(
       child:Stack (children: <Widget>[
@@ -948,30 +983,31 @@ class _Sign_Worker extends State<SignWorker> {
       else{image_file=file;}
     });
   }
-  //SignIn
-  signIn(AuthCredential authCreds) {
-    FirebaseAuth.instance.signInWithCredential(authCreds);
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            // FirebaseAuth.instance.signOut();
-            print(snapshot.data.toString());
-            return InsideAPP();
-          } else {
-            return SignuserScreen();
-          }
-        });
-  }
 
-  Future senddata()async {
-    String base64;
+  Future senddata()async{
+    if(image_file==null){
+      print("image null");
+      var url = 'https://'+IP4+'/testlocalhost/signup.php';
+      var ressponse = await http.post(url, body: {
+        "name": nameController.text,
+        "pass": passController.text,
+        "phone": phone_Num.text,
+        "imagename": "signup.jpg",
+        "image64": "",
+        "accept": "0",
+        "Work":Work.text,
+        "Experiance":Experiance.text,
+        "Information":Information.text,
+        "mytoken":mytoken,
+      });
+      String massage= json.decode(ressponse.body);
+      print(massage);
+    }
+    else{ String base64;
     String imagename;
     _file = File(image_file.path);
     base64 = base64Encode(_file.readAsBytesSync());
-    imagename = _file.path
-        .split('/')
-        .last;
+    imagename = _file.path.split('/').last;
     var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
       "name": nameController.text,
@@ -979,30 +1015,65 @@ class _Sign_Worker extends State<SignWorker> {
       "phone": phone_Num.text,
       "imagename": imagename,
       "image64": base64,
-      "mytoken": mytoken,
+      "accept": "0",
+      "Work":Work.text,
+      "Experiance":Experiance.text,
+      "Information":Information.text,
+      "mytoken":mytoken,
     });
-
-    // else{
-    //   String name="signup.png";
-    //   base64="A";
-    //   var url = 'https://192.168.1.8/testlocalhost/signup.php';
-    //   var ressponse = await http.post(url, body: {
-    //     "name": nameController.text,
-    //     "pass": passController.text,
-    //     "phone": phone_Num.text,
-    //     "imagename": name,
-    //     "image64": base64,
-    //   });
-    // }
+    }
   }
 
-
-    signInWithOTP(smsCode, verId) {
-    AuthCredential authCreds = PhoneAuthProvider.getCredential(
-        verificationId: verId, smsCode: smsCode);
-    signIn(authCreds);
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      //this means the user must tap a button to exit the Alert Dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.only(right: 10,left: 30,top: 30),
+          title: Text('       نشكرك على تسجيلك في صنايعي سنبعت لك إشعار موافقة او اشعار رفض بعد ذلك تستطيع الدخول والتسجيل في الموقع     ',
+            style: TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+              fontFamily: 'Changa',
+            ),),
+          actions: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 10,bottom: 20,top: 30),
+              child:FlatButton(
+                child: Text('إلغاء',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],
+                    fontFamily: 'Changa',
+                  ),),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),),
+            Container(
+              margin: EdgeInsets.only(left: 20,right: 90,bottom: 20,top: 30),
+              child:FlatButton(
+                child: Text('حذف ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],
+                    fontFamily: 'Changa',
+                  ),),
+                onPressed: () {
+                  print("dsd");
+                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>LoginScreen()));
+                },
+              ),),
+          ],
+        );
+      },
+    );
   }
-
 
 
 }

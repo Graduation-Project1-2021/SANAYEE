@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'GET_IMGS.dart';
-String IP4="172.19.162.78";
+String IP4="192.168.1.8";
 
 class IMG extends StatefulWidget {
   final  imageName;

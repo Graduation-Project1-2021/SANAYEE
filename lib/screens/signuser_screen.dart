@@ -14,9 +14,14 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import '../HomeScreen.dart';
 import 'login_screen.dart';
 String IP4="172.19.162.78";
 List<String>name=<String>[];
+String _verificationCode;
+String smscode ;
+
+final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 var arr=new List(10);
 class SignuserScreen extends StatefulWidget {
   @override
@@ -54,6 +59,7 @@ class _Body extends State<SignuserScreen> {
   bool Invaled_Phone=true;
   bool _showPassword1 = false;
   bool _showPassword2 = false;
+  bool invalid_OTP=false;
   bool card1=true;
   bool card2=false;
   var mytoken ;
@@ -408,7 +414,7 @@ class _Body extends State<SignuserScreen> {
                         child: SingleChildScrollView(
                           child:Card(
                             elevation: 5,
-                            margin: EdgeInsets.symmetric(vertical: 10),
+                             margin: EdgeInsets.symmetric(vertical: 10),
                             color: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),),
@@ -461,18 +467,8 @@ class _Body extends State<SignuserScreen> {
 
                                         ),
                                       )),
-                                  Phone ? Container(
-                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 1),
-                                    child: Text('',textAlign:TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'Changa',
-                                        color: Colors.red,
-
-                                      ),),
-                                  ): Container(
-                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 1),
+                                  Phone ? Container(): Container(
+                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                     child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
                                       style: TextStyle(
                                         fontSize: 12.0,
@@ -483,8 +479,8 @@ class _Body extends State<SignuserScreen> {
                                       ),),
                                   ),
                                   Invaled_Phone ? Container(): Container(
-                                    margin: EdgeInsets.fromLTRB(20, 0,0, 1),
-                                    child: Text('يجب أن يكون رقم الهاتف على الصورة +9702417151 ',textAlign:TextAlign.end,
+                                    margin: EdgeInsets.fromLTRB(1, 0,0, 0),
+                                    child: Text('يجب أن يكون رقم الهاتف على الصورة [number][country] + ',textAlign:TextAlign.end,
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w700,
@@ -493,7 +489,7 @@ class _Body extends State<SignuserScreen> {
 
                                       ),),
                                   ),
-                                  codeSent?Container(
+                                  invalid_OTP?Container(
                                     margin: EdgeInsets.only(top: 20),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(29),
@@ -511,11 +507,12 @@ class _Body extends State<SignuserScreen> {
                                             if (formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
                                             if(Phone){
-                                              verifyPhone(phoneNo);
+                                              _verifyPhone(phoneNo);
                                               setState(() {
 
                                               });
-                                            }}
+                                            }
+                                          }
                                       ),
                                     ),
 
@@ -537,11 +534,18 @@ class _Body extends State<SignuserScreen> {
                                         if (formKey.currentState.validate()) {print('validate');}
                                         else{print('not validate');}
                                         if(Phone){
-                                        verifyPhone(phoneNo);
-                                        setState(() {
+                                          _verifyPhone(phoneNo);
+                                          setState(() {
 
-                                        });
-                                      }}
+                                          });
+                                        }
+                                      //   if(Phone){
+                                      //   verifyPhone(phoneNo);
+                                      //   setState(() {
+                                      //
+                                      //   });
+                                      // }
+                                      }
                                     ),
                                   ),
                                   ),
@@ -568,7 +572,7 @@ class _Body extends State<SignuserScreen> {
 
                                        setState((){
                                          this.smsCode=pin;
-                                         print('$smsCode');
+                                         smscode=pin;
                                        },
                                        );
                                      },
@@ -590,17 +594,37 @@ class _Body extends State<SignuserScreen> {
                           child: FlatButton(
                             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                             color: Camone,
-                            onPressed: (){
+                            onPressed: () async {
                               if (formKey.currentState.validate()) {print('validate');}
                               else{print('not validate');}
                               if(card1){
-                              if(Name_Null && Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
-                              card1=false;
-                              print(!passController.text.isEmpty);
-                              }}
+                                if(Name_Null && Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
+                                  card1=false;
+                                  print(!passController.text.isEmpty);
+                                }}
                               else{
-                                if(Phone){
-                                  codeSent ? AuthService().signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                                if(Phone && codeSent){
+                                  try {
+                                    await FirebaseAuth.instance
+                                        .signInWithCredential(PhoneAuthProvider.credential(
+                                        verificationId: _verificationCode, smsCode: smscode))
+                                        .then((value) async {
+                                      if (value.user != null) {
+                                        senddata();
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => InsideAPP()),
+                                                (route) => false);
+                                      }
+                                    });
+                                  } catch (e) {
+                                    invalid_OTP=true;
+                                    // FocusScope.of(context).unfocus();
+                                    // _scaffoldkey.currentState
+                                    //     .showSnackBar(SnackBar(content: Text('invalid OTP')));
+                                  }
+
+                                 // _verifyPhone(phoneNo);
                                 }
                               }
                               // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
@@ -690,37 +714,90 @@ class _Body extends State<SignuserScreen> {
     );
 
   }
-  Future<void> verifyPhone(phoneNo) async {
-    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      AuthService().signIn(authResult);
-    };
-
-    final PhoneVerificationFailed verificationfailed =
-        (FirebaseAuthException authException) {
-      print('${authException.message}');
-      String c=authException.code;
-      if(c=='invalid-phone-number'){setState(() {Invaled_Phone=false;});}
-    };
-
-    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
-      this.verificationId = verId;
-      setState(() {
-        this.codeSent = true;
-      });
-    };
-
-    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
-      this.verificationId = verId;
-    };
-
+  _verifyPhone(String phone) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNo,
-        timeout: const Duration(seconds: 5),
-        verificationCompleted: verified,
-        verificationFailed: verificationfailed,
-        codeSent: smsSent,
-        codeAutoRetrievalTimeout: autoTimeout);
+        phoneNumber: phone,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance
+              .signInWithCredential(credential)
+              .then((value) async {
+            if (value.user != null) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => InsideAPP()),
+                      (route) => false);
+            }
+          });
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          String c=e.code;
+          if(c=='invalid-phone-number'){setState(() {Invaled_Phone=false;});}
+          print(e.message);
+        },
+        codeSent: (String verficationID, int resendToken) {
+          setState(() {
+            _verificationCode = verficationID;
+            codeSent=true;Invaled_Phone=true;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationID) {
+          setState(() {
+            _verificationCode = verificationID;
+          });
+        },
+        timeout: Duration(seconds: 120));
   }
+  // Future<void> verifyPhone(phoneNo) async {
+  //
+  //   try {
+  //     await FirebaseAuth.instance
+  //         .signInWithCredential(PhoneAuthProvider.credential(
+  //         verificationId: _verificationCode, smsCode: phoneNo))
+  //         .then((value) async {
+  //       if (value.user != null) {
+  //         Navigator.pushAndRemoveUntil(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => Home()),
+  //                 (route) => false);
+  //       }
+  //     });
+  //   } catch (e) {
+  //     FocusScope.of(context).unfocus();
+  //     _scaffoldkey.currentState
+  //         .showSnackBar(SnackBar(content: Text('invalid OTP')));
+  //   }
+  //
+  //
+  //   // final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+  //   //   AuthService().signIn(authResult);
+  //   // };
+  //   //
+  //   // final PhoneVerificationFailed verificationfailed =
+  //   //     (FirebaseAuthException authException) {
+  //   //   print('${authException.message}');
+  //   //   String c=authException.code;
+  //   //   if(c=='invalid-phone-number'){setState(() {Invaled_Phone=false;});}
+  //   // };
+  //   //
+  //   // final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+  //   //   this.verificationId = verId;
+  //   //   setState(() {
+  //   //     this.codeSent = true;
+  //   //   });
+  //   // };
+  //   //
+  //   // final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+  //   //   this.verificationId = verId;
+  //   // };
+  //   //
+  //   // await FirebaseAuth.instance.verifyPhoneNumber(
+  //   //     phoneNumber: phoneNo,
+  //   //     timeout: const Duration(seconds: 5),
+  //   //     verificationCompleted: verified,
+  //   //     verificationFailed: verificationfailed,
+  //   //     codeSent: smsSent,
+  //   //     codeAutoRetrievalTimeout: autoTimeout);
+  // }
   Widget image_profile(){
     return Center(
       child:Stack (children: <Widget>[
@@ -790,40 +867,41 @@ class _Body extends State<SignuserScreen> {
   }
 
   Future senddata()async{
-
-    String base64;
+    if(image_file==null){
+    print("image null");
+    var url = 'https://'+IP4+'/testlocalhost/signup.php';
+    var ressponse = await http.post(url, body: {
+      "name": nameController.text,
+      "pass": passController.text,
+      "phone": phone_Num.text,
+      "imagename": "signup.jpg",
+      "image64": "",
+      "mytoken":mytoken,
+    });
+    String massage= json.decode(ressponse.body);
+    print(massage);
+    }
+   else{ String base64;
     String imagename;
     _file = File(image_file.path);
     base64 = base64Encode(_file.readAsBytesSync());
     imagename = _file.path.split('/').last;
     var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
-      "name": nameController.text,
-      "pass": passController.text,
-      "phone": phone_Num.text,
-      "imagename": imagename,
-      "image64": base64,
-      "mytoken":mytoken,
+    "name": nameController.text,
+    "pass": passController.text,
+    "phone": phone_Num.text,
+    "imagename": imagename,
+    "image64": base64,
+    "mytoken":mytoken,
     });
-
-    // else{
-    //   String name="signup.png";
-    //   base64="A";
-    //   var url = 'https://192.168.1.8/testlocalhost/signup.php';
-    //   var ressponse = await http.post(url, body: {
-    //     "name": nameController.text,
-    //     "pass": passController.text,
-    //     "phone": phone_Num.text,
-    //     "imagename": name,
-    //     "image64": base64,
-    //   });
-    // }
+    }
   }
-  signInWithOTP(smsCode, verId) {
-    AuthCredential authCreds = PhoneAuthProvider.getCredential(
-        verificationId: verId, smsCode: smsCode);
-    signIn(authCreds);
-  }
+  // signInWithOTP(smsCode, verId) {
+  //   AuthCredential authCreds = PhoneAuthProvider.getCredential(
+  //       verificationId: verId, smsCode: smsCode);
+  //   signIn(authCreds);
+  // }
 
 
 }

@@ -8,7 +8,7 @@ import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-String IP4="172.19.162.78";
+String IP4="192.168.1.8";
 
 FocusNode myFocusNode = new FocusNode();
 
@@ -37,11 +37,17 @@ class _Body extends State<LoginScreen> {
     });
   }
 
+
+  
   Future getdata()async{
     var url='https://'+IP4+'/testlocalhost/login.php';
     var ressponse=await http.get(url);
     return json.decode(ressponse.body);
   }
+
+
+
+
   Future senddata() async {
     print('hi hi hi');
     var url = 'https://'+IP4+'/testlocalhost/login.php';
