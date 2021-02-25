@@ -261,7 +261,7 @@ class  _Get_Images extends State< Get_Images> {
     String imagename = _file.path.split('/').last;
     print("hiiii");
     print(imagename);
-    var url = 'https:/'+IP4+'/testlocalhost/EXP_Image.php';
+    var url = 'https://'+IP4+'/testlocalhost/EXP_Image.php';
     // final uri=Uri.parse("https://192.168.2.111/testlocalhost/signup.php");
     var response = await http.post(url, body: {
 

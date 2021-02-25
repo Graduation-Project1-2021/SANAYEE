@@ -19,7 +19,6 @@ class SettingsUI extends StatefulWidget {
   final  Experiance;
   final  Information;
   final  token;
-
   SettingsUI({this.name, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
 
   _ProfilePage createState() => _ProfilePage();
@@ -69,13 +68,6 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-
-
-  bool showPassword = false;
-  PickedFile image_file;
-  File _file;
-  bool choose=false;
-  final ImagePicker image_picker =ImagePicker();
   TextEditingController phone_Num = TextEditingController();
 
   TextEditingController nameController = TextEditingController();
@@ -83,6 +75,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController experController = TextEditingController();
   TextEditingController infoController = TextEditingController();
   TextEditingController aboutController = TextEditingController();
+  void initState() {
+    super.initState();
+    nameController.text=widget.name;
+    workcontroller.text=widget.Work;
+    experController.text=widget.Experiance;
+
+  }
+
+  bool showPassword = false;
+  PickedFile image_file;
+  File _file;
+  bool choose=false;
+  final ImagePicker image_picker =ImagePicker();
+
 
 
   @override

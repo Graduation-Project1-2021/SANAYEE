@@ -109,7 +109,7 @@ class _SettingsPageState extends State<SettingPage> {
                   width: 8,
                 ),
                 Text(
-                  "Notifications",
+                  "الإشعارات",
                   textDirection: TextDirection.rtl,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),

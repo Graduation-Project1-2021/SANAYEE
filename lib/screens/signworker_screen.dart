@@ -987,7 +987,7 @@ class _Sign_Worker extends State<SignWorker> {
   Future senddata()async{
     if(image_file==null){
       print("image null");
-      var url = 'https://'+IP4+'/testlocalhost/signup.php';
+      var url = 'https://'+IP4+'/testlocalhost/request.php';
       var ressponse = await http.post(url, body: {
         "name": nameController.text,
         "pass": passController.text,
@@ -1008,7 +1008,7 @@ class _Sign_Worker extends State<SignWorker> {
     _file = File(image_file.path);
     base64 = base64Encode(_file.readAsBytesSync());
     imagename = _file.path.split('/').last;
-    var url = 'https://'+IP4+'/testlocalhost/signup.php';
+    var url = 'https://'+IP4+'/testlocalhost/request.php';
     var ressponse = await http.post(url, body: {
       "name": nameController.text,
       "pass": passController.text,

@@ -16,7 +16,7 @@ import 'dart:convert';
 
 import '../HomeScreen.dart';
 import 'login_screen.dart';
-String IP4="172.19.162.78";
+String IP4="192.168.1.8";
 List<String>name=<String>[];
 String _verificationCode;
 String smscode ;
@@ -875,11 +875,11 @@ class _Body extends State<SignuserScreen> {
       "pass": passController.text,
       "phone": phone_Num.text,
       "imagename": "signup.jpg",
-      "image64": "",
+      "image64": '',
       "mytoken":mytoken,
     });
-    String massage= json.decode(ressponse.body);
-    print(massage);
+    // String massage= json.decode(ressponse.body);
+    // print(massage);
     }
    else{ String base64;
     String imagename;
@@ -895,7 +895,10 @@ class _Body extends State<SignuserScreen> {
     "image64": base64,
     "mytoken":mytoken,
     });
+    String massage= json.decode(ressponse.body);
+    print(massage);
     }
+
   }
   // signInWithOTP(smsCode, verId) {
   //   AuthCredential authCreds = PhoneAuthProvider.getCredential(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterphone/screens/home.dart';
+import 'package:flutterphone/screens/home2.dart';
 import 'package:flutterphone/services/authservice.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
        home: WelcomeScreen(),
-      // home: WelcomeScreen(),
+      // home: MyApp1(),
     );
   }
 }

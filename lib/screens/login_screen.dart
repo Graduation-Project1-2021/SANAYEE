@@ -98,6 +98,7 @@ class _Body extends State<LoginScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        backgroundColor:Color(0xFF1C1C1C),
         // appBar: PreferredSize(
         // preferredSize: Size.fromHeight(180.0),
         //  child:AppBar(
@@ -112,19 +113,10 @@ class _Body extends State<LoginScreen> {
             child: Column(
               children: <Widget>[
                 Container(
+                  color:Color(0xFF1C1C1C),
                   child: Stack(
                     children: <Widget>[
 
-
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/icons/ho.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
 
                       Container(
                         margin: EdgeInsets.fromLTRB(100, 40, 1, 0),
@@ -144,21 +136,33 @@ class _Body extends State<LoginScreen> {
                       ),
 
                       Container(
-                        margin: EdgeInsets.fromLTRB(20, 130, 20, 0),
+                        // color: Color(0xFF1C1C1C),
+                        margin: EdgeInsets.fromLTRB(20, 130,20, 0),
                         height: 570,
+                        width: 600,
                         child: Card(
                           elevation: 5,
                           margin: EdgeInsets.symmetric(vertical: 10),
-                          color: Colors.white,
+                          color:  Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),),
-                          shadowColor: Colors.white,
+                            borderRadius: BorderRadius.circular(60),),
+                          // shadowColor: Color(0xFFECCB45),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               // Container(height: 50,),
                               Container(
-                                margin: EdgeInsets.only(top:0,bottom:80),
+                                margin: EdgeInsets.only(top: 10,bottom: 5),
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  // color:Color(0xFF1C1C1C),
+                                  image: DecorationImage(
+                                    image: new AssetImage(
+                                      'assets/icons/z.png',
+                                    ),
+                                  ),),),
+                              Container(
+                                margin: EdgeInsets.only(top:0,bottom:30),
                                 child: Text('صنايعي',
                                   style: TextStyle(
                                     color: Colors.grey[600],
@@ -187,17 +191,18 @@ class _Body extends State<LoginScreen> {
                             cursorColor:Colors.grey[600],
                             textAlign: TextAlign.right,
                             style: TextStyle(
+                              color: Color(0xFF1C1C1C),
                               fontSize: 16.0,
                               fontFamily: 'Changa',
                               fontWeight: FontWeight.bold,
                             ),
-                            decoration: InputDecoration(prefixIcon: Icon(Icons.person,color:Colors.grey[600],),
+                            decoration: InputDecoration(prefixIcon: Icon(Icons.person,color:Color(0xFFECCB45),),
                               border: OutlineInputBorder(
                                   borderSide: const BorderSide(color: Colors.grey),
                                   borderRadius: const BorderRadius.all(const Radius.circular(30))
                               ),
                               focusedBorder:OutlineInputBorder(
-                                borderSide: const BorderSide(color: Camone),
+                                borderSide: const BorderSide(color:Color(0xFFECCB45)),
                                 borderRadius: BorderRadius.all(Radius.circular(30)),
                               ),
                               labelText: ('الاسم'),
@@ -249,16 +254,17 @@ class _Body extends State<LoginScreen> {
                                   style: TextStyle(
                                     fontSize: 16.0,
                                     fontFamily: 'Changa',
+                                    color: Color(0xFF1C1C1C),
                                     fontWeight: FontWeight.bold,
                                   ),
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(
                                       Icons.lock,
-                                      color: Colors.grey[600],
+                                      color: Color(0xFFECCB45),
 
                                     ),
                                     suffixIcon: IconButton(
-                                      icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off, color: Colors.grey[600],),
+                                      icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off, color: Color(0xFFECCB45),),
                                       color: Colors.cyan,
                                       onPressed:_togglevisibility,
                                     ),
@@ -267,7 +273,7 @@ class _Body extends State<LoginScreen> {
                                         borderRadius: const BorderRadius.all(const Radius.circular(30))
                                     ),
                                     focusedBorder:OutlineInputBorder(
-                                      borderSide: const BorderSide(color:Camone),
+                                      borderSide: const BorderSide(color:Color(0xFFECCB45)),
                                       borderRadius: BorderRadius.all(Radius.circular(30)),
                                     ),
                                     labelText: ('كلمة السر'),
@@ -320,7 +326,7 @@ class _Body extends State<LoginScreen> {
                                   ),),
                               ),
 
-                              SizedBox(height:15,),
+                              SizedBox(height:5,),
                               AlreadyHaveAnAccountCheck(
                                 press: () {
                                   Navigator.push(
@@ -344,7 +350,7 @@ class _Body extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(29),
                           child: FlatButton(
                             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                            color: Camone,
+                            color: Color(0xFFECCB45),
                             onPressed: (){
                               if (_formKey.currentState.validate()) {print('validate');}
                               else{print('not validate');}
@@ -362,7 +368,7 @@ class _Body extends State<LoginScreen> {
                             child: Text(
                               "تسجيل الدخول",
                               style: TextStyle(
-                                color: Colors.white,
+                                color:Color(0xFF1C1C1C),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 21.0,
                                 fontFamily: 'Changa',

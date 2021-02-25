@@ -9,8 +9,11 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import '../constants.dart';
 import 'GET_IMGS.dart';
 import 'IMG_BIG.dart';
+import 'change_pass.dart';
+import 'edit_profile.dart';
 String  name="";
 String  phone="";
 String  image="";
@@ -26,6 +29,7 @@ class PROFILE extends StatefulWidget {
   _PROFILE createState() =>  _PROFILE();
 }
 class  _PROFILE extends State< PROFILE> {
+  // AnimationController _animationController;
   void initState() {
     super.initState();
   }
@@ -42,14 +46,43 @@ class  _PROFILE extends State< PROFILE> {
   Widget build(BuildContext context) {
     return  Directionality( textDirection: TextDirection.rtl,
        child:Scaffold(
-         // appBar: PreferredSize(
-         // preferredSize: Size.fromHeight(0.0), // here the desired height
-         //  child: AppBar(
-         //    flexibleSpace: Image(
-         //      image: AssetImage('assets/icons/ho_top.jpg'),
-         //      fit: BoxFit.cover,
-         //    ),
-         //  ),),
+         appBar: AppBar(
+           elevation: 0,
+           backgroundColor: Camone,
+           actions: [
+             IconButton(
+               onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)));},
+
+               icon: Icon(Icons.menu),)
+           ],
+         ),
+        drawer: Container(
+          width: 350,
+           child:Drawer(
+          child: Column(
+            children:[
+              //  ClipPath(
+              //   clipper: CustomMenuClipper(),
+              //   child: Container(
+              //     width: 35,
+              //     height: 110,
+              //     color: Color(0xFF262AAA),
+              //     alignment: Alignment.centerLeft,
+              //     child: AnimatedIcon(
+              //       // progress: _animationController.view,
+              //       icon: AnimatedIcons.menu_close,
+              //       color: Color(0xFF1BB5FD),
+              //       size: 25,
+              //     ),
+              //   ),
+              // ),
+            changepassword(context, "تغيير كلمة السر"),
+            update(context, "تعديل المعلومات الشخصية"),
+            buildAccountOptionRow(context, "معلومات الاتصال"),
+            buildAccountOptionRow(context, "طلبات الحجوزات"),
+            buildAccountOptionRow(context, "اضافة اعمال جديدة "),
+         ],),),
+        ),
         // backgroundColor: Colors.lightBlueAccent,
         body: Form(
          // child: SingleChildScrollView(
@@ -58,52 +91,19 @@ class  _PROFILE extends State< PROFILE> {
             children: <Widget>[
               Stack(
               children:[Container(
-                height: 300,
+                height: 160,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/icons/ho.jpg'),
-                    fit: BoxFit.cover,
+                  color: Camone,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(80),
+                    bottomRight: Radius.circular(80),
                   ),
                 ),
               ),
+                Stack(
+                children:[
                 Container(
-                  margin: EdgeInsets.fromLTRB(0, 40, 0, 30),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(100, 0, 1, 0),
-                        child: IconButton(
-                          alignment: Alignment.topRight,
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));},
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        ),
-                      ),
-                      // Container(
-                      //   child: SingleChildScrollView(
-                      //     child:Text("ggff"),
-                      //   ),
-                      // )
-                      Container(
-                        margin: EdgeInsets.fromLTRB(1, 0, 210, 0),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)));},
-                          icon: Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        ),),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 100,right: 20),
+                  margin: EdgeInsets.only(top: 20,right: 20),
                   child: InkWell(
                     child: RadialProgress(
                       width: 4,
@@ -111,19 +111,19 @@ class  _PROFILE extends State< PROFILE> {
                       goalCompleted: 0.7,
                       child:CircleAvatar(
                         backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+image),
-                        radius: 45.0,
+                        radius: 30.0,
                       ),
                     ),
                   ),),
                   Container(
                     height: 500,
-                    margin: EdgeInsets.only(top:240),
+                    margin: EdgeInsets.only(top:300),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        topRight: Radius.circular(50),
-                      ),
+                      // borderRadius: BorderRadius.only(
+                      //   topLeft: Radius.circular(50),
+                      //   topRight: Radius.circular(50),
+                      // ),
                     ),
 
                    child:FutureBuilder(
@@ -140,7 +140,7 @@ class  _PROFILE extends State< PROFILE> {
                           Experiance=snapshot.data[index]['Experiance'];
                           Information=snapshot.data[index]['Information'];
                           token=snapshot.data[index]['token'];
-                             print(snapshot.data[index]['name']);
+                          print(snapshot.data[index]['name']);
                           return Profile_worker(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         },
                       );
@@ -149,11 +149,154 @@ class  _PROFILE extends State< PROFILE> {
                   },
                 ),
               ),
-       ], ),],),),),);
+       ], ),],),],),),),);
 
 
 
 }
+
+  Container buildNotificationOptionRow(String title, bool isActive) {
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child:Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600]),
+          ),
+          Transform.scale(
+              scale: 0.7,
+              child: CupertinoSwitch(
+                value: isActive,
+                onChanged: (bool val) {},
+              ))
+        ],
+      ),);
+  }
+
+  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(title,
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Option 1"),
+                    Text("Option 2"),
+                    Text("Option 3"),
+                  ],
+                ),
+                actions: [
+                  FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
+                        );
+                      },
+                      // Navigator.of(context).();
+
+                      child: Text("Close",style: TextStyle(fontSize: 24.0))),
+
+                ],
+              );
+            });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[600],
+                fontFamily: 'Changa',
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  GestureDetector update(BuildContext context, String title) {
+
+    return GestureDetector(
+      onTap: () {Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SettingsUI(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
+      );},
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[600],
+                fontFamily: 'Changa',
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  GestureDetector changepassword(BuildContext context, String title) {
+    return GestureDetector(
+      onTap: () {Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ChangePass(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
+      );},
+
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[600],
+                fontFamily: 'Changa',
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );}
 }
 class Profile_worker  extends StatefulWidget {
   final  name;
@@ -186,7 +329,7 @@ class _Profile_woeker extends State<Profile_worker> {
   Future getImages() async {
     var url = 'https://'+IP4+'/testlocalhost/Show_EXP.php';
     var ressponse = await http.post(url, body: {
-      "phone": '+978456',
+      "phone": widget.phone,
     });
     // ignore: deprecated_member_use
     // var responsebody = json.decode(ressponse.body);
@@ -198,34 +341,21 @@ class _Profile_woeker extends State<Profile_worker> {
     return Column(
       children:<Widget>[
 
-        // Stack(children: [
-        //   // Positioned(
-        //   //   top: -20,
-        //   //   bottom: 0.0,
-        //   //   child:
-        //   //   Container(
-        //   //     margin: EdgeInsets.fromLTRB(100, 0, 1, 0),
-        //   //     child: IconButton(
-        //   //       alignment: Alignment.topRight,
-        //   //       onPressed: () {
-        //   //         Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));},
-        //   //       icon: Icon(
-        //   //         Icons.arrow_back,
-        //   //         color: Colors.black,
-        //   //         size: 30.0,
-        //   //       ),
-        //   //     ),
-        //   //   ),
-        //   // ),
-        //
-        // ],),
+        // Container(
+        //   margin: EdgeInsets.only(top: 10,right: 20),
+        //   child: InkWell(
+        //     child:IconButton(
+        //       icon: Icon(Icons.cloud_upload),
+        //       color: Colors.black,
+        //     ),
+        //   ),),
 
         SingleChildScrollView(
           child: Column(
           children: <Widget>[
         Container(
           height: 400,
-          margin: EdgeInsets.only(top:50),
+          margin: EdgeInsets.only(top:1),
           child:FutureBuilder(
             future: getImages(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -234,6 +364,18 @@ class _Profile_woeker extends State<Profile_worker> {
                   itemCount: 1,
                   itemBuilder: (context, index) {
                     int num =snapshot.data.length-4;
+                    if(snapshot.data.length==0){
+                       return myAlbum0();
+                    }
+                    if(snapshot.data.length==1){
+                      return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
+                    }
+                    if(snapshot.data.length==2){
+                      return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
+                    }
+                    if(snapshot.data.length==3){
+                      return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
+                    }
                     return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
                   },
                 );
@@ -393,4 +535,312 @@ class _Profile_woeker extends State<Profile_worker> {
             // ),
           ],),),);
   }
+
+  myAlbum0(){
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
+      padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
+      height:250,
+      width:400,
+      child: Card(
+        elevation: 5,
+        margin: EdgeInsets.symmetric(vertical: 0),
+        color: Colors.yellow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),),
+        shadowColor: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+
+            Container(
+              child:Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone,name:widget.name)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10,bottom: 10),
+                      child:Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.asset(
+                              'assets/icons/signup.jpg', height: 110,
+                              width: 110,
+                              fit: BoxFit.cover,),
+                          ),
+                          Positioned(
+                            child: Container(
+                              height: 110,
+                              width: 110,
+                              decoration: BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.circular(10.0)
+                              ),
+                              child: Center(
+                                child: Text("انقر لإضافة صور", style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),),),
+                ],),
+            ),
+            // Container(
+            //  child:Text("ألبومي "),
+            // ),
+          ],),),);
+  }
+  myAlbum1(String asset){
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+      padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
+      height:130,
+      width:400,
+      child: Card(
+        elevation: 5,
+        margin: EdgeInsets.symmetric(vertical: 0),
+        color: Colors.yellow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),),
+        shadowColor: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+
+            Container(
+              child:Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone,name:widget.name)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 190,bottom: 10,top:10),
+                      child:Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              asset, height: 110,
+                              width: 150,
+                              fit: BoxFit.cover,),
+                          ),
+                          Positioned(
+                            child: Container(
+                              height: 110,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.circular(10.0)
+                              ),
+                              child: Center(
+                                child: Text("+0", style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),),),
+                ],),
+            ),
+            // Container(
+            //  child:Text("ألبومي "),
+            // ),
+          ],),),);
+  }
+  myAlbum2(String asset1,String asset2){
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 10, 15, 10),
+      padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
+      height:130,
+      width:400,
+      child: Card(
+        elevation: 5,
+        margin: EdgeInsets.symmetric(vertical: 0),
+        color: Colors.yellow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),),
+        shadowColor: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+
+            Container(
+              child:Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone,name:widget.name)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10,bottom: 10,top:10),
+                      child:Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              asset1, height: 110,
+                              width: 110,
+                              fit: BoxFit.cover,),
+                          ),
+                          Positioned(
+                            child: Container(
+                              height: 110,
+                              width: 110,
+                              decoration: BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.circular(10.0)
+                              ),
+                              child: Center(
+                                child: Text("+0", style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),),),
+                  Container(
+                    margin: EdgeInsets.only(left: 10,right: 10,bottom: 10,top: 10),
+                    child:ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        asset2, height: 110,
+                        width:209,
+                        fit: BoxFit.cover,),
+                    ),),
+                ],),
+            ),
+                ],),
+            ),
+            // Container(
+            //  child:Text("ألبومي "),
+            // ),
+          );
+  }
+  myAlbum3(String asset1, String asset2, String asset3){
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
+      padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
+      height:250,
+      width:400,
+      child: Card(
+        elevation: 5,
+        margin: EdgeInsets.symmetric(vertical: 0),
+        color: Colors.yellow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),),
+        shadowColor: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              // margin: EdgeInsets.only(top:5,right: 30,),
+              child:Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(right: 10,bottom: 10,top: 10),
+                    // margin:  EdgeInsets.only(left:15,right: 15),
+                    child:ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        asset2, height: 110,
+                        width: 159,
+                        fit: BoxFit.cover,),
+                    ),),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    // margin:  EdgeInsets.only(left:10,),
+                    child:ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        asset1, height: 110,
+                        width:159,
+                        fit: BoxFit.cover,),
+                    ),),
+                ],
+              ),),
+            Container(
+              child:Row(
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Get_Images(phone:widget.phone,name:widget.name)));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 130,bottom: 10),
+                      child:Stack(
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              asset3, height: 110,
+                              width: 209,
+                              fit: BoxFit.cover,),
+                          ),
+                          Positioned(
+                            child: Container(
+                              height: 110,
+                              width: 209,
+                              decoration: BoxDecoration(
+                                  color: Colors.black38,
+                                  borderRadius: BorderRadius.circular(10.0)
+                              ),
+                              child: Center(
+                                child: Text("+0", style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),),),
+                ],),
+            ),
+            // Container(
+            //  child:Text("ألبومي "),
+            // ),
+          ],),),);
+  }
+
 }
+class CustomMenuClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Paint paint = Paint();
+    paint.color = Colors.white;
+
+    final width = size.width;
+    final height = size.height;
+
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.quadraticBezierTo(0, 8, 10, 16);
+    path.quadraticBezierTo(width - 1, height / 2 - 20, width, height / 2);
+    path.quadraticBezierTo(width + 1, height / 2 + 20, 10, height - 16);
+    path.quadraticBezierTo(0, height - 8, 0, height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+
