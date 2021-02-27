@@ -74,15 +74,12 @@ class  _Get_Images extends State< Get_Images> {
                 children:[
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/icons/ho.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-
-                    ),
+                    height: 220,
+                     decoration: BoxDecoration(
+                     color:  Color(0xFFECCB45),
+                     ),
                   ),
+
                   Container(
                     margin: EdgeInsets.fromLTRB(100, 50, 1, 0),
                     child: IconButton(
@@ -114,11 +111,11 @@ class  _Get_Images extends State< Get_Images> {
                     child:Column(
                       children: <Widget>[
                       Container(
-                      height:547.5,
-                      margin: EdgeInsets.only(top:250),
+                      height:617.5,
+                      margin: EdgeInsets.only(top:180),
                       padding: EdgeInsets.only(top:30,right: 15,left: 15,),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Color(0xFF1C1C1C),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(50),
                           topRight: Radius.circular(50),
@@ -156,7 +153,7 @@ class  _Get_Images extends State< Get_Images> {
                                                height: 150,
                                                width: 150,
                                                decoration: BoxDecoration(
-                                                   color: Colors.black26,
+                                                   color: Colors.grey.withOpacity(0.1),
                                                    borderRadius: BorderRadius.circular(10.0)
                                                ),
                                                child: Center(

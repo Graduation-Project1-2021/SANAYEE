@@ -1,3 +1,4 @@
+import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
@@ -6,23 +7,18 @@ import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/services/authservice.dart';
-import 'package:flutterphone/constants.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pin_entry_text_field/pin_entry_text_field.dart';
+import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
-
-import '../HomeScreen.dart';
 import 'login_screen.dart';
+
+import '../LoginScreen.dart';
 String IP4="192.168.1.8";
-List<String>name=<String>[];
 String _verificationCode;
 String smscode ;
+FocusNode myFocusNode = new FocusNode();
 
-final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
-var arr=new List(10);
 class SignuserScreen extends StatefulWidget {
   @override
 
@@ -35,7 +31,6 @@ class _Body extends State<SignuserScreen> {
   TextEditingController passController = TextEditingController();
   TextEditingController passController2 = TextEditingController();
   TextEditingController phone_Num = TextEditingController();
-
   final formKey = new GlobalKey<FormState>();
 
   String phoneNo, verificationId, smsCode;
@@ -101,618 +96,636 @@ class _Body extends State<SignuserScreen> {
     bool _value2 = false;
     String code = "";
     String pass="";
-
-
     return Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          body: Form(key: formKey,
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor:Color(0xFF1C1C1C),
+        // appBar: AppBar(
+        //   leading:  IconButton(
+        //     alignment: Alignment.topRight,
+        //     onPressed: () {
+        //       if(card1){
+        //         Navigator.of(context).push(
+        //             MaterialPageRoute(
+        //                 builder: (BuildContext context) =>WelcomeScreen()));}
+        //       if(!card1){
+        //         card1=true;
+        //         setState(() {
+        //         });
+        //       }
+        //     },
+        //     icon: Icon(
+        //       Icons.arrow_back,
+        //       color: Colors.white,
+        //       size: 30.0,
+        //     ),
+        //   ),
+        //   actions: [
+        //
+        //   ],
+        // ),
+        body: Form(key: formKey,
           child: SingleChildScrollView(
             child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  child: Stack(
-                    children: [
+                GestureDetector(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                    height:MediaQuery.of(context).size.height * 0.3,
+                    child: CustomPaint(
+                      painter: CurvePainter(false),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
+                        ],),
+                    ),
+                  ),
+                ),
+                GestureDetector(
 
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/icons/ho.jpg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.fromLTRB(100, 40, 1, 1),
-                        child: IconButton(
-                          alignment: Alignment.topRight,
-                          onPressed: () {
-                            if(card1){
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>WelcomeScreen()));}
-                            if(!card1){
-                               card1=true;
-                               setState(() {
-                               });
-                            }
-                            },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                        ),
-                      ),
-                     card1? Container(
-                        height: 600,
-                        margin: EdgeInsets.fromLTRB(20, 130, 20, 0),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.ease,
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Container(
+                        color: Colors.transparent,
+                        padding: EdgeInsets.only(top: 5),
                         child: SingleChildScrollView(
-                        child:Card(
-                          elevation: 5,
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),),
-                          shadowColor: Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0,100,0,0),
-                                padding: EdgeInsets.symmetric(horizontal: 0,),
-                                width: size.width * 0.8,
-                                child: TextFormField(
-                                  controller: nameController,
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      Name_Null=false;
-                                      return null;
-                                    } else {
-
-                                      Name_Null=true;
-                                      return null;
-                                    }
-                                  },
-                                  cursorColor: kPrimaryColor,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Changa',
-                                  ),
-                                  decoration: InputDecoration(prefixIcon: Icon(Icons.person,color: Colors.grey[600]),
-                                    border: OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.grey),
-                                        borderRadius: const BorderRadius.all(const Radius.circular(30))
-                                    ),
-                                    focusedBorder:OutlineInputBorder(
-                                      borderSide: const BorderSide(color: Camone),
-                                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                                    ),
-                                    labelText: ('الاسم'),
-                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                  ),
-                                ),
-                              ),
-                              Name_Null ? Container(margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),): Container(
-                                margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                                child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-
-                              Container(height: 10,),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                padding: EdgeInsets.symmetric(horizontal:0,),
-                                width: size.width * 0.8,
-                                child: TextFormField(
-                                  controller: passController,
-                                  validator: (value) {
-                                    pass=value;
-                                    if (value.isEmpty) {
-                                      Pass_Null=false;
-                                      Pass_S=true;
-                                      return null;
-                                    } else if (value.length < 8) {
-                                      Pass_S=false;
-                                      Pass_Null=true;
-                                      return null;
-                                    }
-                                    Pass_Null=true;
-                                    Pass_S=true;
-                                    return null;
-                                  },
-                                  obscureText: !_showPassword1,
-                                  cursorColor: kPrimaryColor,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Changa',
-                                  ),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.lock, color: Colors.grey[600],),
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        _togglevisibility1();
-                                      },
-                                      child: Icon(
-                                        _showPassword1 ? Icons.visibility : Icons
-                                            .visibility_off, color: Colors.grey[600],),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.grey),
-                                        borderRadius: const BorderRadius.all(const Radius.circular(30))
-                                    ),
-                                    focusedBorder:OutlineInputBorder(
-                                      borderSide: const BorderSide(color: Camone),
-                                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                                    ),
-                                    labelText: ('كلمة السر'),
-                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                  ),
-
-                                ),
-                              ),
-                              Pass_Null ? Container(
-                                margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ): Container(
-                                margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                                child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-                              Container(height: 10,),
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                padding: EdgeInsets.symmetric(horizontal:0,),
-                                width: size.width * 0.8,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if(passController.text.isEmpty){
-                                      return null;
-                                    }
-                                    if(value==pass) {
-                                      Pass_Mismatch=true;
-                                      return null;
-                                    }
-                                    Pass_Mismatch=false;
-                                    return null;
-                                  },
-                                  obscureText: !_showPassword2,
-                                  cursorColor: kPrimaryColor,
-                                  textAlign: TextAlign.right,
-                                  controller: passController2,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Changa',
-                                  ),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.lock, color: Colors.grey[600],),
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        _togglevisibility2();
-                                      },
-                                      child: Icon(
-                                        _showPassword2 ? Icons.visibility : Icons
-                                            .visibility_off, color: Colors.grey[600],),
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.grey),
-                                        borderRadius: const BorderRadius.all(const Radius.circular(30))
-                                    ),
-                                    focusedBorder:OutlineInputBorder(
-                                      borderSide: const BorderSide(color: Camone),
-                                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                                    ),
-                                    labelText: ('تأكيد كلمة السر'),
-                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                    labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                  ),
-                                ),
-                              ),
-                              Container(height: 10,),
-                              Pass_Mismatch ? Container(
-                                margin: EdgeInsets.fromLTRB(150, 0,0, 0),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ): Container(
-                                margin: EdgeInsets.fromLTRB(170, 0,0, 0),
-                                child: Text(' * كلمة السر غير متطابقة',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-                              Pass_S ? Container(
-                                margin: EdgeInsets.fromLTRB(150, 0,0, 0),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ): Container(
-                                margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
-                                child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-                              Container(height: 12,),
-                             Container(
-                                child:AlreadyHaveAnAccountCheck(
-                                  login: false,
-                                  press: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return LoginScreen();
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Container(height: 70,),
-                            ],
-                          ),
-                        ),
-                      ),
-                      ): Container(
-                        height: 600,
-                        margin: EdgeInsets.fromLTRB(20, 130, 20, 0),
-                        child: SingleChildScrollView(
-                          child:Card(
-                            elevation: 5,
-                             margin: EdgeInsets.symmetric(vertical: 10),
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),),
-                            shadowColor: Colors.white,
-                             child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(0,100,0,0),
-                                      padding: EdgeInsets.symmetric(),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 0,),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                card1?Container(
+                                  child: Column(
+                                    children:[Container(
+                                      margin: EdgeInsets.fromLTRB(0,70,0,0),
                                       width: size.width * 0.8,
+                                      height: 60,
                                       child: TextFormField(
-                                        controller: phone_Num,
-                                        keyboardType: TextInputType.phone,
+                                        controller: nameController,
                                         validator: (value) {
                                           if (value.isEmpty) {
-                                            Phone=false;
+                                            Name_Null=false;
                                             return null;
                                           } else {
-                                            Phone=true;
+
+                                            Name_Null=true;
                                             return null;
                                           }
-
-                                        },
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.phone),
-                                          border: OutlineInputBorder(
-                                              borderSide: const BorderSide(color: Colors.grey),
-                                              borderRadius: const BorderRadius.all(const Radius.circular(30))
-                                          ),
-                                          focusedBorder:OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Camone),
-                                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                                          ),
-                                          labelText: ('رقم الهاتف'),
-                                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                                          labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                        ),
-                                        onChanged: (val) {
-                                          setState(() {
-                                            this.phoneNo = val;
-                                          });
                                         },
                                         cursorColor: kPrimaryColor,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          fontSize: 18.0,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
                                           fontFamily: 'Changa',
-
                                         ),
-                                      )),
-                                  Phone ? Container(): Container(
-                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                                    child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'Changa',
-                                        color: Colors.red,
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.grey.withOpacity(0.1),
+                                          prefixIcon: Icon(Icons.person,color: Color(0xFF666360)),
+                                          enabledBorder: new OutlineInputBorder(
+                                            borderRadius: new BorderRadius.circular(30.0),
+                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
 
-                                      ),),
-                                  ),
-                                  Invaled_Phone ? Container(): Container(
-                                    margin: EdgeInsets.fromLTRB(1, 0,0, 0),
-                                    child: Text('يجب أن يكون رقم الهاتف على الصورة [number][country] + ',textAlign:TextAlign.end,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'Changa',
-                                        color: Colors.red,
+                                          ),
+                                          focusedBorder: new OutlineInputBorder(
+                                            borderRadius: new BorderRadius.circular(30.0),
+                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
 
-                                      ),),
-                                  ),
-                                  invalid_OTP?Container(
-                                    margin: EdgeInsets.only(top: 20),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(29),
-                                      child: FlatButton(
-                                          padding: EdgeInsets.symmetric(vertical: 9, horizontal: 50),
-                                          color: Colors.white,
-                                          child:Text("إعادة إرسال الكود",
-                                            style:TextStyle(
-                                              fontSize: 21.0,
-                                              fontFamily: 'Changa',
-                                              color: Camone,
-                                              fontWeight: FontWeight.bold,
-                                            ),),
-                                          onPressed: (){
-                                            if (formKey.currentState.validate()) {print('validate');}
-                                            else{print('not validate');}
-                                            if(Phone){
-                                              _verifyPhone(phoneNo);
-                                              setState(() {
-
-                                              });
-                                            }
-                                          }
+                                          ),
+                                          hintText: 'الاسم ',
+                                          hintStyle: TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: 'Changa',
+                                            color: Color(0xFF666360),
+                                          ),
+                                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                                        ),
                                       ),
                                     ),
+                                      Name_Null ? Container(margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
 
-                                  ):Container(
-                                    margin: EdgeInsets.only(top: 20),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(29),
-                                    child: FlatButton(
-                                      padding: EdgeInsets.symmetric(vertical: 9, horizontal: 50),
-                                      color: Colors.white,
-                                      child:Text("اضغط لإرسال الكود",
-                                      style:TextStyle(
+                                          ),),): Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(0,5,0,0),
+                                        padding: EdgeInsets.symmetric(horizontal:0,),
+                                        width: size.width * 0.8,
+                                        height: 60,
+                                        child: TextFormField(
+                                          controller: passController,
+                                          validator: (value) {
+                                            pass=value;
+                                            if (value.isEmpty) {
+                                              Pass_Null=false;
+                                              Pass_S=true;
+                                              return null;
+                                            } else if (value.length < 8) {
+                                              Pass_S=false;
+                                              Pass_Null=true;
+                                              return null;
+                                            }
+                                            Pass_Null=true;
+                                            Pass_S=true;
+                                            return null;
+                                          },
+                                          obscureText: !_showPassword1,
+                                          cursorColor: kPrimaryColor,
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Changa',
+                                          ),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            prefixIcon: Icon(Icons.lock, color:Color(0xFF666360)),
+                                            suffixIcon: GestureDetector(
+                                              onTap: () {
+                                                _togglevisibility1();
+                                              },
+                                              child: Icon(
+                                                _showPassword1 ? Icons.visibility : Icons
+                                                    .visibility_off, color: Color(0xFF666360),),
+                                            ),
+                                            enabledBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(30.0),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                            ),
+                                            focusedBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(30.0),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                            ),
+                                            hintText: ('كلمة السر'),
+                                            hintStyle: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Changa',
+                                              color: Color(0xFF666360),
+                                            ),
+                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                          ),
+
+                                        ),
+                                      ),
+                                      Pass_Null ? Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(0,5,0,0),
+                                        width: size.width * 0.8,
+                                        height: 60,
+                                        child: TextFormField(
+                                          validator: (value) {
+                                            if(passController.text.isEmpty){
+                                              return null;
+                                            }
+                                            if(value==pass) {
+                                              Pass_Mismatch=true;
+                                              return null;
+                                            }
+                                            Pass_Mismatch=false;
+                                            return null;
+                                          },
+                                          obscureText: !_showPassword2,
+                                          cursorColor: kPrimaryColor,
+                                          textAlign: TextAlign.right,
+                                          controller: passController2,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Changa',
+                                          ),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            prefixIcon: Icon(Icons.lock, color: Color(0xFF666360)),
+                                            suffixIcon: GestureDetector(
+                                              onTap: () {
+                                                _togglevisibility2();
+                                              },
+                                              child: Icon(
+                                                  _showPassword2 ? Icons.visibility : Icons
+                                                      .visibility_off, color: Color(0xFF666360)),
+                                            ),
+                                            enabledBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(30.0),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                            ),
+                                            focusedBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(30.0),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                            ),
+                                            hintText: ('تأكيد كلمة السر'),
+                                            hintStyle: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Changa',
+                                              color: Color(0xFF666360),
+                                            ),
+                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(height: 10,),
+                                      Pass_Mismatch ? Container(
+                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(170, 0,0, 0),
+                                        child: Text(' * كلمة السر غير متطابقة',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Pass_S ? Container(
+                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
+                                        child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                        child:AlreadyHaveAnAccountCheck(
+                                          login: false,
+                                          press: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return Loginscreen();
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                     Container(height: 10,),
+                                    ],
+                                  ),):Container(
+                                  child: Column(
+                                    children:[
+                                      Container(
+                                        margin: EdgeInsets.only(top:20,right:10,left:290),
+                                        child:IconButton(
+                                          onPressed: () {
+                                            if(card1){
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
+                                            if(!card1){
+                                              card1=true;
+                                              setState(() {
+                                              });
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.arrow_back,
+                                            color:Color(0xFFECCB45),
+                                            size: 20.0,
+                                          ),),),
+                                      Container(
+                                          margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                          padding: EdgeInsets.symmetric(),
+                                          width: size.width * 0.8,
+                                          height: 60,
+                                          child: TextFormField(
+                                            controller: phone_Num,
+                                            keyboardType: TextInputType.phone,
+                                            validator: (value) {
+                                              if (value.isEmpty) {
+                                                Phone=false;
+                                                return null;
+                                              } else {
+                                                Phone=true;
+                                                return null;
+                                              }
+
+                                            },
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.grey.withOpacity(0.1),
+                                              prefixIcon: Icon(Icons.phone,color: Color(0xFF666360),),
+                                              enabledBorder: new OutlineInputBorder(
+                                                borderRadius: new BorderRadius.circular(30.0),
+                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                              ),
+                                              focusedBorder: new OutlineInputBorder(
+                                                borderRadius: new BorderRadius.circular(30.0),
+                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                              ),
+                                              hintText: ('رقم الهاتف'),
+                                              hintStyle: TextStyle(
+                                                fontSize: 16.0,
+                                                fontFamily: 'Changa',
+                                                color: Color(0xFF666360),
+                                              ),
+                                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                                            ),
+                                            onChanged: (val) {
+                                              setState(() {
+                                                this.phoneNo = val;
+                                              });
+                                            },
+                                            cursorColor: kPrimaryColor,
+                                            textAlign: TextAlign.right,
+                                            style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontFamily: 'Changa',
+
+                                            ),
+                                          )),
+                                      Phone ? Container(
+                                          child: Text('',textAlign:TextAlign.end,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: 'Changa',
+                                              color: Colors.red,
+
+                                            ),)
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Invaled_Phone ? Container(): Container(
+                                        margin: EdgeInsets.fromLTRB(1, 0,0, 0),
+                                        child: Text('يجب أن يكون رقم الهاتف على الصورة [number][country] + ',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      invalid_OTP?Container(
+                                        margin: EdgeInsets.only(top: 20),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(29),
+                                          child: FlatButton(
+                                              padding: EdgeInsets.symmetric(vertical: 9, horizontal: 50),
+                                              color: Color(0xFF1C1C1C),
+                                              child:Text("إعادة إرسال الكود",
+                                                style:TextStyle(
+                                                  fontSize: 21.0,
+                                                  fontFamily: 'Changa',
+                                                  color:  Color(0xFFECCB45),
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                              onPressed: (){
+                                                if (formKey.currentState.validate()) {print('validate');}
+                                                else{print('not validate');}
+                                                if(Phone){
+                                                  _verifyPhone(phoneNo);
+                                                  setState(() {
+
+                                                  });
+                                                }
+                                              }
+                                          ),
+                                        ),
+
+                                      ):Container(
+                                        margin: EdgeInsets.only(top: 20),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(29),
+                                          child: FlatButton(
+                                              padding: EdgeInsets.symmetric(vertical:0, horizontal:0),
+                                              color: Color(0xFF1C1C1C),
+                                              child:Text("اضغط لإرسال الكود",
+                                                style:TextStyle(
+                                                  fontSize: 21.0,
+                                                  fontFamily: 'Changa',
+                                                  color:  Color(0xFFECCB45),
+                                                  fontWeight: FontWeight.bold,
+                                                ),),
+                                              onPressed: (){
+                                                if (formKey.currentState.validate()) {print('validate');}
+                                                else{print('not validate');}
+                                                if(Phone){
+                                                  _verifyPhone(phoneNo);
+                                                  setState(() {
+
+                                                  });
+                                                }
+                                                //   if(Phone){
+                                                //   verifyPhone(phoneNo);
+                                                //   setState(() {
+                                                //
+                                                //   });
+                                                // }
+                                              }
+                                          ),
+                                        ),
+                                      ),
+                                      // Container(
+                                      //   child: RaisedButton(
+                                      //     //child:Text("jH;d] الكود"),
+                                      //     onPressed: (){
+                                      //       if(codeSent){
+                                      //         print("send");
+                                      //         signInWithOTP(smsCode, verificationId);
+                                      //       }
+                                      //     },
+                                      //   ),
+                                      // ),
+                                      codeSent?Center(
+                                        child:Container(
+                                          margin: EdgeInsets.only(top:0,bottom: 80,left: 55,right: 55),
+                                          // padding: EdgeInsets.only(top:0.05),
+                                          height: 90,
+                                          // color:Colors.grey.withOpacity(0.1),
+                                          child: PinEntryTextField(
+                                            fields: 6,
+                                            fontSize: 12.0,
+                                            fieldWidth: 40.0,
+                                            showFieldAsBox: true,
+                                            onSubmit: (String pin){
+
+                                              setState((){
+                                                this.smsCode=pin;
+                                                smscode=pin;
+                                              },
+                                              );
+                                            },
+                                          ), //
+                                        ),):Container(height: 170,),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 400,
+                                  margin: EdgeInsets.only(left: 145,right: 145,top: 10),
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        side: BorderSide(color: Colors.transparent)
+                                    ),
+                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+                                    color: Color(0xFFECCB45),
+                                    onPressed: () async {
+                                      if (formKey.currentState.validate()) {print('validate');}
+                                      else{print('not validate');}
+                                      if(card1){
+                                        if(Name_Null && Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
+                                          card1=false;
+                                          print(!passController.text.isEmpty);
+                                        }}
+                                      else{
+                                        if(Phone && codeSent){
+                                          try {
+                                            await FirebaseAuth.instance
+                                                .signInWithCredential(PhoneAuthProvider.credential(
+                                                verificationId: _verificationCode, smsCode: smscode))
+                                                .then((value) async {
+                                              if (value.user != null) {
+                                                senddata();
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => InsideAPP()),
+                                                        (route) => false);
+                                              }
+                                            });
+                                          } catch (e) {
+                                            invalid_OTP=true;
+                                            // FocusScope.of(context).unfocus();
+                                            // _scaffoldkey.currentState
+                                            //     .showSnackBar(SnackBar(content: Text('invalid OTP')));
+                                          }
+
+                                          // _verifyPhone(phoneNo);
+                                        }
+                                      }
+                                      // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
+                                      //   // codeSent ? signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                                      // }
+                                      setState(() {
+                                      });
+                                      //else{card1=true;}
+                                      // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
+                                      //   // codeSent ? signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
+                                      // }
+                                    },
+                                    child: Center(child: !card1 ? Text('تأكيد',
+                                      style: TextStyle(
                                         fontSize: 21.0,
                                         fontFamily: 'Changa',
-                                        color: Camone,
+                                        color: Color(0xFF1C1C1C),
                                         fontWeight: FontWeight.bold,
-                                       ),),
-                                      onPressed: (){
-                                        if (formKey.currentState.validate()) {print('validate');}
-                                        else{print('not validate');}
-                                        if(Phone){
-                                          _verifyPhone(phoneNo);
-                                          setState(() {
-
-                                          });
-                                        }
-                                      //   if(Phone){
-                                      //   verifyPhone(phoneNo);
-                                      //   setState(() {
-                                      //
-                                      //   });
-                                      // }
-                                      }
+                                      ),):Text('استمرار',
+                                        style: TextStyle(
+                                          fontSize: 21.0,
+                                          fontFamily: 'Changa',
+                                          color: Color(0xFF1C1C1C),
+                                          fontWeight: FontWeight.bold,
+                                        ))),
+                                  ),
+                                ),
+                                Row(children:[
+                                  Container(
+                                    width: 10.0,
+                                    height: 10.0,
+                                    margin: EdgeInsets.only(top: 30,left: 0,right: 190),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: card1 ? Color(0xFFECCB45) :  Colors.grey.withOpacity(0.1),
                                     ),
                                   ),
+                                  Container(
+                                    width: 10.0,
+                                    height: 10.0,
+                                    margin: EdgeInsets.only(top: 30,left: 100,right: 10),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: card1 ?  Colors.grey.withOpacity(0.1):Color(0xFFECCB45),
+                                    ),
                                   ),
-                                  // Container(
-                                  //   child: RaisedButton(
-                                  //     //child:Text("jH;d] الكود"),
-                                  //     onPressed: (){
-                                  //       if(codeSent){
-                                  //         print("send");
-                                  //         signInWithOTP(smsCode, verificationId);
-                                  //       }
-                                  //     },
-                                  //   ),
-                                  // ),
-                                 codeSent?Container(
-                                   margin: EdgeInsets.only(top:40,bottom: 2),
-                                   padding: EdgeInsets.only(top:0.05),
-                                   child: PinEntryTextField(
-                                     fields: 6,
-                                     fontSize: 12.0,
-                                     fieldWidth: 40.0,
-                                     showFieldAsBox: true,
-                                     onSubmit: (String pin){
 
-                                       setState((){
-                                         this.smsCode=pin;
-                                         smscode=pin;
-                                       },
-                                       );
-                                     },
-                                   ), //
-                                 ):Container(height: 100,),
-                                  Container(height: 180,),
-
-                                ],
+                                ],),
+                              ],
                             ),
-                        ),
+                          ),),
                       ),
-                      ),Container(margin:EdgeInsets.only(top:80),child: image_profile(),),
-                      Container(
-                        width: 150,
-                        // margin: card1?EdgeInsets.only(top:655,left: 145,right: 145):EdgeInsets.only(top:655,left: 120,right: 60),
-                          margin: EdgeInsets.only(top:655,left: 145,right: 145),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(29),
-                          child: FlatButton(
-                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-                            color: Camone,
-                            onPressed: () async {
-                              if (formKey.currentState.validate()) {print('validate');}
-                              else{print('not validate');}
-                              if(card1){
-                                if(Name_Null && Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
-                                  card1=false;
-                                  print(!passController.text.isEmpty);
-                                }}
-                              else{
-                                if(Phone && codeSent){
-                                  try {
-                                    await FirebaseAuth.instance
-                                        .signInWithCredential(PhoneAuthProvider.credential(
-                                        verificationId: _verificationCode, smsCode: smscode))
-                                        .then((value) async {
-                                      if (value.user != null) {
-                                        senddata();
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => InsideAPP()),
-                                                (route) => false);
-                                      }
-                                    });
-                                  } catch (e) {
-                                    invalid_OTP=true;
-                                    // FocusScope.of(context).unfocus();
-                                    // _scaffoldkey.currentState
-                                    //     .showSnackBar(SnackBar(content: Text('invalid OTP')));
-                                  }
-
-                                 // _verifyPhone(phoneNo);
-                                }
-                              }
-                              // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
-                              //   // codeSent ? signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
-                              // }
-                              setState(() {
-                              });
-                               //else{card1=true;}
-                              // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
-                              //   // codeSent ? signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
-                              // }
-                            },
-                            child: Center(child: !card1 ? Text('تأكيد',
-                              style: TextStyle(
-                                fontSize: 21.0,
-                                fontFamily: 'Changa',
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),):Text('استمرار',
-                                style: TextStyle(
-                                  fontSize: 21.0,
-                                  fontFamily: 'Changa',
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ))),
-                          ),
-                        ),
-                      ),
-                      // !card1?Container(
-                      //   margin: EdgeInsets.only(top:655,left:50,right:280),
-                      //   width: 120,
-                      //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(29),
-                      //     child: FlatButton(
-                      //       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 4),
-                      //       color: Camone,
-                      //       onPressed: (){
-                      //         if(codeSent){print("send");signInWithOTP(smsCode, verificationId);}
-                      //         setState(() {
-                      //         });
-                      //         // if(Name_Null &&  Pass_Null &&  Pass_Mismatch &&  Phone &&  Pass_S){
-                      //         //   // codeSent ? signInWithOTP(smsCode, verificationId):verifyPhone(phoneNo);
-                      //         // }
-                      //         if (formKey.currentState.validate()) {print('validate');}
-                      //         else{print('not validate');}
-                      //       },
-                      //       child: Center(child: Text('تأكيد',
-                      //           style: TextStyle(
-                      //             fontSize: 21.0,
-                      //             fontFamily: 'Changa',
-                      //             color: Colors.white,
-                      //             fontWeight: FontWeight.bold,
-                      //           ))),
-                      //     ),
-                      //   ),
-                      // ):Container(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            width: 10.0,
-                            height: 10.0,
-                            margin: EdgeInsets.only(top: 745,left: 10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:  card1?Camone:Colors.grey[600],
-                            ),
-                          ),
-                          Container(
-                            width: 10.0,
-                            height: 10.0,
-                            margin: EdgeInsets.only(top: 745,),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:  card1?Colors.grey[600]:Camone,
-                            ),
-                          ),
-                        ],),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ),
-        ),
-    );
-
+                    )
+                ), ],),),
+        ),),);
   }
   _verifyPhone(String phone) async {
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -868,43 +881,62 @@ class _Body extends State<SignuserScreen> {
 
   Future senddata()async{
     if(image_file==null){
-    print("image null");
-    var url = 'https://'+IP4+'/testlocalhost/signup.php';
-    var ressponse = await http.post(url, body: {
-      "name": nameController.text,
-      "pass": passController.text,
-      "phone": phone_Num.text,
-      "imagename": "signup.jpg",
-      "image64": '',
-      "mytoken":mytoken,
-    });
-    // String massage= json.decode(ressponse.body);
-    // print(massage);
+      print("image null");
+      var url = 'https://'+IP4+'/testlocalhost/signup.php';
+      var ressponse = await http.post(url, body: {
+        "name": nameController.text,
+        "pass": passController.text,
+        "phone": phone_Num.text,
+        "imagename": "signup.jpg",
+        "image64": '',
+        "mytoken":mytoken,
+      });
+      // String massage= json.decode(ressponse.body);
+      // print(massage);
     }
-   else{ String base64;
+    else{ String base64;
     String imagename;
     _file = File(image_file.path);
     base64 = base64Encode(_file.readAsBytesSync());
     imagename = _file.path.split('/').last;
     var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
-    "name": nameController.text,
-    "pass": passController.text,
-    "phone": phone_Num.text,
-    "imagename": imagename,
-    "image64": base64,
-    "mytoken":mytoken,
+      "name": nameController.text,
+      "pass": passController.text,
+      "phone": phone_Num.text,
+      "imagename": imagename,
+      "image64": base64,
+      "mytoken":mytoken,
     });
     String massage= json.decode(ressponse.body);
     print(massage);
     }
 
   }
-  // signInWithOTP(smsCode, verId) {
-  //   AuthCredential authCreds = PhoneAuthProvider.getCredential(
-  //       verificationId: verId, smsCode: smsCode);
-  //   signIn(authCreds);
-  // }
+}
 
+class CurvePainter extends CustomPainter {
 
+  bool outterCurve;
+
+  CurvePainter(this.outterCurve);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = Color(0xFFF3D657);
+    paint.style = PaintingStyle.fill;
+
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.5, outterCurve ? size.height + 110 : size.height - 110, size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

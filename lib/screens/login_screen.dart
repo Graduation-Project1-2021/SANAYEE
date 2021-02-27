@@ -1,24 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:flutterphone/components/already_have_an_account_acheck.dart';
+import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/Inside_the_app/inside.dart';
-import 'package:flutterphone/screens/signuser_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 String IP4="192.168.1.8";
 
 FocusNode myFocusNode = new FocusNode();
 
-class LoginScreen extends StatefulWidget {
+class Loginscreen extends StatefulWidget {
   @override
 
   _Body createState() => _Body();
 }
 
-class _Body extends State<LoginScreen> {
+class _Body extends State<Loginscreen> {
   final _formKey = GlobalKey<FormState>();
 
 
@@ -38,7 +38,7 @@ class _Body extends State<LoginScreen> {
   }
 
 
-  
+
   Future getdata()async{
     var url='https://'+IP4+'/testlocalhost/login.php';
     var ressponse=await http.get(url);
@@ -111,285 +111,329 @@ class _Body extends State<LoginScreen> {
         body: Form(key: _formKey,
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  color:Color(0xFF1C1C1C),
-                  child: Stack(
-                    children: <Widget>[
 
+                GestureDetector(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                    height: MediaQuery.of(context).size.height * 0.75,
+                    child: CustomPaint(
+                      painter: CurvePainter(true),
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Center(
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
 
-                      Container(
-                        margin: EdgeInsets.fromLTRB(100, 40, 1, 0),
-                        child: IconButton(
-                          alignment: Alignment.topRight,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>WelcomeScreen()));
-                          },
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 30.0,
+                                  Container(
+                                    margin: EdgeInsets.only(top: 45,bottom: 5),
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      // color:Color(0xFF1C1C1C),
+                                      image: DecorationImage(
+                                        image: new AssetImage(
+                                          'assets/icons/vb.png',
+                                        ),
+                                      ),),),
+                                  Container(
+                                    margin: EdgeInsets.only(top:0,bottom:40),
+                                    child:Center(
+                                      child: Text('صنايعي',
+                                        style: TextStyle(
+                                          color: Color(0xFF1C1C1C),
+                                          fontFamily: 'Changa',
+                                          fontSize: 30.0,
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),),
+                                  Container(
+                                    margin: EdgeInsets.only(top:0),
+                                    padding: EdgeInsets.symmetric(horizontal: 0),
+                                    width: size.width * 0.82,
+                                    height: 55,
+                                    child: TextFormField(
+                                      controller: nameController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          Name_Null=false;
+                                          return null;
+                                        } else {
+                                          Name_Null=true;
+                                          return null;
+                                        }},
+
+                                      cursorColor:Colors.grey[600],
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        color: Color(0xFF1C1C1C),
+                                        fontSize: 16.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(0xFFECCB45),
+                                        prefixIcon: Icon(Icons.person,color: Color(0xFFD9BC43),),
+                                        enabledBorder: new OutlineInputBorder(
+                                          borderRadius: new BorderRadius.circular(30.0),
+                                          borderSide:  BorderSide(color: Color(0xFFECCB45)),
+
+                                        ),
+                                        focusedBorder: new OutlineInputBorder(
+                                          borderRadius: new BorderRadius.circular(30.0),
+                                          borderSide:  BorderSide(color: Color(0xFFECCB45) ),
+
+                                        ),
+                                        hintText: 'الاسم ',
+                                        hintStyle: TextStyle(
+                                          fontSize: 16.0,
+                                          fontFamily: 'Changa',
+                                          color: Colors.black26,
+                                        ),
+                                        floatingLabelBehavior: FloatingLabelBehavior.always,
+
+                                      ),
+
+                                    ),
+                                  ),
+                                  Name_Null ? Container(
+                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                    child: Text('',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ): Container(
+                                    margin: EdgeInsets.fromLTRB(225, 0, 0, 0),
+                                    child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ),
+                                  Container(height: 5,),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 0),
+                                    padding: EdgeInsets.symmetric(horizontal: 0),
+                                    width: size.width * 0.82,
+                                    height: 55,
+                                    child: TextFormField(
+                                      controller: passController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          Pass_Null=false;
+                                          return null;
+                                        } else{
+                                          Pass_Null=true;
+                                          return null;
+                                        }},
+                                      obscureText: !_showPassword,
+                                      cursorColor:Colors.grey[600],
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontFamily: 'Changa',
+                                        color: Color(0xFF1C1C1C),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: Color(0xFFECCB45),
+                                        prefixIcon: Icon(
+                                          Icons.lock,
+                                          color: Color(0xFFD9BC43),
+
+                                        ),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color: Color(0xFFD9BC43),),
+                                          color: Colors.cyan,
+                                          onPressed:_togglevisibility,
+                                        ),
+                                        enabledBorder: new OutlineInputBorder(
+                                          borderRadius: new BorderRadius.circular(30.0),
+                                          borderSide:  BorderSide(color: Color(0xFFECCB45)),
+
+                                        ),
+                                        focusedBorder: new OutlineInputBorder(
+                                          borderRadius: new BorderRadius.circular(30.0),
+                                          borderSide:  BorderSide(color: Color(0xFFECCB45) ),
+
+                                        ),
+                                        hintText: 'كلمة السر',
+                                        hintStyle: TextStyle(
+                                          fontSize: 16.0,
+                                          fontFamily: 'Changa',
+                                          color: Colors.black26,
+                                        ),
+                                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                                      ),
+                                    ),
+                                  ),
+                                  Pass_Null ? Container(
+                                    margin: EdgeInsets.fromLTRB(180, 0, 0, 1),
+                                    child: Text('',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ): Container(
+                                    margin: EdgeInsets.fromLTRB(225, 0, 0, 1),
+                                    child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ),
+
+                                  login_Sucsess ? Container(
+                                    margin: EdgeInsets.fromLTRB(110, 0,0, 1),
+                                    child: Text('',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ): Container(
+                                    margin: EdgeInsets.fromLTRB(140,0,0, 1),
+                                    child: Text(' * اسم المستخدم أو كلمة المرور خاطئة',textAlign:TextAlign.end,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Changa',
+                                        color: Colors.red,
+
+                                      ),),
+                                  ),
+
+                                  // SizedBox(height:5,),
+                                  Column(
+                                    children:[
+                                      Container(
+                                        width: size.width * 0.82,
+                                        margin: EdgeInsets.only(top:0,),
+                                        // decoration: BoxDecoration(
+                                        //   color: Color(0xFF1C1C1C),
+                                        //   borderRadius: BorderRadius.all(
+                                        //     Radius.circular(25),
+                                        //   ),
+                                        //   boxShadow: [
+                                        //     BoxShadow(
+                                        //       color: Color(0xFF1C1C1C).withOpacity(0.2),
+                                        //       spreadRadius: 3,
+                                        //       blurRadius: 4,
+                                        //       offset: Offset(0, 3),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        child: FlatButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(25.0),
+                                              side: BorderSide(color: Colors.transparent)
+                                          ),
+                                          // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                                          color: Color(0xFF1C1C1C),
+                                          onPressed: (){
+                                            if (_formKey.currentState.validate()) {print('validate');}
+                                            else{print('not validate');}
+                                            setState(() {
+                                              // Name_Null=true;
+                                              // Pass_Null=true;
+                                            });
+                                            if(Name_Null && Pass_Null) {
+                                              senddata();
+                                              print("send");
+                                            }
+                                            print(nameController.text);
+                                            print(passController.text);
+                                          },
+                                          child: Text(
+                                            "تسجيل الدخول",
+                                            style: TextStyle(
+                                              color: Color(0xFFF3D657),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 21.0,
+                                              fontFamily: 'Changa',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(height: 5,),
+                                      AlreadyHaveAnAccountCheck(
+                                        press: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return SignuserScreen();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-
-                      Container(
-                        // color: Color(0xFF1C1C1C),
-                        margin: EdgeInsets.fromLTRB(20, 130,20, 0),
-                        height: 570,
-                        width: 600,
-                        child: Card(
-                          elevation: 5,
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          color:  Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(60),),
-                          // shadowColor: Color(0xFFECCB45),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              // Container(height: 50,),
-                              Container(
-                                margin: EdgeInsets.only(top: 10,bottom: 5),
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  // color:Color(0xFF1C1C1C),
-                                  image: DecorationImage(
-                                    image: new AssetImage(
-                                      'assets/icons/z.png',
-                                    ),
-                                  ),),),
-                              Container(
-                                margin: EdgeInsets.only(top:0,bottom:30),
-                                child: Text('صنايعي',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontFamily: 'Changa',
-                                    fontSize: 30.0,
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                          margin: EdgeInsets.only(top:0),
-                          padding: EdgeInsets.symmetric(horizontal: 0),
-                          width: size.width * 0.82,
-                          child: TextFormField(
-                            controller: nameController,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                Name_Null=false;
-                                return null;
-                              } else {
-                                Name_Null=true;
-                                return null;
-                              }},
-
-                            cursorColor:Colors.grey[600],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Color(0xFF1C1C1C),
-                              fontSize: 16.0,
-                              fontFamily: 'Changa',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            decoration: InputDecoration(prefixIcon: Icon(Icons.person,color:Color(0xFFECCB45),),
-                              border: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.grey),
-                                  borderRadius: const BorderRadius.all(const Radius.circular(30))
-                              ),
-                              focusedBorder:OutlineInputBorder(
-                                borderSide: const BorderSide(color:Color(0xFFECCB45)),
-                                borderRadius: BorderRadius.all(Radius.circular(30)),
-                              ),
-                              labelText: ('الاسم'),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                            ),
-
-                          ),
-                        ),
-                        Name_Null ? Container(
-                          margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                          child: Text('',textAlign:TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Changa',
-                              color: Colors.red,
-
-                            ),),
-                        ): Container(
-                          margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
-                          child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Changa',
-                              color: Colors.red,
-
-                            ),),
-                        ),
-                              Container(height: 20,),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 0),
-                                padding: EdgeInsets.symmetric(horizontal: 0),
-                                width: size.width * 0.82,
-                                child: TextFormField(
-                                  controller: passController,
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      Pass_Null=false;
-                                      return null;
-                                    } else{
-                                      Pass_Null=true;
-                                      return null;
-                                    }},
-                                  obscureText: !_showPassword,
-                                  cursorColor:Colors.grey[600],
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontFamily: 'Changa',
-                                    color: Color(0xFF1C1C1C),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: Color(0xFFECCB45),
-
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off, color: Color(0xFFECCB45),),
-                                      color: Colors.cyan,
-                                      onPressed:_togglevisibility,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderSide: const BorderSide(color: Colors.grey),
-                                        borderRadius: const BorderRadius.all(const Radius.circular(30))
-                                    ),
-                                    focusedBorder:OutlineInputBorder(
-                                      borderSide: const BorderSide(color:Color(0xFFECCB45)),
-                                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                                    ),
-                                    labelText: ('كلمة السر'),
-                                    labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                  ),
-                                ),
-                              ),
-                              Pass_Null ? Container(
-                                margin: EdgeInsets.fromLTRB(180, 0, 0, 1),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ): Container(
-                                margin: EdgeInsets.fromLTRB(180, 0, 0, 1),
-                                child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-
-                              login_Sucsess ? Container(
-                                margin: EdgeInsets.fromLTRB(110, 5,15, 1),
-                                child: Text('',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ): Container(
-                                margin: EdgeInsets.fromLTRB(110, 5,15, 1),
-                                child: Text(' * اسم المستخدم أو كلمة المرور خاطئة',textAlign:TextAlign.end,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Changa',
-                                    color: Colors.red,
-
-                                  ),),
-                              ),
-
-                              SizedBox(height:5,),
-                              AlreadyHaveAnAccountCheck(
-                                press: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return SignuserScreen();
-                                      },
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height:70,),
-                      Container(
-                        margin: EdgeInsets.only(top:655,left: 100,right: 100),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(29),
-                          child: FlatButton(
-                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-                            color: Color(0xFFECCB45),
-                            onPressed: (){
-                              if (_formKey.currentState.validate()) {print('validate');}
-                              else{print('not validate');}
-                              setState(() {
-                                // Name_Null=true;
-                                // Pass_Null=true;
-                              });
-                              if(Name_Null && Pass_Null) {
-                                senddata();
-                                print("send");
-                              }
-                              print(nameController.text);
-                              print(passController.text);
-                            },
-                            child: Text(
-                              "تسجيل الدخول",
-                              style: TextStyle(
-                                color:Color(0xFF1C1C1C),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 21.0,
-                                fontFamily: 'Changa',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-
-                    ],
+                    ),
                   ),
+                )
 
-                ),
               ],
-
             ),
           ),
-
-        ),
-      ),
-    );
+        ),),);
   }
+}
+
+class CurvePainter extends CustomPainter {
+
+  bool outterCurve;
+
+  CurvePainter(this.outterCurve);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = Color(0xFFF3D657);
+    paint.style = PaintingStyle.fill;
+
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.5, outterCurve ? size.height + 110 : size.height - 110, size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

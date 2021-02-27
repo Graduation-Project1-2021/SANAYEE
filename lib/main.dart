@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutterphone/screens/home.dart';
-import 'package:flutterphone/screens/home2.dart';
-import 'package:flutterphone/services/authservice.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
@@ -9,9 +6,6 @@ import 'package:flutterphone/constants.dart';
 import 'dart:io';
 import 'package:flutterphone/screens/slider.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'LoginScreen.dart';
-
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -39,8 +33,8 @@ class MyApp extends StatelessWidget {
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-       home: WelcomeScreen(),
-      // home: MyApp1(),
+        // home: LoginScreen(),
+      home: WelcomeScreen(),
     );
   }
 }

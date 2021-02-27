@@ -11,9 +11,9 @@ import 'dart:convert';
 
 import '../constants.dart';
 import 'GET_IMGS.dart';
-import 'IMG_BIG.dart';
+import 'edit.dart';
 import 'change_pass.dart';
-import 'edit_profile.dart';
+
 String  name="";
 String  phone="";
 String  image="";
@@ -44,80 +44,64 @@ class  _PROFILE extends State< PROFILE> {
   @override
 
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return  Directionality( textDirection: TextDirection.rtl,
        child:Scaffold(
+         key: _scaffoldKey,
+         drawer:Container(
+             width: 350,
+        child:new Drawer(
+        child: Column(
+             children: <Widget>[
+               DrawerHeader(
+                 padding: EdgeInsets.all(0.0),
+                 child: Container(
+                     height: 142,
+                     width: MediaQuery.of(context).size.width,
+                     child: Image.asset(
+                       "assets/icons/vb.png",
+                     )),
+                 decoration: BoxDecoration(
+                   color: Color(0xFFECCB45),
+                 ),
+               ),
+               Container(
+                 height: 40,
+                 color: Colors.white,
+
+               ),
+               update(context, "تعديل المعلومات الشخصية"),
+               Albume(context, "معرض الصور"),
+               changepassword(context, "تغيير كلمة السر"),
+                // buildAccountOptionRow(context, "معلومات الاتصال"),
+               buildAccountOptionRow(context, "طلبات الحجوزات"),
+               // buildAccountOptionRow(context, "اضافة اعمال جديدة "),
+               SizedBox(
+                 height: 40,
+               ),
+             ],
+           ),
+         ),),
+         backgroundColor: Color(0xFF1C1C1C),
          appBar: AppBar(
+           automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
            elevation: 0,
-           backgroundColor: Camone,
+           backgroundColor:  Color(0xFFECCB45),
            actions: [
              IconButton(
-               onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)));},
-
+               onPressed: () => _scaffoldKey.currentState.openDrawer(),
                icon: Icon(Icons.menu),)
            ],
          ),
-        drawer: Container(
-          width: 350,
-           child:Drawer(
-          child: Column(
-            children:[
-              //  ClipPath(
-              //   clipper: CustomMenuClipper(),
-              //   child: Container(
-              //     width: 35,
-              //     height: 110,
-              //     color: Color(0xFF262AAA),
-              //     alignment: Alignment.centerLeft,
-              //     child: AnimatedIcon(
-              //       // progress: _animationController.view,
-              //       icon: AnimatedIcons.menu_close,
-              //       color: Color(0xFF1BB5FD),
-              //       size: 25,
-              //     ),
-              //   ),
-              // ),
-            changepassword(context, "تغيير كلمة السر"),
-            update(context, "تعديل المعلومات الشخصية"),
-            buildAccountOptionRow(context, "معلومات الاتصال"),
-            buildAccountOptionRow(context, "طلبات الحجوزات"),
-            buildAccountOptionRow(context, "اضافة اعمال جديدة "),
-         ],),),
-        ),
         // backgroundColor: Colors.lightBlueAccent,
         body: Form(
-         // child: SingleChildScrollView(
+          child: SingleChildScrollView(
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Stack(
-              children:[Container(
-                height: 160,
-                decoration: BoxDecoration(
-                  color: Camone,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(80),
-                    bottomRight: Radius.circular(80),
-                  ),
-                ),
-              ),
-                Stack(
-                children:[
-                Container(
-                  margin: EdgeInsets.only(top: 20,right: 20),
-                  child: InkWell(
-                    child: RadialProgress(
-                      width: 4,
-                      progressColor: Colors.white,
-                      goalCompleted: 0.7,
-                      child:CircleAvatar(
-                        backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+image),
-                        radius: 30.0,
-                      ),
-                    ),
-                  ),),
                   Container(
-                    height: 500,
-                    margin: EdgeInsets.only(top:300),
+                    height: 700,
+                    margin: EdgeInsets.only(top:0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       // borderRadius: BorderRadius.only(
@@ -125,7 +109,6 @@ class  _PROFILE extends State< PROFILE> {
                       //   topRight: Radius.circular(50),
                       // ),
                     ),
-
                    child:FutureBuilder(
                   future: getWorker(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -133,14 +116,13 @@ class  _PROFILE extends State< PROFILE> {
                       return ListView.builder(
                         itemCount: 1,
                         itemBuilder: (context, index) {
-                          name=snapshot.data[0]['name'];
+                          name=snapshot.data[index]['name'];
                           phone=snapshot.data[index]['phone'];
                           image=snapshot.data[index]['image'];
                           Work=snapshot.data[index]['Work'];
-                          Experiance=snapshot.data[index]['Experiance'];
                           Information=snapshot.data[index]['Information'];
+                          Experiance=snapshot.data[index]['Experiance'];
                           token=snapshot.data[index]['token'];
-                          print(snapshot.data[index]['name']);
                           return Profile_worker(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         },
                       );
@@ -149,7 +131,7 @@ class  _PROFILE extends State< PROFILE> {
                   },
                 ),
               ),
-       ], ),],),],),),),);
+       ],),),),),);
 
 
 
@@ -215,8 +197,10 @@ class  _PROFILE extends State< PROFILE> {
               );
             });
       },
-      child: Padding(
+      child: Container(
+        color: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -245,8 +229,9 @@ class  _PROFILE extends State< PROFILE> {
       onTap: () {Navigator.push(context,
         MaterialPageRoute(builder: (context) => SettingsUI(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
       );},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -269,13 +254,43 @@ class  _PROFILE extends State< PROFILE> {
     );
   }
 
+  GestureDetector Albume(BuildContext context, String title) {
+
+    return GestureDetector(
+      onTap: () {Navigator.push(context,
+        MaterialPageRoute(builder: (context) => Get_Images(name:widget.name,phone:phone),));},
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[600],
+                fontFamily: 'Changa',
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   GestureDetector changepassword(BuildContext context, String title) {
     return GestureDetector(
       onTap: () {Navigator.push(context,
         MaterialPageRoute(builder: (context) => ChangePass(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
       );},
 
-      child: Padding(
+      child: Container(
+        color: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -340,7 +355,53 @@ class _Profile_woeker extends State<Profile_worker> {
   Widget build(BuildContext context) {
     return Column(
       children:<Widget>[
-
+       Stack(
+           children:[
+             Container(
+               height: 160,
+               decoration: BoxDecoration(
+                 color:  Color(0xFFECCB45),
+                 borderRadius: BorderRadius.only(
+                   bottomLeft: Radius.circular(80),
+                   bottomRight: Radius.circular(80),
+                 ),
+               ),
+             ),
+             Container(
+               margin: EdgeInsets.only(top: 2,left: 250,right: 20),
+               child: InkWell(
+                 child: RadialProgress(
+                   width: 4,
+                   progressColor: Colors.white,
+                   goalCompleted: 0.7,
+                   child:CircleAvatar(
+                     backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),
+                     radius: 24.0,
+                   ),
+                 ),
+               ),),
+             Container(
+               margin: EdgeInsets.only(top: 75,right: 30),
+               child: Text(widget.name,
+               style: TextStyle(
+                 color: Colors.white,
+                 fontSize: 16.0,
+                 fontFamily: 'Changa',
+                 fontWeight: FontWeight.bold,
+               ),),
+             ),
+             // Container(
+             //   margin: EdgeInsets.only(top: 1,right: 90),
+             //   child: Text('نجار',
+             //     style: TextStyle(
+             //       color: Colors.white,
+             //       fontSize: 16.0,
+             //       fontFamily: 'Changa',
+             //       fontWeight: FontWeight.bold,
+             //     ),),
+             // ),
+           ]
+       ),
         // Container(
         //   margin: EdgeInsets.only(top: 10,right: 20),
         //   child: InkWell(
@@ -384,7 +445,9 @@ class _Profile_woeker extends State<Profile_worker> {
             },
           ),
         ),
-
+            Container(
+              height: 500,
+            ),
       ],
     ),),], );
   }
@@ -442,17 +505,15 @@ class _Profile_woeker extends State<Profile_worker> {
 
   myAlbum(String asset1, String asset2, String asset3, String asset4, String more){
     return Container(
-      margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
-      padding:EdgeInsets.fromLTRB(15, 0, 15, 0),
-      height:250,
-      width:400,
-      child: Card(
-        elevation: 5,
-        margin: EdgeInsets.symmetric(vertical: 0),
-        color: Colors.yellow,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),),
-        shadowColor: Colors.white,
+       margin: EdgeInsets.fromLTRB(30, 20, 30, 20),
+      // padding:EdgeInsets.fromLTRB(5, 0, 5, 0),
+      height:290,
+      width:370,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(40.0),
+          border: Border.all(color: Colors.grey, width: 1.2)
+      ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -530,10 +591,18 @@ class _Profile_woeker extends State<Profile_worker> {
                     ),),
                 ],),
             ),
-            // Container(
-            //  child:Text("ألبومي "),
-            // ),
-          ],),),);
+            Container(
+              margin: EdgeInsets.only(left: 10),
+             padding: EdgeInsets.only(left: 230),
+             child:Text("ألبومي ",
+               style: TextStyle(
+                 color: Colors.black87,
+                 fontSize: 16.0,
+                 fontFamily: 'Changa',
+                 fontWeight: FontWeight.bold,
+               ),),
+            ),
+          ],),);
   }
 
   myAlbum0(){

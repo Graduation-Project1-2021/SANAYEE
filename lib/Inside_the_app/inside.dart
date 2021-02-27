@@ -52,6 +52,7 @@ class InsideAPP extends StatelessWidget {
                 height: size.height * 0.2 - 27,
                 decoration: BoxDecoration(
                   color: Color(0xFFECCB45),
+                  // color: Color(0xFFF3D657),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(36),
                     bottomRight: Radius.circular(36),

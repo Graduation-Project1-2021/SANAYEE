@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -115,13 +116,11 @@ class  _Editpasswordpage extends State< Editpassword> {
       children: [
 
       Container(
-      height: 200,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/icons/ho.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      height: 210,
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          decoration: BoxDecoration(
+            color:  Color(0xFFECCB45),
+          ),
     ),
         Container(
           margin: EdgeInsets.fromLTRB(100, 40, 1, 100),
@@ -131,7 +130,7 @@ class  _Editpasswordpage extends State< Editpassword> {
               Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          SettingPage(name:widget.name,phone:widget.phone,image:widget.image,Work:widget.Work,Experiance:widget.Experiance,Information:widget.Information,token:widget.token)));
+                         PROFILE(name:widget.name)));
 
             },
             icon: Icon(
@@ -146,13 +145,24 @@ class  _Editpasswordpage extends State< Editpassword> {
           margin: EdgeInsets.fromLTRB(80, 130, 10, 1),
           child: Text(
             'تغيير كلمة السر',
-            style:TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
+            style:TextStyle(fontSize:17, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
           ),
         ),
-    ],),),
-        Container(margin: EdgeInsets.only(top: 80),),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          height: 627.5,
+          margin: EdgeInsets.only(top:170),
+          decoration: BoxDecoration(
+            color: Color(0xFF1C1C1C),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(50),
+            ),
+          ),
+          child:Column(
+            children:[
+       Container(
+          margin: EdgeInsets.only(top: 140,left: 20,right: 20),
+          height: 60,
           child:TextFormField(
             // textDirection: TextDirection.rtl,
             controller: password,
@@ -170,13 +180,16 @@ class  _Editpasswordpage extends State< Editpassword> {
             },
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.grey[600],),
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(const Radius.circular(30))
+              filled: true,
+              fillColor: Colors.grey.withOpacity(0.1),
+              enabledBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
               ),
-              focusedBorder:OutlineInputBorder(
-                borderSide: const BorderSide(color: Camone),
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+              focusedBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelText: "كلمة السر القديمة",
@@ -211,9 +224,10 @@ class  _Editpasswordpage extends State< Editpassword> {
             ),),
         ),
 
-         Container(margin: EdgeInsets.symmetric(vertical: 10)),
+         Container(margin: EdgeInsets.symmetric(vertical: 5)),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
+          height: 60,
           child:TextFormField(
             validator: (value) {
               pass=value;
@@ -235,13 +249,16 @@ class  _Editpasswordpage extends State< Editpassword> {
             obscureText: !_showPassword2,
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.grey[600],),
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(const Radius.circular(30))
+              filled: true,
+              fillColor: Colors.grey.withOpacity(0.1),
+              enabledBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
               ),
-              focusedBorder:OutlineInputBorder(
-                borderSide: const BorderSide(color: Camone),
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+              focusedBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelText: "كلمة السر الجديدة",
@@ -276,9 +293,10 @@ class  _Editpasswordpage extends State< Editpassword> {
 
             ),),
         ),
-        Container(margin: EdgeInsets.symmetric(vertical: 10.0),),
+        Container(margin: EdgeInsets.symmetric(vertical: 5.0),),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 20),
+          height: 60,
           child:TextFormField(
             obscureText: !_showPassword3,
             validator: (value) {
@@ -302,13 +320,16 @@ class  _Editpasswordpage extends State< Editpassword> {
             controller: confirmpass,
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.grey[600],),
             decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: const BorderRadius.all(const Radius.circular(30))
+              filled: true,
+              fillColor: Colors.grey.withOpacity(0.1),
+              enabledBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
               ),
-              focusedBorder:OutlineInputBorder(
-                borderSide: const BorderSide(color: Camone),
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+              focusedBorder: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               labelText: "تأكيد كلمة السر",
@@ -415,8 +436,8 @@ class  _Editpasswordpage extends State< Editpassword> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 100),
-              width: 200,
+              margin: EdgeInsets.symmetric(horizontal: 130),
+              width: 150,
               child:RaisedButton(
                 onPressed: () {
                   setState(() {});
@@ -426,11 +447,11 @@ class  _Editpasswordpage extends State< Editpassword> {
                   if (formKey.currentState.validate()) {print('validate');}
                   else{print('not validate');}
                 },
-                color: Camone,
+                  color:Color(0xFFECCB45),
                 padding: EdgeInsets.symmetric(vertical: 10),
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                    borderRadius: BorderRadius.circular(25)),
                 child: Text(
                   "حفظ التعديل",
                   style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.white,),
@@ -454,9 +475,9 @@ class  _Editpasswordpage extends State< Editpassword> {
           ],
         )
 
-      ],
-    ),
-    ),),),);
+       ],), ), ],
+    ),),
+      ],),),),),);
   }
   Widget buildTextField(
       String labelText, String placeholder, bool isPasswordTextField) {

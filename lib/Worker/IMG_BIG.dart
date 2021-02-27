@@ -29,7 +29,7 @@ class  _Get_Images extends State<IMG> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.black,
+        color:Colors.black,
         child: Column(
           children: <Widget>[
             Container(
