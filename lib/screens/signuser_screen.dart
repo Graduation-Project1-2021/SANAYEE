@@ -17,6 +17,10 @@ import '../LoginScreen.dart';
 String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
+
+String country_id;
+String hint="اختيار المنطقة";
+List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا",""];
 FocusNode myFocusNode = new FocusNode();
 
 class SignuserScreen extends StatefulWidget {
@@ -28,8 +32,11 @@ class SignuserScreen extends StatefulWidget {
 class _Body extends State<SignuserScreen> {
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController namefirstController = TextEditingController();
+  TextEditingController namelastController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController passController2 = TextEditingController();
+  TextEditingController Coutry = TextEditingController();
   TextEditingController phone_Num = TextEditingController();
   final formKey = new GlobalKey<FormState>();
 
@@ -46,6 +53,8 @@ class _Body extends State<SignuserScreen> {
   @override
   bool selected=true ;
   bool Name_Null=true;
+  bool Namefirst_Null=true;
+  bool Namelast_Null=true;
   bool Pass_Null=true;
   bool Pass_Mismatch=true;
   bool Phone=true;
@@ -55,6 +64,7 @@ class _Body extends State<SignuserScreen> {
   bool _showPassword1 = false;
   bool _showPassword2 = false;
   bool invalid_OTP=false;
+  bool Country=true;
   bool card1=true;
   bool card2=false;
   var mytoken ;
@@ -68,6 +78,9 @@ class _Body extends State<SignuserScreen> {
         mytoken = token ;
       });
       print(mytoken);
+    });
+    setState(() {
+      Country=true;
     });
     super.initState();
   }
@@ -134,7 +147,7 @@ class _Body extends State<SignuserScreen> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height:MediaQuery.of(context).size.height * 0.3,
+                    height:MediaQuery.of(context).size.height * 0.28,
                     child: CustomPaint(
                       painter: CurvePainter(false),
                       child: Column(
@@ -150,7 +163,7 @@ class _Body extends State<SignuserScreen> {
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.ease,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.72,
                       child: Container(
                         color: Colors.transparent,
                         padding: EdgeInsets.only(top: 5),
@@ -163,8 +176,130 @@ class _Body extends State<SignuserScreen> {
                               children: <Widget>[
                                 card1?Container(
                                   child: Column(
-                                    children:[Container(
-                                      margin: EdgeInsets.fromLTRB(0,70,0,0),
+                                    children:[
+                                      Container(
+                                       child:Row(
+                                         children: [
+                                           Container(
+                                             margin: EdgeInsets.fromLTRB(0,70,40,0),
+                                             width: size.width * 0.33,
+                                             height: 60,
+                                             child: TextFormField(
+                                               controller: namefirstController,
+                                               validator: (value) {
+                                                 if (value.isEmpty) {
+                                                   Namefirst_Null=false;
+                                                   return null;
+                                                 } else {
+
+                                                   Namefirst_Null=true;
+                                                   return null;
+                                                 }
+                                               },
+                                               cursorColor: kPrimaryColor,
+                                               textAlign: TextAlign.right,
+                                               style: TextStyle(
+                                                 fontSize: 16.0,
+                                                 fontWeight: FontWeight.bold,
+                                                 fontFamily: 'Changa',
+                                               ),
+                                               decoration: InputDecoration(
+                                                 filled: true,
+                                                 fillColor: Colors.grey.withOpacity(0.1),
+                                                 enabledBorder: new OutlineInputBorder(
+                                                   borderRadius: new BorderRadius.circular(30.0),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                 ),
+                                                 focusedBorder: new OutlineInputBorder(
+                                                   borderRadius: new BorderRadius.circular(30.0),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                 ),
+                                                 hintText: 'الاسم الأول ',
+                                                 hintStyle: TextStyle(
+                                                   fontSize: 16.0,
+                                                   fontFamily: 'Changa',
+                                                   color: Color(0xFF666360),
+                                                 ),
+                                                 floatingLabelBehavior: FloatingLabelBehavior.always,
+                                               ),
+                                             ),
+                                           ),
+                                           Container(
+                                             margin: EdgeInsets.fromLTRB(0,70,10,0),
+                                             //padding: EdgeInsets.fromLTRB(0,0,30,0),
+                                             width: size.width * 0.44,
+                                             height: 60,
+                                             child: TextFormField(
+                                               controller: namelastController,
+                                               validator: (value) {
+                                                 if (value.isEmpty) {
+                                                   Namelast_Null=false;
+                                                   return null;
+                                                 } else {
+
+                                                   Namelast_Null=true;
+                                                   return null;
+                                                 }
+                                               },
+                                               cursorColor: kPrimaryColor,
+                                               textAlign: TextAlign.right,
+                                               style: TextStyle(
+                                                 fontSize: 16.0,
+                                                 fontWeight: FontWeight.bold,
+                                                 fontFamily: 'Changa',
+                                               ),
+                                               decoration: InputDecoration(
+                                                 filled: true,
+                                                 fillColor: Colors.grey.withOpacity(0.1),
+                                                 enabledBorder: new OutlineInputBorder(
+                                                   borderRadius: new BorderRadius.circular(30.0),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                 ),
+                                                 focusedBorder: new OutlineInputBorder(
+                                                   borderRadius: new BorderRadius.circular(30.0),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                 ),
+                                                 //contentPadding: EdgeInsets.only(),
+                                                 hintText: ' اسم العائلة ',
+                                                 hintStyle: TextStyle(
+                                                   fontSize: 16.0,
+                                                   fontFamily: 'Changa',
+                                                   color: Color(0xFF666360),
+                                                 ),
+                                                 floatingLabelBehavior: FloatingLabelBehavior.always,
+                                               ),
+                                             ),
+                                           ),
+                                         ],
+                                       ),
+                                      ),
+                                      Namelast_Null || Namefirst_Null ? Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(105, 0, 0, 0),
+                                        child: Text('يجب إدخال الاسمان الأول والأخير !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                      margin: EdgeInsets.fromLTRB(0,5,0,0),
                                       width: size.width * 0.8,
                                       height: 60,
                                       child: TextFormField(
@@ -200,7 +335,7 @@ class _Body extends State<SignuserScreen> {
                                             borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
 
                                           ),
-                                          hintText: 'الاسم ',
+                                          hintText: 'اسم المستخدم ',
                                           hintStyle: TextStyle(
                                             fontSize: 16.0,
                                             fontFamily: 'Changa',
@@ -292,7 +427,7 @@ class _Body extends State<SignuserScreen> {
 
                                         ),
                                       ),
-                                      Pass_Null ? Container(
+                                      Pass_Null && Pass_S ?  Container(
                                         margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('',textAlign:TextAlign.end,
                                           style: TextStyle(
@@ -301,10 +436,24 @@ class _Body extends State<SignuserScreen> {
                                             fontFamily: 'Changa',
                                             color: Colors.red,
 
-                                          ),),
+                                          ),),):Container(),
+                                      Pass_Null ? Container(
                                       ): Container(
                                         margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Pass_S ? Container(
+
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
+                                        child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
                                           style: TextStyle(
                                             fontSize: 12.0,
                                             fontWeight: FontWeight.w700,
@@ -370,9 +519,9 @@ class _Body extends State<SignuserScreen> {
                                           ),
                                         ),
                                       ),
-                                      Container(height: 10,),
+                                      // Container(height: 10,),
                                       Pass_Mismatch ? Container(
-                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
+                                        margin: EdgeInsets.fromLTRB(170, 0,0, 0),
                                         child: Text('',textAlign:TextAlign.end,
                                           style: TextStyle(
                                             fontSize: 12.0,
@@ -392,28 +541,8 @@ class _Body extends State<SignuserScreen> {
 
                                           ),),
                                       ),
-                                      Pass_S ? Container(
-                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
-                                        child: Text('',textAlign:TextAlign.end,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Changa',
-                                            color: Colors.red,
-
-                                          ),),
-                                      ): Container(
-                                        margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
-                                        child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Changa',
-                                            color: Colors.red,
-
-                                          ),),
-                                      ),
                                       Container(
+                                        margin: EdgeInsets.only(top: 5),
                                         child:AlreadyHaveAnAccountCheck(
                                           login: false,
                                           press: () {
@@ -428,7 +557,7 @@ class _Body extends State<SignuserScreen> {
                                           },
                                         ),
                                       ),
-                                     Container(height: 10,),
+                                     //Container(height: 10,),
                                     ],
                                   ),):Container(
                                   child: Column(
@@ -451,8 +580,80 @@ class _Body extends State<SignuserScreen> {
                                             color:Color(0xFFECCB45),
                                             size: 20.0,
                                           ),),),
+                                      Directionality(textDirection:TextDirection.rtl, child:
                                       Container(
                                           margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                          padding: EdgeInsets.fromLTRB(0,15,40,0),
+                                          width: size.width * 0.8,
+                                          height: 60,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(40.0),
+                                            // border: Border.all(color: Colors.grey, width: 1.2)
+                                          ),
+                                          child:DropdownButton(
+                                            itemHeight: 50,
+                                            icon: Icon(Icons.location_on),
+                                            iconSize:25.0,
+                                            value: country_id,
+                                            dropdownColor: Colors.white,
+                                            onChanged: (value){
+                                                 setState(() {
+                                                   country_id=value;
+                                                   value=value;
+                                                   print(country_id);
+                                                   // Country=true;
+                                                 });
+                                            },
+                                            hint:Text(" اختيار المنطقة ",
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontFamily: 'Changa',
+                                                color: Color(0xFF666360),
+                                                fontWeight: FontWeight.bold,
+                                              ),),
+                                            underline: Container(color: Colors.transparent),
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Changa',
+                                              color: Color(0xFF666360),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            items:country.map((value){
+                                              return DropdownMenuItem(
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 260.0,
+                                                  child: Text(value, textAlign: TextAlign.right),
+                                                ),
+                                                value: value,
+                                              );
+                                            }).toList(),
+
+                                          )
+                                      ),),
+                                      Country ? Container(
+                                          child: Text('',textAlign:TextAlign.end,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: 'Changa',
+                                              color: Colors.red,
+
+                                            ),)
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.fromLTRB(0,0,0,0),
                                           padding: EdgeInsets.symmetric(),
                                           width: size.width * 0.8,
                                           height: 60,
@@ -536,7 +737,7 @@ class _Body extends State<SignuserScreen> {
                                           ),),
                                       ),
                                       invalid_OTP?Container(
-                                        margin: EdgeInsets.only(top: 20),
+                                        margin: EdgeInsets.only(top: 10),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(29),
                                           child: FlatButton(
@@ -563,7 +764,7 @@ class _Body extends State<SignuserScreen> {
                                         ),
 
                                       ):Container(
-                                        margin: EdgeInsets.only(top: 20),
+                                        margin: EdgeInsets.only(top: 10),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(29),
                                           child: FlatButton(
@@ -608,9 +809,9 @@ class _Body extends State<SignuserScreen> {
                                       // ),
                                       codeSent?Center(
                                         child:Container(
-                                          margin: EdgeInsets.only(top:0,bottom: 80,left: 55,right: 55),
+                                          margin: EdgeInsets.only(top:0,bottom: 35,left: 55,right: 55),
                                           // padding: EdgeInsets.only(top:0.05),
-                                          height: 90,
+                                          height: 60,
                                           // color:Colors.grey.withOpacity(0.1),
                                           child: PinEntryTextField(
                                             fields: 6,
@@ -626,7 +827,7 @@ class _Body extends State<SignuserScreen> {
                                               );
                                             },
                                           ), //
-                                        ),):Container(height: 170,),
+                                        ),):Container(height: 145,),
                                     ],
                                   ),
                                 ),
@@ -641,15 +842,29 @@ class _Body extends State<SignuserScreen> {
                                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
                                     color: Color(0xFFECCB45),
                                     onPressed: () async {
+                                      if(!card1) {
+                                        setState(() {
+                                          if (country_id == null) {
+                                            print("ggg");
+                                            Country = false;
+                                          }
+                                          else {
+                                            print("fff");
+                                            Country = true;
+                                          }
+                                        });
+                                      }
                                       if (formKey.currentState.validate()) {print('validate');}
                                       else{print('not validate');}
                                       if(card1){
-                                        if(Name_Null && Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
+                                        if(Name_Null && Namefirst_Null && Namelast_Null& Pass_Null && Pass_Mismatch &&  Pass_S && !nameController.text.isEmpty && !namefirstController.text.isEmpty && !namelastController.text.isEmpty && !passController.text.isEmpty && !passController2.text.isEmpty){
                                           card1=false;
                                           print(!passController.text.isEmpty);
                                         }}
                                       else{
-                                        if(Phone && codeSent){
+
+                                        if(Phone && codeSent && Country){
+                                          print(country_id);
                                           try {
                                             await FirebaseAuth.instance
                                                 .signInWithCredential(PhoneAuthProvider.credential(
@@ -885,14 +1100,17 @@ class _Body extends State<SignuserScreen> {
       var url = 'https://'+IP4+'/testlocalhost/signup.php';
       var ressponse = await http.post(url, body: {
         "name": nameController.text,
+        "namefirst": namefirstController.text,
+        "namelast": namelastController.text,
         "pass": passController.text,
         "phone": phone_Num.text,
         "imagename": "signup.jpg",
         "image64": '',
         "mytoken":mytoken,
+        "country": country_id,
       });
-      // String massage= json.decode(ressponse.body);
-      // print(massage);
+      String massage= json.decode(ressponse.body);
+      print(massage);
     }
     else{ String base64;
     String imagename;
@@ -902,8 +1120,11 @@ class _Body extends State<SignuserScreen> {
     var url = 'https://'+IP4+'/testlocalhost/signup.php';
     var ressponse = await http.post(url, body: {
       "name": nameController.text,
+      "namefirst": namefirstController.text,
+      "namelast": namelastController.text,
       "pass": passController.text,
       "phone": phone_Num.text,
+      "country": country_id,
       "imagename": imagename,
       "image64": base64,
       "mytoken":mytoken,

@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/signworker_screen.dart';
@@ -20,17 +22,32 @@ String _verificationCode;
 String smscode ;
 FocusNode myFocusNode = new FocusNode();
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen1 extends StatefulWidget {
   @override
 
   _Body createState() => _Body();
 }
 
-class _Body extends State<WelcomeScreen> {
+class _Body extends State<WelcomeScreen1> {
 
   @override
   final formKey = new GlobalKey<FormState>();
-  bool login=false;
+  bool login=true;
+  int _currentIndex=0;
+
+  List cardList=[
+    Item1(),
+    Item2(),
+  ];
+
+  List<T> map<T>(List list, Function handler) {
+    List<T> result = [];
+    for (var i = 0; i < list.length; i++) {
+      result.add(handler(i, list[i]));
+    }
+    return result;
+  }
+  CarouselSlider cslider;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
@@ -60,39 +77,40 @@ class _Body extends State<WelcomeScreen> {
                     curve: Curves.ease,
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: CustomPaint(
-                      painter: CurvePainter(false),
+                      painter: CurvePainter(login),
                       child: Container(
-                        padding: EdgeInsets.only(bottom:200),
+                        //padding: EdgeInsets.only(bottom:50),
                         child: Center(
                           child: SingleChildScrollView(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 0),
                               child:Column(
                                 children: [
-                                  // Container(
-                                  //   margin: EdgeInsets.only(top:45,right: 240),
-                                  //   padding: EdgeInsets.only(left: 5,right:5),
-                                  //   decoration: BoxDecoration(
-                                  //     border: Border.all(
-                                  //       color: Color(0xFF1C1C1C),
-                                  //     ),
-                                  //   ),
-                                  //   child:GestureDetector(
-                                  //       onTap: (){
-                                  //         Navigator.of(context).push(MaterialPageRoute(
-                                  //             builder: (BuildContext context) => Loginscreen()));
-                                  //       },
-                                  //       child:Text('تسجيل الدخول',
-                                  //         style: TextStyle(
-                                  //           fontSize: 14,
-                                  //           fontWeight: FontWeight.bold,
-                                  //           color: Color(0xFF1C1C1C),
-                                  //           // decoration: TextDecoration.underline,
-                                  //           fontFamily: 'Changa',),)
-                                  //
-                                  //   ),),
                                   Container(
-                                    margin: EdgeInsets.only(top: 50,bottom: 10),
+                                    margin: EdgeInsets.only(top:60,right: 170),
+                                    padding: EdgeInsets.only(left: 5,right:5),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Color(0xFF1C1C1C),
+                                      ),
+                                    ),
+                                    child:GestureDetector(
+                                        onTap: (){
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (BuildContext context) => Loginscreen()));
+                                        },
+                                        child:Text('تسجيل الدخول كمقدم خدمة ',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF1C1C1C),
+                                            // decoration: TextDecoration.underline,
+                                            fontFamily: 'Changa',),)
+
+                                    ),),
+
+                                  Container(
+                                    margin: EdgeInsets.only(top: 60,),
                                     height: 100,
                                     decoration: BoxDecoration(
                                       // color:Color(0xFF1C1C1C),
@@ -104,7 +122,7 @@ class _Body extends State<WelcomeScreen> {
                                   Container(
                                       child:Text('صنايعي ',
                                         style: TextStyle(
-                                          fontSize: 40,
+                                          fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: Color(0xFF1C1C1C),
                                           fontFamily: 'Changa',
@@ -139,20 +157,21 @@ class _Body extends State<WelcomeScreen> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: login ? MediaQuery.of(context).size.height * 0.4 : MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     child: Container(
                         color: Colors.transparent,
-                        padding: EdgeInsets.only(top: 55),
+                        padding: EdgeInsets.only(top: 0),
                         child: Center(
                           child: SingleChildScrollView(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                               child:Column(
                                 children: [
+
                                   Stack(
                                     children:[
                                       Container(
-                                          margin: EdgeInsets.only(top:0),
+                                          margin: EdgeInsets.only(top:60),
                                           child:Text(' تطبيق صنايعي هو تطبيق يقدم العديد من الخدمات المنزلية كنجار وكهربائي ... سجل معنا الآن لتتلقى جميع خدمات صنايعي ',
                                             style: TextStyle(
                                               fontSize: 16,
@@ -162,7 +181,7 @@ class _Body extends State<WelcomeScreen> {
                                             ),)
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(top:60,right: 145),
+                                        margin: EdgeInsets.only(top:120,right: 145),
                                         child:GestureDetector(
                                             onTap: (){
                                               Navigator.of(context).push(MaterialPageRoute(
@@ -176,7 +195,25 @@ class _Body extends State<WelcomeScreen> {
                                                 decoration: TextDecoration.underline,
                                                 fontFamily: 'Changa',),)
 
-                                        ),),],),
+                                        ),),
+                                      Container(
+                                        margin: EdgeInsets.only(top:220,right: 0),
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (BuildContext context) => Loginscreen()));
+                                          },
+                                          child:Text('هل لديك حساب ؟ تسجيل الدخول',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFFF3D657),
+                                              // decoration: TextDecoration.underline,
+                                              fontFamily: 'Changa',),)
+
+                                      ),),
+                                    ],),
+
 
                                   // Container(
                                   //   margin: EdgeInsets.only(top:45,right: 120),
@@ -244,4 +281,61 @@ class CurvePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+class Item1 extends StatelessWidget {
+  const Item1({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // margin: EdgeInsets.only(top:200),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.3, 1],
+            colors: [Color(0xffff4000),Color(0xffffcc66),]
+        ),
+      ),
+    );
+  }
+}
+
+class Item2 extends StatelessWidget {
+  const Item2({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.3, 1],
+            colors: [Color(0xff5f2c82), Color(0xff49a09d)]
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+              "Data",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold
+              )
+          ),
+          Text(
+              "Data",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w600
+              )
+          ),
+        ],
+      ),
+    );
+  }
 }

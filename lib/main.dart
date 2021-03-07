@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterphone/screens/home2.dart';
+import 'package:flutterphone/screens/welcome.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:flutterphone/constants.dart';
 import 'dart:io';
 import 'package:flutterphone/screens/slider.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'Inside_the_app/user_order.dart';
+import 'Inside_the_app/zxc.dart';
+import 'Worker/cv.dart';
+import 'Worker/new_orders.dart';
+import 'Worker/orders.dart';
+import 'Worker/setting_worker.dart';
+import 'Worker/worker_order.dart';
+
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -28,13 +39,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
       title: 'Flutter Auth',
       theme: ThemeData(
-        primaryColor: kPrimaryColor,
-        scaffoldBackgroundColor: Colors.white,
+       primaryColor: MY_YELLOW,
+       visualDensity: VisualDensity.adaptivePlatformDensity,
+       // scaffoldBackgroundColor: Colors.white,
       ),
-        // home: LoginScreen(),
-      home: WelcomeScreen(),
+          // home: CalendarPage(),
+         home: WelcomeScreen1(),
     );
   }
 }

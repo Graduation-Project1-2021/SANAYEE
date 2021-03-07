@@ -11,6 +11,8 @@ import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
+
+import 'login_screen.dart';
 String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
@@ -25,6 +27,8 @@ class SignWorker extends StatefulWidget {
 class _Body extends State<SignWorker> {
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController namefirstController = TextEditingController();
+  TextEditingController namelastController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController passController2 = TextEditingController();
   TextEditingController phone_Num = TextEditingController();
@@ -48,6 +52,8 @@ class _Body extends State<SignWorker> {
   @override
   bool selected=true ;
   bool Name_Null=true;
+  bool Namefirst_Null=true;
+  bool Namelast_Null=true;
   bool Pass_Null=true;
   bool Pass_Mismatch=true;
   bool Phone=true;
@@ -150,7 +156,7 @@ class _Body extends State<SignWorker> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height:MediaQuery.of(context).size.height * 0.3,
+                    height:MediaQuery.of(context).size.height * 0.28,
                     child: CustomPaint(
                       painter: CurvePainter(false),
                       child: Column(
@@ -166,7 +172,7 @@ class _Body extends State<SignWorker> {
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 500),
                       curve: Curves.ease,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.72,
                       child: Container(
                         color: Colors.transparent,
                         padding: EdgeInsets.only(top: 5),
@@ -179,8 +185,130 @@ class _Body extends State<SignWorker> {
                               children: <Widget>[
                                 card1?Container(
                                   child: Column(
-                                    children:[Container(
-                                      margin: EdgeInsets.fromLTRB(0,70,0,0),
+                                    children:[
+                                      Container(
+                                        child:Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(0,70,40,0),
+                                              width: size.width * 0.33,
+                                              height: 60,
+                                              child: TextFormField(
+                                                controller: namefirstController,
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    Namefirst_Null=false;
+                                                    return null;
+                                                  } else {
+
+                                                    Namefirst_Null=true;
+                                                    return null;
+                                                  }
+                                                },
+                                                cursorColor: kPrimaryColor,
+                                                textAlign: TextAlign.right,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Changa',
+                                                ),
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.grey.withOpacity(0.1),
+                                                  enabledBorder: new OutlineInputBorder(
+                                                    borderRadius: new BorderRadius.circular(30.0),
+                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                  ),
+                                                  focusedBorder: new OutlineInputBorder(
+                                                    borderRadius: new BorderRadius.circular(30.0),
+                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                  ),
+                                                  hintText: 'الاسم الأول ',
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontFamily: 'Changa',
+                                                    color: Color(0xFF666360),
+                                                  ),
+                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(0,70,10,0),
+                                              //padding: EdgeInsets.fromLTRB(0,0,30,0),
+                                              width: size.width * 0.44,
+                                              height: 60,
+                                              child: TextFormField(
+                                                controller: namelastController,
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    Namelast_Null=false;
+                                                    return null;
+                                                  } else {
+
+                                                    Namelast_Null=true;
+                                                    return null;
+                                                  }
+                                                },
+                                                cursorColor: kPrimaryColor,
+                                                textAlign: TextAlign.right,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Changa',
+                                                ),
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Colors.grey.withOpacity(0.1),
+                                                  enabledBorder: new OutlineInputBorder(
+                                                    borderRadius: new BorderRadius.circular(30.0),
+                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                  ),
+                                                  focusedBorder: new OutlineInputBorder(
+                                                    borderRadius: new BorderRadius.circular(30.0),
+                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                                  ),
+                                                  //contentPadding: EdgeInsets.only(),
+                                                  hintText: ' اسم العائلة ',
+                                                  hintStyle: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontFamily: 'Changa',
+                                                    color: Color(0xFF666360),
+                                                  ),
+                                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Namelast_Null || Namefirst_Null ? Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(105, 0, 0, 0),
+                                        child: Text('يجب إدخال الاسمان الأول والأخير !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
+                                      Container(
+                                      margin: EdgeInsets.fromLTRB(0,0,0,0),
                                       width: size.width * 0.8,
                                       height: 60,
                                       child: TextFormField(
@@ -246,7 +374,7 @@ class _Body extends State<SignWorker> {
                                           ),),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.fromLTRB(0,5,0,0),
+                                        margin: EdgeInsets.fromLTRB(0,0,0,0),
                                         padding: EdgeInsets.symmetric(horizontal:0,),
                                         width: size.width * 0.8,
                                         height: 60,
@@ -308,7 +436,7 @@ class _Body extends State<SignWorker> {
 
                                         ),
                                       ),
-                                      Pass_Null ? Container(
+                                      Pass_Null && Pass_S ?  Container(
                                         margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('',textAlign:TextAlign.end,
                                           style: TextStyle(
@@ -317,8 +445,8 @@ class _Body extends State<SignWorker> {
                                             fontFamily: 'Changa',
                                             color: Colors.red,
 
-                                          ),),
-                                      ): Container(
+                                          ),),):Container(),
+                                      Pass_Null ? Container(): Container(
                                         margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
                                           style: TextStyle(
@@ -329,8 +457,19 @@ class _Body extends State<SignWorker> {
 
                                           ),),
                                       ),
+                                      Pass_S ? Container(): Container(
+                                        margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
+                                        child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
                                       Container(
-                                        margin: EdgeInsets.fromLTRB(0,5,0,0),
+                                        margin: EdgeInsets.fromLTRB(0,0,0,0),
                                         width: size.width * 0.8,
                                         height: 60,
                                         child: TextFormField(
@@ -386,9 +525,9 @@ class _Body extends State<SignWorker> {
                                           ),
                                         ),
                                       ),
-                                      Container(height: 10,),
+                                      //Container(height: 10,),
                                       Pass_Mismatch ? Container(
-                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('',textAlign:TextAlign.end,
                                           style: TextStyle(
                                             fontSize: 12.0,
@@ -408,28 +547,23 @@ class _Body extends State<SignWorker> {
 
                                           ),),
                                       ),
-                                      Pass_S ? Container(
-                                        margin: EdgeInsets.fromLTRB(150, 0,0, 0),
-                                        child: Text('',textAlign:TextAlign.end,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Changa',
-                                            color: Colors.red,
-
-                                          ),),
-                                      ): Container(
-                                        margin: EdgeInsets.fromLTRB(70, 0, 0, 0),
-                                        child: Text(' * يجب أن تحتوي كلمة السر 8 أحرف على الأقل',textAlign:TextAlign.end,
-                                          style: TextStyle(
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Changa',
-                                            color: Colors.red,
-
-                                          ),),
+                                     // Container(height: 35,),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 5),
+                                        child:AlreadyHaveAnAccountCheck(
+                                          login: false,
+                                          press: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return Loginscreen();
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                      Container(height: 35,),
 
                                     ],
                                   ),):Container(),
@@ -634,7 +768,9 @@ class _Body extends State<SignWorker> {
                                             color: Colors.red,
                                           ),),
                                       ),
+                                      Container(height: 38,),
                                     ],
+
                                   ),
                                 ):Container(),
                                 card3?Container(
@@ -828,7 +964,7 @@ class _Body extends State<SignWorker> {
                                               );
                                             },
                                           ), //
-                                        ),):Container(height: 165,),
+                                        ),):Container(height: 145,),
 
                                     ],
                                   ),
@@ -836,7 +972,7 @@ class _Body extends State<SignWorker> {
 
                                 Container(
                                   width: 400,
-                                  margin: EdgeInsets.only(left: 145,right: 145,top: 10),
+                                  margin: EdgeInsets.only(left: 145,right: 145,top: 20),
                                   child: FlatButton(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(25.0),

@@ -104,64 +104,26 @@ class  _Editpasswordpage extends State< Editpassword> {
   final formKey = new GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-      body: Form(key: formKey,
-      child: SingleChildScrollView(
-      child: Column(
+    return  Scaffold(
+     body:Container(
+       color: MY_BLACK,
+       height: 500,
+       child: Column(
       children: <Widget>[
-      Container(
-      child: Stack(
-      children: [
-
-      Container(
-      height: 210,
-          margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          decoration: BoxDecoration(
-            color:  Color(0xFFECCB45),
-          ),
-    ),
+        // Container(
+        //   margin: EdgeInsets.fromLTRB(80, 130, 10, 1),
+        //   child: Text(
+        //     'تغيير كلمة السر',
+        //     style:TextStyle(fontSize:17, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
+        //   ),
+        // ),
         Container(
-          margin: EdgeInsets.fromLTRB(100, 40, 1, 100),
-          child: IconButton(
-            alignment: Alignment.topRight,
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                         PROFILE(name:widget.name)));
-
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
-        ),
-
-        Container(
-          margin: EdgeInsets.fromLTRB(80, 130, 10, 1),
-          child: Text(
-            'تغيير كلمة السر',
-            style:TextStyle(fontSize:17, fontWeight: FontWeight.bold,fontFamily: 'Changa',color: Colors.white,),
-          ),
-        ),
-        Container(
-          height: 627.5,
-          margin: EdgeInsets.only(top:170),
-          decoration: BoxDecoration(
-            color: Color(0xFF1C1C1C),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(50),
-              topRight: Radius.circular(50),
-            ),
-          ),
+          height: 500,
           child:Column(
             children:[
+
        Container(
-          margin: EdgeInsets.only(top: 140,left: 20,right: 20),
+          margin: EdgeInsets.only(top: 80,left: 60,right: 60),
           height: 60,
           child:TextFormField(
             // textDirection: TextDirection.rtl,
@@ -226,7 +188,7 @@ class  _Editpasswordpage extends State< Editpassword> {
 
          Container(margin: EdgeInsets.symmetric(vertical: 5)),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: EdgeInsets.symmetric(horizontal: 60),
           height: 60,
           child:TextFormField(
             validator: (value) {
@@ -295,7 +257,7 @@ class  _Editpasswordpage extends State< Editpassword> {
         ),
         Container(margin: EdgeInsets.symmetric(vertical: 5.0),),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: EdgeInsets.symmetric(horizontal: 60),
           height: 60,
           child:TextFormField(
             obscureText: !_showPassword3,
@@ -428,17 +390,13 @@ class  _Editpasswordpage extends State< Editpassword> {
             ),),
         ),
 
-
-        SizedBox(
-          height: 10,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 130),
               width: 150,
-              child:RaisedButton(
+              child:FlatButton(
                 onPressed: () {
                   setState(() {});
                   if( Pass_Null &&  Pass_Mismatch && Pass_S &&  Pass_old){
@@ -447,16 +405,21 @@ class  _Editpasswordpage extends State< Editpassword> {
                   if (formKey.currentState.validate()) {print('validate');}
                   else{print('not validate');}
                 },
-                  color:Color(0xFFECCB45),
-                padding: EdgeInsets.symmetric(vertical: 10),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                child: Text(
-                  "حفظ التعديل",
-                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.white,),
+                // backgroundColor:MY_YELLOW ,
+                // elevation: 2,
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(25)),
+                // child: Icon(Icons.check_circle),
+                child:Text("حفظ",
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: MY_YELLOW,
+                    fontFamily: 'Changa',
+                  ),
                 ),
-              ),),
+                ),
+              ),
             // OutlineButton(
             //   padding: EdgeInsets.symmetric(horizontal: 50),
             //   shape: RoundedRectangleBorder(
@@ -476,8 +439,7 @@ class  _Editpasswordpage extends State< Editpassword> {
         )
 
        ],), ), ],
-    ),),
-      ],),),),),);
+    ),),);
   }
   Widget buildTextField(
       String labelText, String placeholder, bool isPasswordTextField) {

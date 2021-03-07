@@ -42,11 +42,9 @@ class _Screen extends State<Screen> {
           //     title:Text("Flutter Card Carousel")
           // ),
           body: Container(
-             child:Column(
-            children: <Widget>[
-              Container(
-              child:Stack(
-               children:[
+              margin: EdgeInsets.only(top:200),
+              child:Column(
+               children:<Widget>[
               cslider = CarouselSlider(
                 options: CarouselOptions(
                   // height: height,
@@ -95,84 +93,10 @@ class _Screen extends State<Screen> {
 
                 }),
               ),
-              Container(
-               margin: EdgeInsets.only(top:270),
-                child:SizedBox(
-                  width: 200.0,
-                  height: 100.0,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[600],
-                    highlightColor: Camone,
-                    child: Text(
-                      'صنايعي',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        // fontWeight: FontWeight.bold,
-                          fontFamily: 'Changa',
-                          fontSize: 70.0,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                        shadows: <Shadow>[
-                          Shadow(
-                            blurRadius: 12.0,
-                            color: Colors.grey,
-                            offset: Offset.fromDirection(120,12),
-                          )
-                        ]
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-                 GestureDetector(
-                   // onTap: () => onProfileClick(context), // choose image on click of profile
-                   child: Container(
-                     width: 150,
-                     height: 150,
-                     decoration: BoxDecoration(
-                         shape: BoxShape.circle,
-                         image: DecorationImage(
-                           image: AssetImage('assets/icons/ho.jpg'),
-                           fit: BoxFit.cover,
-                         ),
-                     ),),),
-                 GestureDetector(
-                   // onTap: () => onProfileClick(context), // choose image on click of profile
-                   child: Container(
-                     width: 150,
-                     height: 150,
-                     decoration: BoxDecoration(
-                       shape: BoxShape.rectangle,
-                       image: DecorationImage(
-                         image: AssetImage('assets/icons/ho.jpg'),
-                         fit: BoxFit.cover,
-                       ),
-                     ),),),
-                           Container(
-                             margin: EdgeInsets.only(top:300),
-                             child: HexagonWidget.flat(
-                               width: 200,
-                               child: AspectRatio(
-                                 aspectRatio: HexagonType.FLAT.ratio,
-                                 child: Image.asset('assets/icons/ho.jpg', fit: BoxFit.fitHeight,),
-                               ),
-                           ),),
-              Row(
-                children: <Widget>[
-                  Container(
-                    child: IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: getnext(),
-                    ),
-                  ),
-
-                ],
-              ),
             ],
           )
       ),
-    ],),
-    ),), );
+    ), );
   }
   getnext(){
 

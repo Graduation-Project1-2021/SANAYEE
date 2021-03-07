@@ -65,6 +65,14 @@ class  _Get_Images extends State< Get_Images> {
   Widget build(BuildContext context) {
     return Directionality( textDirection: TextDirection.rtl,
     child:Scaffold(
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(40.0), // here the desired height
+          child: AppBar(
+            backgroundColor: Color(0xFFECCB45),
+            elevation: 0.0,
+            //leading: I,
+          )
+      ),
       // backgroundColor: Colors.lightBlueAccent,
       body: Form(
         child: Column(
@@ -74,26 +82,26 @@ class  _Get_Images extends State< Get_Images> {
                 children:[
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: 220,
+                    height: 180,
                      decoration: BoxDecoration(
                      color:  Color(0xFFECCB45),
                      ),
                   ),
 
-                  Container(
-                    margin: EdgeInsets.fromLTRB(100, 50, 1, 0),
-                    child: IconButton(
-                      alignment: Alignment.topRight,
-                      onPressed: () {
-                        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name:widget.name)));
-                        },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   margin: EdgeInsets.fromLTRB(100, 50, 1, 0),
+                  //   child: IconButton(
+                  //     alignment: Alignment.topRight,
+                  //     onPressed: () {
+                  //       Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name:widget.name)));
+                  //       },
+                  //     icon: Icon(
+                  //       Icons.arrow_back,
+                  //       color: Colors.white,
+                  //       size: 30.0,
+                  //     ),
+                  //   ),
+                  // ),
                   // Container(
                   //   margin: EdgeInsets.fromLTRB(50, 100, 1, 0),
                   //   child:Text(
@@ -112,7 +120,7 @@ class  _Get_Images extends State< Get_Images> {
                       children: <Widget>[
                       Container(
                       height:617.5,
-                      margin: EdgeInsets.only(top:180),
+                      margin: EdgeInsets.only(top:91),
                       padding: EdgeInsets.only(top:30,right: 15,left: 15,),
                       decoration: BoxDecoration(
                         color: Color(0xFF1C1C1C),

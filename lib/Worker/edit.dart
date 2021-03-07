@@ -17,6 +17,8 @@ String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
 FocusNode myFocusNode = new FocusNode();
+String country_id;
+List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس",""];
 class SettingsUI extends StatefulWidget {
 
   final  name;
@@ -182,9 +184,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
+                                      Row(
+                                      children: <Widget>[
+
+                                        Container(
+                                          margin: EdgeInsets.fromLTRB(0,40,40,15),
+                                          width: size.width * 0.33,
+                                          height: 60,
+                                          child: TextFormField(
+                                            onChanged: (value) {
+                                              nameController.text=value;
+                                              print(nameController.text);
+                                            },
+                                            controller: nameController,
+                                            cursorColor: Colors.grey[600],
+                                            textAlign: TextAlign.right,
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Changa',
+                                            ),
+                                            decoration: InputDecoration(
+                                              filled: true,
+                                              fillColor: Colors.grey.withOpacity(0.1),
+                                              enabledBorder: new OutlineInputBorder(
+                                                borderRadius: new BorderRadius.circular(28.0),
+                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                              ),
+                                              focusedBorder: new OutlineInputBorder(
+                                                borderRadius: new BorderRadius.circular(28.0),
+                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+
+                                              ),
+                                              labelText: ('الاسم الأول'),
+                                              floatingLabelBehavior: FloatingLabelBehavior.always,
+                                              labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
+                                            ),
+                                          ),
+                                        ),
                                       Container(
-                                        margin: EdgeInsets.fromLTRB(0,10,0,15),
-                                        width: size.width * 0.8,
+                                        margin: EdgeInsets.fromLTRB(0,40,10,15),
+                                        width: size.width * 0.44,
                                         height: 60,
                                         child: TextFormField(
                                           onChanged: (value) {
@@ -212,12 +253,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                               borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
 
                                             ),
-                                            labelText: ('الاسم'),
+                                            labelText: ('اسم العائلة '),
                                             floatingLabelBehavior: FloatingLabelBehavior.always,
                                             labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
                                           ),
                                         ),
                                       ),
+                                      ],),
                                       Container(
                                         height: 70,
                                         margin: EdgeInsets.fromLTRB(0,10,0,15),
@@ -299,21 +341,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 Container(
                                   margin: EdgeInsets.only(left: 130,right: 130,top:50),
                                   width: 150,
-                                  child:RaisedButton(
-                                    onPressed: () {
-                                      editpersonalinfo();
-                                      _showMyDialog();
-                                    },
-                                    color:Color(0xFFECCB45),
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25)),
-                                    child: Text(
-                                      "حفظ التعديل",
-                                      style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.white,),
-                                    ),
-                                  ),),
+                                  child: FloatingActionButton(
+                                    backgroundColor:Color(0xFFECCB45),
+                                    splashColor: Colors.transparent,
+                                  onPressed: (){
+                                    editpersonalinfo();
+                                    _showMyDialog();
+                                  },
+                                  tooltip: 'Increment',
+                                  child: Icon(Icons.edit),
+                                   ),
+                                  // child:RaisedButton(
+                                  //   onPressed: () {
+                                  //     editpersonalinfo();
+                                  //     _showMyDialog();
+                                  //   },
+                                  //   color:Color(0xFFECCB45),
+                                  //   padding: EdgeInsets.symmetric(vertical: 10),
+                                  //   elevation: 2,
+                                  //   //shape: ,
+                                  //   // shape: RoundedRectangleBorder(
+                                  //   //     borderRadius: BorderRadius.circular(25)),
+                                  //   child:Icon(Icons.edit),
+                                  //   // child: Text(
+                                  //   //   "حفظ التعديل",
+                                  //   //   style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600,fontFamily: 'Changa',color: Colors.white,),
+                                  //   // ),
+                                  // ),
+                                ),
                               ],
                             ),
                           ),),
@@ -435,9 +490,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       //this means the user must tap a button to exit the Alert Dialog
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.only(right: 50,left:10,top: 30),
+          contentPadding: EdgeInsets.only(right: 40,left:10,top: 30),
           titlePadding: EdgeInsets.only(right: 50,left:50,top: 30),
-          content: Text('تم نعديل المعلومات بنجاح ',
+          content: Text('تم تعديل المعلومات بنجاح ',
             style: TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,

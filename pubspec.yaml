@@ -49,6 +49,12 @@ dependencies:
   carousel_slider: ^3.0.0
   shimmer: ^1.1.2
   hexagon: ^0.1.0
+  table_calendar: ^2.2.3
+  rate_my_app: ^0.4.0
+  curved_navigation_bar: ^0.3.7 #latest version
+  lite_rolling_switch: ^0.1.1
+  font_awesome_flutter:
+
 
 
 

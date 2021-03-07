@@ -1,28 +1,76 @@
 
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutterphone/screens/login_screen.dart';
 import 'dart:convert';
+import 'WORKER_PROFILE.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 
+String IP4="192.168.1.8";
+class InsideAPP extends StatefulWidget {
+    final name;
+    InsideAPP({this.name});
+  _Body createState() => _Body();
+}
 
-class InsideAPP extends StatelessWidget {
-  const InsideAPP({
-    Key key,
-  }) : super(key: key);
+class _Body extends State<InsideAPP> {
 
+  var Listsearch=[];
 
+  Future getdata()async{
+    var url='https://'+IP4+'/testlocalhost/all_worker.php';
+    var ressponse=await http.get(url);
+    var responsepody= json.decode(ressponse.body);
+    for(int i=0;i<responsepody.length;i++){
+      if(!Listsearch.contains(responsepody[i]['Work'])){ Listsearch.add(responsepody[i]['Work']);}
+
+    }
+    print(Listsearch);
+  }
+  void initState(){
+    getdata();
+    super.initState();
+  }
   @override
+  int _page = 0;
+  GlobalKey _bottomNavigationKey = GlobalKey();
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     Size size = MediaQuery.of(context).size;
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          bottomNavigationBar: CurvedNavigationBar(
+            color:  Color(0xFFECCB45),
+            buttonBackgroundColor: Color(0xFFECCB45),
+            backgroundColor: MY_BLACK,
+            height: 48,
+            key: _bottomNavigationKey,
+            items: <Widget>[
+              Icon(Icons.home, size: 25),
+              Icon(Icons.settings, size: 25),
+              Icon(Icons.playlist_add_check, size: 25),
+              Icon(Icons.notifications, size: 25),
+              Icon(Icons.logout, size: 25),
+            ],
+            onTap: (index) {
+              setState(() {
+                _page = index;
+                if(_page==0){
+                  // print(List2);
+                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>InsideAPP(name: widget.name,)));
+                }
+                // if(_page==1){
+                //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
+                // }
+              });
+            },
+          ),
           backgroundColor: Color(0xFF1C1C1C),
           appBar: AppBar(
             elevation: 0,
@@ -74,6 +122,8 @@ class InsideAPP extends StatelessWidget {
                 bottom: 0,
                 left: 0,
                 right: 0,
+                child:GestureDetector(
+                  onTap: (){showSearch(context: context, delegate: DataSearch(list: Listsearch));},
                 child: Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.symmetric(horizontal: 20),
@@ -92,34 +142,33 @@ class InsideAPP extends StatelessWidget {
                   ),
                   child: Row(
                     children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                            hintText: "ابحث",
-                            hintStyle: TextStyle(
+                         Container(
+                           margin: EdgeInsets.only(left: 240),
+                          child:Text('ابحث',
+                            style: TextStyle(
+                              fontFamily: 'Changa',
                               color: Color(0xFFECCB45),
-                              fontSize: 22.0,fontFamily: 'Changa',
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                         ),
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child:RotatedBox(
+                          quarterTurns: 1,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              color:  Color(0xFF1C1C1C),
+                              size: 40.0,
                             ),
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-
-                            suffixIcon: RotatedBox(
-                              quarterTurns: 1,
-                              child: IconButton(
-                              icon:Icon(Icons.search),
-                              color: Color(0xFFECCB45),
-                              iconSize: 40,
-                            ),)
-                            // surffix isn't working properly  with SVG
-                            // thats why we use row
-                            // suffixIcon: SvgPicture.asset("assets/icons/search.svg"),
+                            onPressed: null,
                           ),
                         ),
+
                       ),
-                      //SvgPicture.asset("assets/icons/search.svg"),
                     ],
-                  ),
+                  ),),
                 ),
               ),
 
@@ -208,6 +257,8 @@ class InsideAPP extends StatelessWidget {
 
 
 }
+
+
 class RecomendPlantCard extends StatelessWidget {
   const RecomendPlantCard({
     Key key,
@@ -276,15 +327,310 @@ class RecomendPlantCard extends StatelessWidget {
     );
   }
 }
-// Container(
-// child:IconButton(
-// icon: Icon(Icons.logout),
-// onPressed: ()async{
-// await FirebaseAuth.instance.signOut();
-// Navigator.pushAndRemoveUntil(
-// context,
-// MaterialPageRoute(builder: (context) => LoginScreen()),
-// (route) => false);
-// },
-// )
-// )
+class DataSearch extends SearchDelegate<String>{
+  List<dynamic>list;
+  var recentList=[];
+  DataSearch({this.list});
+  Future getSearch()async{
+    var url='https://'+IP4+'/testlocalhost/groupsearch.php';
+    var ressponse=await http.post(url,body: {
+      "Work":query,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [IconButton(icon: Icon(Icons.clear), onPressed: (){query="";})];
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    //return IconButton(icon: Icon(Icons.arrow_back), onPressed: (){});
+    return IconButton(
+        icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow,
+          progress: transitionAnimation,
+
+        ),
+        onPressed: (){
+          close(context, null);
+        },);
+    // return AppBar(
+    //   backgroundColor: Colors.yellow,
+    //   actions: [
+    //   IconButton(
+    //       icon: AnimatedIcon(
+    //         icon: AnimatedIcons.menu_arrow,
+    //         progress: transitionAnimation,
+    //
+    //       ),
+    //       onPressed: (){
+    //         close(context, null);
+    //       },),
+    //   ],
+    // );
+    throw UnimplementedError();
+  }
+
+  //String get searchFieldLabel => "احثوو,";
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+     return Directionality(textDirection: TextDirection.rtl,
+         child:SingleChildScrollView(
+           child:Container(
+             color: Colors.white,
+             height: 700,
+           //  color:  Color(0xFF1C1C1C),
+         child:FutureBuilder(
+      future: getSearch(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if(snapshot.hasData){
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return Group(name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+            },
+          );
+        }
+        return Center(child: CircularProgressIndicator());
+      },
+    ),),),);
+    return Text("SARA");
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+
+    var search =query.isEmpty?recentList:list.where((p) => p.startsWith(query)).toList();
+    return Directionality(
+        textDirection: TextDirection.rtl,
+        child:Container(
+        height: 200,
+        margin: EdgeInsets.only(top: 50),
+       child:ListView.builder(itemCount:search.length,itemBuilder: (context,i){
+         return ListTile(leading: Icon(Icons.people_sharp),
+             title: Text(search[i],
+             style: TextStyle(
+              fontSize: 18.0,
+              fontFamily: 'Changa',
+              color: Color(0xFF666360),
+              fontWeight: FontWeight.bold,),
+             ),
+
+           onTap:(){
+           query=search[i];
+           recentList.add(query);
+           showResults(context);
+         }
+         );
+         }),),);
+    throw UnimplementedError();
+  }
+  
+}
+class Group  extends StatefulWidget {
+  final  name;
+  final  namefirst;
+  final  namelast;
+  final  phone;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+
+  Group({this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+
+  @override
+  _Group createState() => _Group();
+}
+
+class _Group extends State<Group> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future getImages() async {
+    var url = 'https://' + IP4 + '/testlocalhost/Show_EXP.php';
+    var ressponse = await http.post(url, body: {
+      "phone": widget.phone,
+    });
+    // ignore: deprecated_member_use
+    // var responsebody = json.decode(ressponse.body);
+    // print(responsebody);
+    return json.decode(ressponse.body);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child:Container(
+        height: 230,
+        width: 200,
+        decoration: BoxDecoration(
+          //color:Colors.white,
+          color:  Color(0xFF1C1C1C),
+          borderRadius: BorderRadius.circular(20),
+          // boxShadow: [
+          //   BoxShadow(
+          //     offset: Offset(0, 1),
+          //     blurRadius: 20,
+          //     color: Color(0xFFECCB45),
+          //   ),
+          // ],
+        ),
+        margin:EdgeInsets.symmetric(horizontal: 20,vertical: 10) ,
+
+        child: Column(
+        children: <Widget>[
+          Stack(children: [
+            Container (
+              margin: EdgeInsets.only(top: 50,right: 30),
+              child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 46.0,),),
+            Container (
+              width: 200,
+              //color: Colors.red,
+              margin: EdgeInsets.only(top: 40,right: 150,left: 50),child:Text(widget.namefirst+ " "+widget.namelast,
+              style: TextStyle(
+                fontSize: 21.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),),),
+            Container (
+              width: 200,
+              margin: EdgeInsets.only(top: 70,right: 150),
+              child:Text(widget.Work,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: 'Changa',
+                  color: Color(0xFF666360),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),),
+          Row(
+            children: [
+            Container (
+              width: 120,
+              margin: EdgeInsets.only(top: 100,right: 150),
+              child:Text(widget.phone,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: 'Changa',
+                  color: Color(0xFF666360),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),),
+              Container(
+                margin: EdgeInsets.only(top: 100,right: 3,left: 15,),
+                child:Icon(Icons.phone,
+               color: Color(0xFF666360),),
+              ),
+            ],),
+            //Container (margin: EdgeInsets.only(top: 20,left: 150),child:Text(widget.name),),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 170,right: 55),
+                  child:Text("4.9",
+                  style: TextStyle(
+                    color: Color(0xFF666360),
+                  ),),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 170,right: 3,left: 15,),
+                  child:Icon(Icons.star,
+                  color: Color(0xFFECCB45),),
+                ),
+
+              ],
+            ),
+            // Row(
+            //   children: [
+            //     Container(
+            //       margin: EdgeInsets.only(top: 125,right: 150),
+            //       child:Text("4.9"),
+            //     ),
+            //     Container(
+            //       margin: EdgeInsets.only(top: 120,right: 3,left: 15,),
+            //       child:Icon(Icons.star),
+            //     ),
+            //     Container(
+            //       margin: EdgeInsets.only(top: 120,left: 0,right: 5),
+            //       child:Text(" 123 تعليق"),
+            //     ),
+            //     Container(
+            //       margin: EdgeInsets.only(top: 120,right: 3,left: 90),
+            //       child:Icon(Icons.comment),
+            //     ),
+            //
+            //   ],
+            // ),
+            Row(
+            children:[
+              Container(
+                width: 80,
+                margin: EdgeInsets.only(left: 0,right: 150,top: 150),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(color: Colors.transparent)
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 2),
+                  color: Color(0xFFECCB45),
+                  onPressed: () async {},
+                  child: Center(child:Text("طلب",
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontFamily: 'Changa',
+                      color:  Color(0xFF1C1C1C),
+                      fontWeight: FontWeight.bold,
+                    ),),),),
+              ),
+            Container(
+            width: 120,
+            margin: EdgeInsets.only(left: 0,right: 10,top: 150),
+             child: FlatButton(
+              shape: RoundedRectangleBorder(
+               borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(color: Colors.transparent)
+              ),
+             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
+             color: Color(0xFFECCB45),
+             onPressed: () async {
+               Navigator.push(context,
+                   MaterialPageRoute(builder: (context) =>user_worker(name:widget.name,namefirst:widget.namefirst,namelast:widget.namelast,phone:widget.phone,image:widget.image,Work:widget.Work,Experiance:widget.Experiance,Information:widget.Information,token:widget.token)),);},
+
+               child: Center(child:Text("عرض المزيد",
+               style: TextStyle(
+                 fontSize: 17.0,
+                 fontFamily: 'Changa',
+                 color:  Color(0xFF1C1C1C),
+                 fontWeight: FontWeight.bold,
+               ),),),),
+            ),
+
+          ],),
+      ],),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            width: 300,
+            // child:Divider(
+            //   color: Color(0xFF666360),
+            //   thickness: 2,
+            // ),
+          ),
+
+    ],),
+      ),);
+
+  }
+}

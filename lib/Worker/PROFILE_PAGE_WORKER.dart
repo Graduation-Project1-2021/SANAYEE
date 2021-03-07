@@ -1,6 +1,8 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
+import 'package:flutterphone/Worker/worker_order.dart';
 import 'package:flutterphone/commons/radial_progress.dart';
 import 'package:flutterphone/screens/login_screen.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
@@ -8,9 +10,10 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
-
+import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import 'GET_IMGS.dart';
+import 'accept_order.dart';
 import 'edit.dart';
 import 'change_pass.dart';
 
@@ -25,13 +28,52 @@ String IP4="192.168.1.8";
 
 class PROFILE extends StatefulWidget {
   final name;
-   PROFILE({this.name});
+  int profile;
+   PROFILE({this.name,this.profile});
   _PROFILE createState() =>  _PROFILE();
 }
 class  _PROFILE extends State< PROFILE> {
   // AnimationController _animationController;
+  int _page = 0;
+  GlobalKey _bottomNavigationKey = GlobalKey();
+  final List1=[];
+  var ListDate1=[];
+  final List2=[];
+  var ListDate2=[];
+  List<dynamic>L;
+  Future getdata1()async{
+    var url='https://'+IP4+'/testlocalhost/count.php';
+    var ressponse=await http.post(url,body: {
+      "phone": phone,
+    });
+    var responsepody= json.decode(ressponse.body);
+    for(int i=0;i<responsepody.length;i++){
+      //L.add(responsepody[i]['count']);
+      List1.add(responsepody[i]['id']);
+      ListDate1.add(responsepody[i]['date']);
+    }
+    // print(List1);
+    // print(ListDate1);
+  }
+  Future getdata2()async{
+    var url='https://'+IP4+'/testlocalhost/count2.php';
+    var ressponse=await http.post(url,body: {
+      "phone": phone,
+    });
+    var responsepody= json.decode(ressponse.body);
+    for(int i=0;i<responsepody.length;i++){
+      //L.add(responsepody[i]['count']);
+      List2.add(responsepody[i]['id']);
+      ListDate2.add(responsepody[i]['date']);
+    }
+    // print(List2);
+    // print(ListDate2);
+  }
   void initState() {
     super.initState();
+    getdata1();
+    getdata2();
+
   }
   Future getWorker()async{
     var url='https://'+IP4+'/testlocalhost/getworker.php';
@@ -48,62 +90,71 @@ class  _PROFILE extends State< PROFILE> {
     return  Directionality( textDirection: TextDirection.rtl,
        child:Scaffold(
          key: _scaffoldKey,
-         drawer:Container(
-             width: 350,
-        child:new Drawer(
-        child: Column(
-             children: <Widget>[
-               DrawerHeader(
-                 padding: EdgeInsets.all(0.0),
-                 child: Container(
-                     height: 142,
-                     width: MediaQuery.of(context).size.width,
-                     child: Image.asset(
-                       "assets/icons/vb.png",
-                     )),
-                 decoration: BoxDecoration(
-                   color: Color(0xFFECCB45),
-                 ),
-               ),
-               Container(
-                 height: 40,
-                 color: Colors.white,
-
-               ),
-               update(context, "تعديل المعلومات الشخصية"),
-               Albume(context, "معرض الصور"),
-               changepassword(context, "تغيير كلمة السر"),
-                // buildAccountOptionRow(context, "معلومات الاتصال"),
-               buildAccountOptionRow(context, "طلبات الحجوزات"),
-               // buildAccountOptionRow(context, "اضافة اعمال جديدة "),
-               SizedBox(
-                 height: 40,
-               ),
-             ],
-           ),
-         ),),
-         backgroundColor: Color(0xFF1C1C1C),
-         appBar: AppBar(
-           automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
-           elevation: 0,
-           backgroundColor:  Color(0xFFECCB45),
-           actions: [
-             IconButton(
-               onPressed: () => _scaffoldKey.currentState.openDrawer(),
-               icon: Icon(Icons.menu),)
+         bottomNavigationBar: CurvedNavigationBar(
+           color:  Color(0xFFECCB45),
+           buttonBackgroundColor: Color(0xFFECCB45),
+           backgroundColor: MY_BLACK,
+           height: 48,
+           key: _bottomNavigationKey,
+           items: <Widget>[
+             Icon(Icons.home, size: 25),
+             Icon(Icons.settings, size: 25),
+             Icon(Icons.playlist_add_check, size: 25),
+             Icon(Icons.notifications, size: 25),
+             Icon(Icons.logout, size: 25),
            ],
+           onTap: (index) {
+             setState(() {
+               _page = index;
+                 if(_page==0){
+                  // print(List2);
+                   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name: widget.name,)));
+                }
+
+               if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Loginscreen()));}               // if(_page==1){
+               //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
+               // }
+             });
+           },
          ),
+          backgroundColor: Color(0xFFECCB45),
+         appBar: PreferredSize(
+             preferredSize: Size.fromHeight(40.0), // here the desired height
+             child: AppBar(
+               backgroundColor: Color(0xFFECCB45),
+               elevation: 0.0,
+               //leading: I,
+             )
+         ),
+         // appBar: PreferredSize(
+         //  //referredSize: 50.0,      child: AppBar(
+         //   automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
+         //   elevation: 0,
+         //   backgroundColor:  Color(0xFFECCB45),
+         // ),),
         // backgroundColor: Colors.lightBlueAccent,
         body: Form(
-          child: SingleChildScrollView(
-          child: Column(
+          // child:SingleChildScrollView(
+         child:Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-                  Container(
+              // Container(
+              //   height: 300,
+              //   decoration: BoxDecoration(
+              //     color:  Color(0xFFF3D657),
+              //     // borderRadius: BorderRadius.only(
+              //     //   bottomLeft: Radius.circular(100),
+              //     //   bottomRight: Radius.circular(100),
+              //     // ),
+              //   ),
+              //    ),
+             Expanded(child:Container(
                     height: 700,
+                    // color:  Color(0xFFF3D657),
                     margin: EdgeInsets.only(top:0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                     // color:Color(0xFF1C1C1C),
                       // borderRadius: BorderRadius.only(
                       //   topLeft: Radius.circular(50),
                       //   topRight: Radius.circular(50),
@@ -123,84 +174,33 @@ class  _PROFILE extends State< PROFILE> {
                           Information=snapshot.data[index]['Information'];
                           Experiance=snapshot.data[index]['Experiance'];
                           token=snapshot.data[index]['token'];
-                          return Profile_worker(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+
+                          if(_page==0){return Profile_worker(name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);}
+                          if(_page==1){return SettingPage(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);}
+                          if(_page==2){ return accept_order(phone: phone,List1:List2,ListDate: ListDate2,);}
+                          if(_page==3){return work_order(phone: phone,List1:List1,ListDate: ListDate1,);}
+
+
+                          return Container();
                         },
                       );
                     }
                     return Center(child: CircularProgressIndicator());
                   },
                 ),
-              ),
-       ],),),),),);
+             ),),],),),),);
 
 
 
 }
-
-  Container buildNotificationOptionRow(String title, bool isActive) {
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child:Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[600]),
-          ),
-          Transform.scale(
-              scale: 0.7,
-              child: CupertinoSwitch(
-                value: isActive,
-                onChanged: (bool val) {},
-              ))
-        ],
-      ),);
-  }
-
-  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
+  GestureDetector odrers (BuildContext context, String title) {
     return GestureDetector(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(title,
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Option 1"),
-                    Text("Option 2"),
-                    Text("Option 3"),
-                  ],
-                ),
-                actions: [
-                  FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SettingPage(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
-                        );
-                      },
-                      // Navigator.of(context).();
-
-                      child: Text("Close",style: TextStyle(fontSize: 24.0))),
-
-                ],
-              );
-            });
-      },
+      onTap: () {Navigator.push(context,
+        MaterialPageRoute(builder: (context) => work_order(phone: phone,List1:List1,ListDate: ListDate1,)),
+      );},
       child: Container(
         color: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
-
+        padding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -222,7 +222,36 @@ class  _PROFILE extends State< PROFILE> {
       ),
     );
   }
+  GestureDetector accept_orders (BuildContext context, String title) {
 
+    return GestureDetector(
+      onTap: () {Navigator.push(context,
+        MaterialPageRoute(builder: (context) => accept_order(phone: phone,List1:List2,ListDate: ListDate2,)),
+      );},
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey[600],
+                fontFamily: 'Changa',
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   GestureDetector update(BuildContext context, String title) {
 
     return GestureDetector(
@@ -285,10 +314,8 @@ class  _PROFILE extends State< PROFILE> {
   }
   GestureDetector changepassword(BuildContext context, String title) {
     return GestureDetector(
-      onTap: () {Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ChangePass(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token)),
-      );},
-
+      onTap: () {return Editpassword(name:name,phone:phone,image:image,Work:Work,Experiance:Experiance,Information:Information,token:token);
+      },
       child: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 20),
@@ -315,14 +342,17 @@ class  _PROFILE extends State< PROFILE> {
 }
 class Profile_worker  extends StatefulWidget {
   final  name;
+  final  namefirst;
+  final  namelast;
   final  phone;
   final  image;
   final  Work;
   final  Experiance;
   final  Information;
   final  token;
+  final page;
 
-  Profile_worker({this.name, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  Profile_worker({this.name,this.namelast,this.namefirst, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token,this.page});
 
   @override
   _Profile_woeker createState() => _Profile_woeker();
@@ -332,6 +362,7 @@ class _Profile_woeker extends State<Profile_worker> {
   bool uploading = false;
   double val = 0;
   File uploadimage;
+  bool image =false;
   // File _file;
   List<File> _image = []; //هاي هي
   int counter = 0;
@@ -355,53 +386,260 @@ class _Profile_woeker extends State<Profile_worker> {
   Widget build(BuildContext context) {
     return Column(
       children:<Widget>[
-       Stack(
-           children:[
-             Container(
-               height: 160,
-               decoration: BoxDecoration(
-                 color:  Color(0xFFECCB45),
-                 borderRadius: BorderRadius.only(
-                   bottomLeft: Radius.circular(80),
-                   bottomRight: Radius.circular(80),
-                 ),
-               ),
-             ),
-             Container(
-               margin: EdgeInsets.only(top: 2,left: 250,right: 20),
-               child: InkWell(
-                 child: RadialProgress(
-                   width: 4,
-                   progressColor: Colors.white,
-                   goalCompleted: 0.7,
-                   child:CircleAvatar(
-                     backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),
-                     radius: 24.0,
-                   ),
-                 ),
-               ),),
-             Container(
-               margin: EdgeInsets.only(top: 75,right: 30),
-               child: Text(widget.name,
-               style: TextStyle(
-                 color: Colors.white,
-                 fontSize: 16.0,
-                 fontFamily: 'Changa',
-                 fontWeight: FontWeight.bold,
-               ),),
-             ),
-             // Container(
-             //   margin: EdgeInsets.only(top: 1,right: 90),
-             //   child: Text('نجار',
-             //     style: TextStyle(
-             //       color: Colors.white,
-             //       fontSize: 16.0,
-             //       fontFamily: 'Changa',
-             //       fontWeight: FontWeight.bold,
-             //     ),),
-             // ),
-           ]
-       ),
+              Container(
+                margin: EdgeInsets.only(top:0),
+                //transform: Matrix4.translationValues(0, 5.0, 0),
+                child:Center(
+                  child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 35.0,),),
+              ),
+              Container(
+                margin: EdgeInsets.only(top:10),
+                child:Center(
+                  child: Text(widget.namefirst+ " "+widget.namelast,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontFamily: 'Changa',
+                      fontWeight: FontWeight.bold,),),
+                ),),
+              Row(children: [
+                GestureDetector(
+
+                  child:Container(
+                    child:Column(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 40,
+                          margin: EdgeInsets.only(right: 50,top:30),
+                          child: IconButton(
+                            icon:Icon(Icons.person),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 25,
+                          margin: EdgeInsets.only(right: 50,top:10),
+                          child: Text('حول',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.3,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child:Container(
+                    child:Column(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 40,
+                          margin: EdgeInsets.only(right: 50,top:30),
+                          child: IconButton(
+                            icon:Icon(Icons.my_library_books_sharp),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 60,
+                          margin: EdgeInsets.only(right: 50,top:10),
+                          child: Text('منشورات',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.3,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      image=true;
+                    });
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
+                  },
+                  child:Container(
+                    child:Column(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 40,
+                          margin: EdgeInsets.only(right: 50,top:30),
+                          child: IconButton(
+                            icon:Icon(Icons.image,
+                            color: image==true?MY_BLACK:Color(0xFF716C10),),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 25,
+                          margin: EdgeInsets.only(right: 50,top:10),
+                          child: Text('صور',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.3,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,
+                            ),),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child:Container(
+                    child:Column(
+                      children: [
+                        Container(
+                          height: 20,
+                          width: 40,
+                          margin: EdgeInsets.only(right: 50,top:30),
+                          child: IconButton(
+                            icon:Icon(Icons.comment),
+                          ),
+                        ),
+                        Container(
+                          height: 20,
+                          width: 50,
+                          margin: EdgeInsets.only(right: 50,top:10),
+                          child: Text('تعليقات',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.3,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],),
+
+
+              //bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+
+              SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.only(top:30),
+                  height: 700,
+                  width: 500,
+                  decoration: BoxDecoration(
+                    color: MY_BLACK,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(50),
+                      topRight: Radius.circular(50),
+                    ),
+                  ),
+                  child:Column(
+                    children: [
+                      GestureDetector(
+                        child:Container(
+                          child:Column(
+                            children: [
+                              Container(
+                                height: 20,
+                                width: 40,
+                                // margin: EdgeInsets.only(top: 250,right: 50),
+                                // child: IconButton(
+                                //   icon:Icon(Icons.comment),
+                                // ),
+                              ),
+                              // Container(
+                              //   height: 150,
+                              //   width: 300,
+                              //   margin: EdgeInsets.only(top: 10,right: 50),
+                              //   child: Text(widget.Information +"\n"+"\n"+widget.Experiance,
+                              //     style: TextStyle(
+                              //       color: Colors.yellow,
+                              //       fontSize: 13.3,
+                              //       fontFamily: 'Changa',
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
+                             Container(
+                                      height: 400,
+                                      margin: EdgeInsets.only(top:15),
+                                      child:FutureBuilder(
+                                        future: getImages(),
+                                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                          if(snapshot.hasData){
+                                            return ListView.builder(
+                                              itemCount: 1,
+                                              itemBuilder: (context, index) {
+                                                int num =snapshot.data.length-4;
+                                                if(image==true){
+                                                if(snapshot.data.length==0){
+                                                   return myAlbum0();
+                                                }
+                                                if(snapshot.data.length==1){
+                                                  return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
+                                                }
+                                                if(snapshot.data.length==2){
+                                                  return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
+                                                }
+                                                if(snapshot.data.length==3){
+                                                  return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
+                                                }
+                                                return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
+                                              }
+                                              return Container();
+                                              }
+                                            );
+                                          }
+                                          return Center(child: CircularProgressIndicator());
+                                        },
+                                      ),
+                                    )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),),
+              //   Container(
+              //     height: 50,
+              //     width: 60,
+              //     margin: EdgeInsets.only(top: 130,right: 50),
+              //     child: IconButton(
+              //       icon:Icon(Icons.image),
+              //     ),
+              //     ),
+              // Container(
+              //   height: 50,
+              //   width: 60,
+              //   margin: EdgeInsets.only(top: 130,right: 50),
+              //   child: IconButton(
+              //     icon:Icon(Icons.comment),
+              //   ),
+              // ),
+
+              // Container(
+              //   margin: EdgeInsets.only(top: 1,right: 90),
+              //   child: Text('نجار',
+              //     style: TextStyle(
+              //       color: Colors.white,
+              //       fontSize: 16.0,
+              //       fontFamily: 'Changa',
+              //       fontWeight: FontWeight.bold,
+              //     ),),
+              // ),
         // Container(
         //   margin: EdgeInsets.only(top: 10,right: 20),
         //   child: InkWell(
@@ -411,46 +649,48 @@ class _Profile_woeker extends State<Profile_worker> {
         //     ),
         //   ),),
 
-        SingleChildScrollView(
-          child: Column(
-          children: <Widget>[
-        Container(
-          height: 400,
-          margin: EdgeInsets.only(top:1),
-          child:FutureBuilder(
-            future: getImages(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.hasData){
-                return ListView.builder(
-                  itemCount: 1,
-                  itemBuilder: (context, index) {
-                    int num =snapshot.data.length-4;
-                    if(snapshot.data.length==0){
-                       return myAlbum0();
-                    }
-                    if(snapshot.data.length==1){
-                      return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
-                    }
-                    if(snapshot.data.length==2){
-                      return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
-                    }
-                    if(snapshot.data.length==3){
-                      return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
-                    }
-                    return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
-                  },
-                );
-              }
-              return Center(child: CircularProgressIndicator());
-            },
-          ),
-        ),
-            Container(
-              height: 500,
-            ),
-      ],
-    ),),], );
+        //     SingleChildScrollView(
+        //       child: Column(
+        //       children: <Widget>[
+        //     Container(
+        //       height: 400,
+        //       margin: EdgeInsets.only(top:1),
+        //       child:FutureBuilder(
+        //         future: getImages(),
+        //         builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //           if(snapshot.hasData){
+        //             return ListView.builder(
+        //               itemCount: 1,
+        //               itemBuilder: (context, index) {
+        //                 int num =snapshot.data.length-4;
+        //                 if(snapshot.data.length==0){
+        //                    return myAlbum0();
+        //                 }
+        //                 if(snapshot.data.length==1){
+        //                   return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
+        //                 }
+        //                 if(snapshot.data.length==2){
+        //                   return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
+        //                 }
+        //                 if(snapshot.data.length==3){
+        //                   return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
+        //                 }
+        //                 return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
+        //               },
+        //             );
+        //           }
+        //           return Center(child: CircularProgressIndicator());
+        //         },
+        //       ),
+        //     ),
+        //         Container(
+        //           height: 500,
+        //         ),
+        //   ],
+        // ),),
+      ], );
   }
+
   chooseImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
@@ -512,7 +752,7 @@ class _Profile_woeker extends State<Profile_worker> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(40.0),
-          border: Border.all(color: Colors.grey, width: 1.2)
+          border: Border.all(color: MY_BLACK, width: 1.2)
       ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -911,5 +1151,29 @@ class CustomMenuClipper extends CustomClipper<Path> {
     return true;
   }
 }
+class CurvePainter extends CustomPainter {
 
+  bool outterCurve;
+
+  CurvePainter(this.outterCurve);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = Color(0xFFF3D657);
+    paint.style = PaintingStyle.fill;
+
+    Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.5, outterCurve ? size.height + 110 : size.height - 110, size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
 

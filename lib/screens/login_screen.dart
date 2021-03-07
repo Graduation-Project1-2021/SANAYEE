@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
@@ -62,7 +63,7 @@ class _Body extends State<Loginscreen> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return InsideAPP();
+            return U_PROFILE(name:nameController.text,);
           },
         ),
       );
@@ -132,7 +133,6 @@ class _Body extends State<Loginscreen> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-
                                   Container(
                                     margin: EdgeInsets.only(top: 45,bottom: 5),
                                     height: 100,
