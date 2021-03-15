@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutterphone/Chat/chatListUser.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
@@ -13,8 +14,11 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutterphone/constants.dart';
 import '../constants.dart';
+import '../database.dart';
 import 'WORKER_PROFILE.dart';
+import 'List_worker_group.dart';
 
+String  name_Me="";
 String  name="";
 String  phone="";
 String  image="";
@@ -25,8 +29,8 @@ String  token="";
 String IP4="192.168.1.8";
 
 class U_PROFILE extends StatefulWidget {
-  final name;
-  U_PROFILE({this.name,});
+  final name_Me;
+  U_PROFILE({this.name_Me,});
   _U_PROFILE createState() =>  _U_PROFILE();
 }
 class  _U_PROFILE extends State<U_PROFILE> {
@@ -68,22 +72,31 @@ class  _U_PROFILE extends State<U_PROFILE> {
     // print(List2);
     // print(ListDate2);
   }
-
+  getChat(){
+    databaseMethods.getChatsMe(widget.name_Me).then((val){
+      setState(() {
+        print(val.toString());
+        chatsRoom=val;
+      });
+    });
+  }
   void initState() {
     super.initState();
     getdata1();
     getdata2();
+    getChat();
   }
 
   Future getUser() async {
     var url = 'https://' + IP4 + '/testlocalhost/getUser.php';
     var ressponse = await http.post(url, body: {
-      "name": widget.name,
+      "name": widget.name_Me,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
-
+  DatabaseMethods databaseMethods=new DatabaseMethods();
+  Stream chatsRoom;
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -91,34 +104,34 @@ class  _U_PROFILE extends State<U_PROFILE> {
       child: Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar: CurvedNavigationBar(
-          color: Color(0xFFECCB45),
-          buttonBackgroundColor: Color(0xFFECCB45),
-          backgroundColor: MY_BLACK,
+          color:L_ORANGE,
+          buttonBackgroundColor:L_ORANGE,
+          backgroundColor: Colors.white,
           height: 48,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Icon(Icons.home, size: 25),
-            Icon(Icons.settings, size: 25),
-            Icon(Icons.playlist_add_check, size: 25),
-            Icon(Icons.notifications, size: 25),
-            Icon(Icons.logout, size: 25),
+            Icon(Icons.home, size: 25,color: Colors.white,),
+            Icon(Icons.settings, size: 25,color: Colors.white,),
+            Icon(Icons.playlist_add_check, size: 25,color: Colors.white,),
+            Icon(Icons.mark_chat_unread, size: 25,color: Colors.white,),
+            Icon(Icons.logout, size: 25,color: Colors.white,),
           ],
           onTap: (index) {
             setState(() {
+              getChat();
               _page = index;
-              if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name: widget.name,)));}
+              if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));}
+              if(_page==3){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));}
               if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Loginscreen()));}
-              // if(_page==1){
-              //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
-              // }
+
             });
           },
         ),
-        backgroundColor: Color(0xFFECCB45),
+       // backgroundColor:PURPEL,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40.0), // here the desired height
+            preferredSize: Size.fromHeight(1.0), // here the desired height
             child: AppBar(
-              backgroundColor: Color(0xFFECCB45),
+              backgroundColor: PURPEL,
               elevation: 0.0,
               actions: [],
               titleSpacing: 0,
@@ -126,7 +139,13 @@ class  _U_PROFILE extends State<U_PROFILE> {
               //leading: I,
             )
         ),
-        body: Form(
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.topRight,
+                  colors: [P_PURPEL,PURPEL,LIGHT_PURPEL])
+          ),
           // child:SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -157,13 +176,8 @@ class  _U_PROFILE extends State<U_PROFILE> {
                           namelast = snapshot.data[index]['namelast'];
                           token = snapshot.data[index]['token'];
 
-                          if (_page == 0) {
-                            return USER_PROFILE(name: snapshot.data[index]['name'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phone: snapshot.data[index]['phone'], image: snapshot.data[index]['image'], token: snapshot.data[index]['token']);
-                          }
-                          // if (_page == 3) {
-                          //   return user_order(phone:phone,ListDate:ListDate1,List1:List1,);
-                          // }
-                          return Container();
+                            return USER_PROFILE(country: snapshot.data[index]['country'],name_Me: snapshot.data[index]['name'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phone: snapshot.data[index]['phone'], image: snapshot.data[index]['image'], token: snapshot.data[index]['token']);
+
                         },
                       );
                     }
@@ -175,14 +189,15 @@ class  _U_PROFILE extends State<U_PROFILE> {
   }
 }
 class USER_PROFILE  extends StatefulWidget {
-  final  name;
+  final  name_Me;
   final  namefirst;
   final  namelast;
   final  phone;
   final  image;
   final  token;
+  final country;
 
-  USER_PROFILE({this.name,this.namelast,this.namefirst, this.phone, this.image,this.token,});
+  USER_PROFILE({this.country,this.name_Me,this.namelast,this.namefirst, this.phone, this.image,this.token,});
 
   @override
   _USER_PROFILE createState() => _USER_PROFILE();
@@ -208,21 +223,37 @@ class _USER_PROFILE extends State<USER_PROFILE> {
       if(!Listsearch.contains(responsepody[i]['Work'])){ Listsearch.add(responsepody[i]['Work']);}
 
     }
-    print(Listsearch);
+  }
+  DatabaseMethods databaseMethods=new DatabaseMethods();
+  Stream chatsRoom;
+  getChat(){
+    databaseMethods.getChatsMe(widget.name_Me).then((val){
+      setState(() {
+        print(val.toString());
+        chatsRoom=val;
+      });
+    });
   }
   @override
   void initState() {
     super.initState();
     getdata();
+    // getChat();
   }
 
   @override
   Widget build(BuildContext context) {
-
+     getChat();
     return Column(
         children:<Widget>[
+          // Container(
+          //   margin: EdgeInsets.only(top:10),
+          //   child:IconButton(
+          //   onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));},
+          //   icon: Icon(Icons.chat_bubble),
+          //   ),),
           Container(
-            margin: EdgeInsets.only(top:0),
+            margin: EdgeInsets.only(top:37),
             //transform: Matrix4.translationValues(0, 5.0, 0),
             child:Center(
               child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 35.0,),),
@@ -244,7 +275,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
              height: 520,
              width: 500,
           decoration: BoxDecoration(
-            color: MY_BLACK,
+            color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(50),
               topRight: Radius.circular(50),
@@ -256,7 +287,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                 //margin: EdgeInsets.only(bottom: 5),
                 transform: Matrix4.translationValues(0.0, -20.0, 0.0),
                 child:GestureDetector(
-                  onTap: (){showSearch(context: context, delegate: DataSearch(list: Listsearch));},
+                  onTap: (){showSearch(context: context, delegate: DataSearch(list: Listsearch,name_Me:widget.name_Me));},
                   child: Container(
                     width: 340,
                     alignment: Alignment.center,
@@ -264,7 +295,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                   //  padding: EdgeInsets.symmetric(horizontal: 40),
                     height: 54,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color:Li_ORANGE,
                       borderRadius: BorderRadius.circular(20),
                       // boxShadow: [
                       //   BoxShadow(
@@ -281,7 +312,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                           child:Text('ابحث',
                             style: TextStyle(
                               fontFamily: 'Changa',
-                              color: Color(0xFFECCB45),
+                              color: Colors.white,
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                             ),),
@@ -293,7 +324,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                             child: IconButton(
                               icon: Icon(
                                 Icons.search,
-                                color:  Color(0xFF1C1C1C),
+                                color:Colors.white,
                                 size: 40.0,
                               ),
                               onPressed: null,
@@ -305,7 +336,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                 ),
               ),
               Container(
-                color: Color(0xFF1C1C1C),
+                color: Colors.white,
                 margin: EdgeInsets.only(top:0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -317,9 +348,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                         press: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              // builder: (context) => DetailsScreen(),
-                            ),
+                            MaterialPageRoute(builder: (context) => List_Worker(work: 'نجار',name_Me: widget.name_Me,location: widget.country,),),
                           );
                         },
                       ),
@@ -402,7 +431,7 @@ class RecomendPlantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: Color(0xFF1C1C1C),
+      color: Colors.white,
       margin: EdgeInsets.only(left: 10, top: 10, bottom: 10,right: 10),
       width: 100,
       height: 130,
@@ -414,15 +443,15 @@ class RecomendPlantCard extends StatelessWidget {
               height: 130,
               // padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:Colors.grey.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(29),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 50,
-                    color:Color(0xFF1C1C1C),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     offset: Offset(0, 10),
+                //     blurRadius: 50,
+                //     color:Color(0xFF1C1C1C),
+                //   ),
+                // ],
               ),
               child: Container(
                 child:Stack(
@@ -441,7 +470,7 @@ class RecomendPlantCard extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Changa',
-                            color: Color(0xFFECCB45),
+                            color: Colors.black,
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                           ),
@@ -458,7 +487,8 @@ class RecomendPlantCard extends StatelessWidget {
 class DataSearch extends SearchDelegate<String>{
   List<dynamic>list;
   var recentList=[];
-  DataSearch({this.list});
+  final name_Me;
+  DataSearch({this.list,this.name_Me});
   Future getSearch()async{
     var url='https://'+IP4+'/testlocalhost/groupsearch.php';
     var ressponse=await http.post(url,body: {
@@ -522,7 +552,7 @@ class DataSearch extends SearchDelegate<String>{
                 return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    return Group(name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                    return Group(name_Me:name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                   },
                 );
               }
@@ -565,6 +595,7 @@ class DataSearch extends SearchDelegate<String>{
 
 }
 class Group  extends StatefulWidget {
+  final name_Me;
   final  name;
   final  namefirst;
   final  namelast;
@@ -574,8 +605,9 @@ class Group  extends StatefulWidget {
   final  Experiance;
   final  Information;
   final  token;
+  final country;
 
-  Group({this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  Group({this.country,this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
 
   @override
   _Group createState() => _Group();
@@ -744,7 +776,7 @@ class _Group extends State<Group> {
                       color: Color(0xFFECCB45),
                       onPressed: () async {
                         Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => user_worker(name: widget.name, namefirst: widget.namefirst, namelast: widget.namelast, phone: widget.phone, image: widget.image, Work: widget.Work,Experiance: widget.Experiance,Information: widget.Information,token: widget.token)),);
+                          MaterialPageRoute(builder: (context) => user_worker(name_Me:widget.name_Me,name: widget.name, namefirst: widget.namefirst, namelast: widget.namelast, phone: widget.phone, image: widget.image, Work: widget.Work,Experiance: widget.Experiance,Information: widget.Information,token: widget.token)),);
                          },
                       child: Center(child: Text("عرض المزيد",
                         style: TextStyle(

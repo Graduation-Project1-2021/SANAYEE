@@ -1,3 +1,4 @@
+import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:http/http.dart' as http;
@@ -12,15 +13,14 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'login_screen.dart';
+import 'welcome.dart';
+
 
 import '../LoginScreen.dart';
 String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
 
-String country_id;
-String hint="اختيار المنطقة";
-List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا",""];
 FocusNode myFocusNode = new FocusNode();
 
 class SignuserScreen extends StatefulWidget {
@@ -30,6 +30,10 @@ class SignuserScreen extends StatefulWidget {
 }
 
 class _Body extends State<SignuserScreen> {
+
+  String country_id;
+  String hint="اختيار المنطقة";
+  List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا","الخليل","قلقيلية"];
 
   TextEditingController nameController = TextEditingController();
   TextEditingController namefirstController = TextEditingController();
@@ -112,7 +116,7 @@ class _Body extends State<SignuserScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor:Color(0xFF1C1C1C),
+        backgroundColor:Colors.white,
         // appBar: AppBar(
         //   leading:  IconButton(
         //     alignment: Alignment.topRight,
@@ -143,21 +147,45 @@ class _Body extends State<SignuserScreen> {
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                    height:MediaQuery.of(context).size.height * 0.28,
-                    child: CustomPaint(
-                      painter: CurvePainter(false),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
-                        ],),
+                Stack(
+                  children: [
+
+                    ClipPath(
+                      clipper: Clipper4(),
+                      child:  Container(
+                        height: 220,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.orangeAccent, Colors.orangeAccent.withOpacity(0.8)])),
+
+                        // child: Center(child: Text("MultiplePointedEdgeClipper()")),
+                      ),
                     ),
-                  ),
+                   Column(
+                      children: [
+                        Center(
+                          child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
+                      ],),
+                  ],
                 ),
+
+                // GestureDetector(
+                //   child: AnimatedContainer(
+                //     duration: Duration(milliseconds: 500),
+                //     curve: Curves.ease,
+                //     height:MediaQuery.of(context).size.height * 0.28,
+                //     child: CustomPaint(
+                //       painter: CurvePainter(false),
+                //       child: Column(
+                //         children: [
+                //           Center(
+                //             child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
+                //         ],),
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
 
                     child: AnimatedContainer(
@@ -205,15 +233,15 @@ class _Body extends State<SignuserScreen> {
                                                ),
                                                decoration: InputDecoration(
                                                  filled: true,
-                                                 fillColor: Colors.grey.withOpacity(0.1),
+                                                 fillColor: Colors.grey.withOpacity(0.05),
                                                  enabledBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                                  ),
                                                  focusedBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                                  ),
                                                  hintText: 'الاسم الأول ',
@@ -252,15 +280,15 @@ class _Body extends State<SignuserScreen> {
                                                ),
                                                decoration: InputDecoration(
                                                  filled: true,
-                                                 fillColor: Colors.grey.withOpacity(0.1),
+                                                 fillColor: Colors.grey.withOpacity(0.05),
                                                  enabledBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                                  ),
                                                  focusedBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                                  ),
                                                  //contentPadding: EdgeInsets.only(),
@@ -323,16 +351,16 @@ class _Body extends State<SignuserScreen> {
                                         ),
                                         decoration: InputDecoration(
                                           filled: true,
-                                          fillColor: Colors.grey.withOpacity(0.1),
+                                          fillColor: Colors.grey.withOpacity(0.05),
                                           prefixIcon: Icon(Icons.person,color: Color(0xFF666360)),
                                           enabledBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                           ),
                                           focusedBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                           ),
                                           hintText: 'اسم المستخدم ',
@@ -396,7 +424,7 @@ class _Body extends State<SignuserScreen> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey.withOpacity(0.05),
                                             prefixIcon: Icon(Icons.lock, color:Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -408,12 +436,12 @@ class _Body extends State<SignuserScreen> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                             ),
                                             hintText: ('كلمة السر'),
@@ -489,7 +517,7 @@ class _Body extends State<SignuserScreen> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey.withOpacity(0.05),
                                             prefixIcon: Icon(Icons.lock, color: Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -501,12 +529,12 @@ class _Body extends State<SignuserScreen> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
 
                                             ),
                                             hintText: ('تأكيد كلمة السر'),
@@ -568,7 +596,7 @@ class _Body extends State<SignuserScreen> {
                                           onPressed: () {
                                             if(card1){
                                               Navigator.of(context).push(
-                                                  MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
+                                                  MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen1()));}
                                             if(!card1){
                                               card1=true;
                                               setState(() {
@@ -577,24 +605,25 @@ class _Body extends State<SignuserScreen> {
                                           },
                                           icon: Icon(
                                             Icons.arrow_back,
-                                            color:Color(0xFFECCB45),
+                                            color:Colors.orangeAccent,
                                             size: 20.0,
                                           ),),),
                                       Directionality(textDirection:TextDirection.rtl, child:
                                       Container(
                                           margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                          padding: EdgeInsets.fromLTRB(0,15,40,0),
+                                          padding: EdgeInsets.fromLTRB(20,15,20,10),
                                           width: size.width * 0.8,
                                           height: 60,
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(40.0),
+                                            color: Colors.grey.withOpacity(0.05),
+                                            borderRadius: BorderRadius.circular(30.0),
                                             // border: Border.all(color: Colors.grey, width: 1.2)
                                           ),
                                           child:DropdownButton(
+                                            isExpanded: true,
                                             itemHeight: 50,
-                                            icon: Icon(Icons.location_on),
-                                            iconSize:25.0,
+                                            icon: Icon(Icons.pin_drop),
+                                            iconSize:30.0,
                                             value: country_id,
                                             dropdownColor: Colors.white,
                                             onChanged: (value){
@@ -672,16 +701,15 @@ class _Body extends State<SignuserScreen> {
                                             },
                                             decoration: InputDecoration(
                                               filled: true,
-                                              fillColor: Colors.grey.withOpacity(0.1),
+                                              fillColor: Colors.grey.withOpacity(0.05),
                                               prefixIcon: Icon(Icons.phone,color: Color(0xFF666360),),
                                               enabledBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
-
+                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
                                               ),
                                               focusedBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                borderSide:  BorderSide(color:Colors.white),
 
                                               ),
                                               hintText: ('رقم الهاتف'),
@@ -747,7 +775,7 @@ class _Body extends State<SignuserScreen> {
                                                 style:TextStyle(
                                                   fontSize: 21.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Color(0xFFECCB45),
+                                                  color:  Colors.orangeAccent,
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -769,12 +797,12 @@ class _Body extends State<SignuserScreen> {
                                           borderRadius: BorderRadius.circular(29),
                                           child: FlatButton(
                                               padding: EdgeInsets.symmetric(vertical:0, horizontal:0),
-                                              color: Color(0xFF1C1C1C),
+                                              color: Colors.white,
                                               child:Text("اضغط لإرسال الكود",
                                                 style:TextStyle(
                                                   fontSize: 21.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Color(0xFFECCB45),
+                                                  color:  Colors.orangeAccent,
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -808,6 +836,7 @@ class _Body extends State<SignuserScreen> {
                                       //   ),
                                       // ),
                                       codeSent?Center(
+                                        child:Directionality(textDirection: TextDirection.ltr,
                                         child:Container(
                                           margin: EdgeInsets.only(top:0,bottom: 35,left: 55,right: 55),
                                           // padding: EdgeInsets.only(top:0.05),
@@ -827,7 +856,7 @@ class _Body extends State<SignuserScreen> {
                                               );
                                             },
                                           ), //
-                                        ),):Container(height: 145,),
+                                        ),),):Container(height: 145,),
                                     ],
                                   ),
                                 ),
@@ -840,7 +869,7 @@ class _Body extends State<SignuserScreen> {
                                         side: BorderSide(color: Colors.transparent)
                                     ),
                                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                                    color: Color(0xFFECCB45),
+                                    color: PURPEL,
                                     onPressed: () async {
                                       if(!card1) {
                                         setState(() {
@@ -874,7 +903,7 @@ class _Body extends State<SignuserScreen> {
                                                 senddata();
                                                 Navigator.pushAndRemoveUntil(
                                                     context,
-                                                    MaterialPageRoute(builder: (context) => InsideAPP()),
+                                                    MaterialPageRoute(builder: (context) => U_PROFILE(name_Me: nameController.text,)),
                                                         (route) => false);
                                               }
                                             });
@@ -902,13 +931,13 @@ class _Body extends State<SignuserScreen> {
                                       style: TextStyle(
                                         fontSize: 21.0,
                                         fontFamily: 'Changa',
-                                        color: Color(0xFF1C1C1C),
+                                        color:  Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),):Text('استمرار',
                                         style: TextStyle(
                                           fontSize: 21.0,
                                           fontFamily: 'Changa',
-                                          color: Color(0xFF1C1C1C),
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ))),
                                   ),
@@ -920,7 +949,7 @@ class _Body extends State<SignuserScreen> {
                                     margin: EdgeInsets.only(top: 30,left: 0,right: 190),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ? Color(0xFFECCB45) :  Colors.grey.withOpacity(0.1),
+                                      color: card1 ? Colors.orangeAccent :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -929,7 +958,7 @@ class _Body extends State<SignuserScreen> {
                                     margin: EdgeInsets.only(top: 30,left: 100,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ?  Colors.grey.withOpacity(0.1):Color(0xFFECCB45),
+                                      color: card1 ?  Colors.grey.withOpacity(0.5):Colors.orangeAccent,
                                     ),
                                   ),
 
@@ -1145,7 +1174,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Color(0xFFF3D657);
+    paint.color = Colors.orangeAccent;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();
@@ -1160,4 +1189,23 @@ class CurvePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class Clipper4 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.5,size.height - 110, size.width, size.height);
+    path.lineTo(size.width, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
+
 }

@@ -3,20 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/screens/home2.dart';
 import 'package:flutterphone/screens/welcome.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:flutterphone/constants.dart';
+import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:io';
-import 'package:flutterphone/screens/slider.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-import 'Inside_the_app/user_order.dart';
-import 'Inside_the_app/zxc.dart';
-import 'Worker/cv.dart';
-import 'Worker/new_orders.dart';
-import 'Worker/orders.dart';
-import 'Worker/setting_worker.dart';
-import 'Worker/worker_order.dart';
-
+import 'Map.dart';
+import 'button.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -46,8 +38,8 @@ class MyApp extends StatelessWidget {
        visualDensity: VisualDensity.adaptivePlatformDensity,
        // scaffoldBackgroundColor: Colors.white,
       ),
-          // home: CalendarPage(),
-         home: WelcomeScreen1(),
+          // home: MyApp4(),
+         home: WelcomeScreen(),
     );
   }
 }

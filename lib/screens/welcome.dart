@@ -58,7 +58,7 @@ class _Body extends State<WelcomeScreen1> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor:Color(0xFF1C1C1C),
+        backgroundColor:Colors.orange,
         body: Form(key: formKey,
           child: SingleChildScrollView(
             child: Column(
@@ -75,9 +75,9 @@ class _Body extends State<WelcomeScreen1> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height: MediaQuery.of(context).size.height * 0.38,
                     child: CustomPaint(
-                      painter: CurvePainter(login),
+                      painter: CurvePainter(true),
                       child: Container(
                         //padding: EdgeInsets.only(bottom:50),
                         child: Center(
@@ -97,13 +97,14 @@ class _Body extends State<WelcomeScreen1> {
                                     child:GestureDetector(
                                         onTap: (){
                                           Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (BuildContext context) => Loginscreen()));
+                                              builder: (BuildContext context) => SignWorker()));
                                         },
                                         child:Text('تسجيل الدخول كمقدم خدمة ',
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xFF1C1C1C),
+                                            // backgroundColor: Colors.orange,
                                             // decoration: TextDecoration.underline,
                                             fontFamily: 'Changa',),)
 
@@ -124,7 +125,7 @@ class _Body extends State<WelcomeScreen1> {
                                         style: TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
-                                          color: Color(0xFF1C1C1C),
+                                          color: Colors.black,
                                           fontFamily: 'Changa',
                                           fontStyle: FontStyle.italic,
                                         ),)
@@ -157,7 +158,7 @@ class _Body extends State<WelcomeScreen1> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.62,
                     child: Container(
                         color: Colors.transparent,
                         padding: EdgeInsets.only(top: 0),
@@ -176,7 +177,7 @@ class _Body extends State<WelcomeScreen1> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Color(0xFFF3D657),
+                                              color:Colors.white,
                                               fontFamily: 'Changa',
                                             ),)
                                       ),
@@ -191,7 +192,7 @@ class _Body extends State<WelcomeScreen1> {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(0xFFF3D657),
+                                                color: Colors.white,
                                                 decoration: TextDecoration.underline,
                                                 fontFamily: 'Changa',),)
 
@@ -207,7 +208,7 @@ class _Body extends State<WelcomeScreen1> {
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
-                                              color: Color(0xFFF3D657),
+                                              color: Colors.white,
                                               // decoration: TextDecoration.underline,
                                               fontFamily: 'Changa',),)
 
@@ -266,7 +267,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Color(0xFFF3D657);
+    paint.color =Colors.white;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();

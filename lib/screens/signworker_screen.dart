@@ -11,6 +11,7 @@ import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'welcome.dart';
 
 import 'login_screen.dart';
 String IP4="192.168.1.8";
@@ -1289,7 +1290,7 @@ class _Body extends State<SignWorker> {
                     fontFamily: 'Changa',
                   ),),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));
+                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen1()));
                 },
               ),),
           ],

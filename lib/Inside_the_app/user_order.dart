@@ -38,14 +38,14 @@ class _user_order extends State<user_order> {
   StreamController<Map<DateTime, List>> _streamController;
   CalendarController _calendarController;
   Map<DateTime, List<dynamic>> _events;
- // var ListBlock=["8.00 - 9.00 ","9.00 - 10.00","","","",];
+  // var ListBlock=["8.00 - 9.00 ","9.00 - 10.00","","","",];
   Future getList() async {
     var url = 'https://' + IP4 + '/testlocalhost/getList.php';
     var ressponse = await http.post(url, body: {
       "phone": widget.phone,
       "date":formattedDate,
     });
-     ListBlock=[];
+    ListBlock=[];
     var responsepody = json.decode(ressponse.body);
     for (int i = 0; i < responsepody.length; i++) {
       String start_to_end=responsepody[i]['timestart']+" "+"-"+" "+responsepody[i]['timeend'];
@@ -102,11 +102,18 @@ class _user_order extends State<user_order> {
       formattedDate = DateFormat('yyyy-MM-dd').format(day);
       print(formattedDate);
       getList();
-      cheack1();
+      if(ListBlock.isEmpty){
+        print("Nulllll");
+        setState(() {
+
+        });
+        return Center(child: CircularProgressIndicator());
+      }
+      print(ListBlock);
       print(_selectedDay);
     });
     setState(() {
-      
+
     });
   }
   var ListTimeSlot1=[];
@@ -135,51 +142,26 @@ class _user_order extends State<user_order> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   Widget build(BuildContext context) {
     return  Directionality( textDirection: ui.TextDirection.rtl,
-          child:Scaffold(
-            bottomNavigationBar: CurvedNavigationBar(
-           color: Color(0xFFECCB45),
-           buttonBackgroundColor: Color(0xFFECCB45),
-            backgroundColor: MY_BLACK,
-              height: 48,
-              key: _bottomNavigationKey,
-              items: <Widget>[
-                 Icon(Icons.home, size: 25),
-                 Icon(Icons.settings, size: 25),
-                 Icon(Icons.playlist_add_check, size: 25),
-                 Icon(Icons.notifications, size: 25),
-                 Icon(Icons.logout, size: 25),
-                 ],
-                 onTap: (index) {
-                 setState(() {
-                 _page = index;
-                 if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name:name,)));}
-                 // if(_page==1){
-                 //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
-                 // }
-                 });
-                 },
-            ),
-                 backgroundColor: Color(0xFF1C1C1C),
-                 appBar: AppBar(
-                 automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
-                 elevation: 0,
-                 backgroundColor:  Color(0xFFECCB45),
-                 leading: IconButton(
-                 icon: Icon(Icons.arrow_back),
-                 onPressed: (){
-                 Navigator.pop(context);
-                 },
-                 ),
-              ),
-    // backgroundColor: Colors.lightBlueAccent,
-    body: Form(
-    child:Container(
-           height: 670,
-          color: MY_YELLOW,
-          child:Column(
-              children:<Widget>[
-                Container(),
-                //StreamBuilder<Map<DateTime, List>>(
+      child:Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
+          elevation: 0,
+          backgroundColor:PURPEL,
+          leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+            Navigator.pop(context);
+            // Navigator.pop(context);
+          }),
+        ),
+        // backgroundColor: Colors.lightBlueAccent,
+        body: Form(
+          child:Container(
+            height: 670,
+            color: PURPEL,
+            child:Column(
+                children:<Widget>[
+                  Container(),
+                  //StreamBuilder<Map<DateTime, List>>(
                   // stream: _streamController.stream,
                   // builder: (context, snapshot) {
                   //   if (!snapshot.hasData) {
@@ -190,126 +172,126 @@ class _user_order extends State<user_order> {
                   //     );
                   //   }
 
-                    // final events = snapshot.data;
-                     TableCalendar(
-                      onDaySelected: _onDaySelected,
-                      calendarController: _calendarController,
-                      //events: events,
-                      initialCalendarFormat: CalendarFormat.week,
-                      startingDayOfWeek: StartingDayOfWeek.monday,
-                      formatAnimation: FormatAnimation.slide,
-                      headerStyle: HeaderStyle(
-                        centerHeaderTitle: true,
-                        formatButtonVisible: false,
-                        titleTextStyle: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16
-                        ),
-                        leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
-                        rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
-                        leftChevronMargin: EdgeInsets.only(left: 70),
-                        rightChevronMargin: EdgeInsets.only(right: 70),
+                  // final events = snapshot.data;
+                  TableCalendar(
+                    onDaySelected: _onDaySelected,
+                    calendarController: _calendarController,
+                    //events: events,
+                    initialCalendarFormat: CalendarFormat.week,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    formatAnimation: FormatAnimation.slide,
+                    headerStyle: HeaderStyle(
+                      centerHeaderTitle: true,
+                      formatButtonVisible: false,
+                      titleTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16
                       ),
-                      calendarStyle: CalendarStyle(
-
-                          todayColor: Color(0xFF1C1C1C),
-                          selectedColor: Color(0xFFD9BC43),
-                          weekendStyle: TextStyle(
-                              color: Colors.white
-                          ),
-                          weekdayStyle: TextStyle(
-                              color: Colors.white
-                          )
-                      ),
-                      daysOfWeekStyle: DaysOfWeekStyle(
-                          weekendStyle: TextStyle(
-                              color: Colors.white
-                          ),
-                          weekdayStyle: TextStyle(
-                              color: Colors.white
-                          )
-
-                      ),),
-                      SizedBox(height: 5,),
-                      SizedBox(height: 5,),
-                Expanded(
-                  child: Container(
-                    width: 500,
-                    height: 500,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-                        color: MY_BLACK,
+                      leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
+                      rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
+                      leftChevronMargin: EdgeInsets.only(left: 70),
+                      rightChevronMargin: EdgeInsets.only(right: 70),
                     ),
+                    calendarStyle: CalendarStyle(
 
+                        todayColor: Color(0xFF1C1C1C),
+                        selectedColor: L_ORANGE,
+                        weekendStyle: TextStyle(
+                            color: Colors.white
+                        ),
+                        weekdayStyle: TextStyle(
+                            color: Colors.white
+                        )
+                    ),
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                        weekendStyle: TextStyle(
+                            color: Colors.white
+                        ),
+                        weekdayStyle: TextStyle(
+                            color: Colors.white
+                        )
+
+                    ),),
+                  SizedBox(height: 5,),
+                  SizedBox(height: 5,),
+                  Expanded(
                     child: Container(
+                      width: 500,
                       height: 500,
-                      margin: EdgeInsets.only(right: 1),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            cheack1(),
-                            cheack2(),
-                            Container(
-                              margin: EdgeInsets.only(top: 20,left: 290),
-                             child:Icon(Icons.wb_sunny,size: 50,color: Colors.yellow,),
-                            ),
-                            //IconData(Icons.wb_sunny),),
-                            SizedBox(height: 20,),
-                            Container(
-                              height: 200,
-                              child:GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 20,
-                                  childAspectRatio: 2.2,
-                                ),
-                                itemCount: ListTimeSlot1.length,
-                                itemBuilder: (context,index){
-                                  return time1(ListTimeSlot1[index],"Am");
-                                },
-                              )
-                            ),
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+                        color: Colors.white,
+                      ),
+                      child: Container(
+                        height: 500,
+                        margin: EdgeInsets.only(right: 1),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              cheack1(),
+                              cheack2(),
+                              Container(
+                                margin: EdgeInsets.only(top: 20,left: 290),
+                                child:Icon(Icons.wb_sunny,size: 50,color: Colors.yellow,),
+                              ),
+                              //IconData(Icons.wb_sunny),),
+                              SizedBox(height: 20,),
+                              Container(
+                                  height: 200,
+                                  child:GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 20,
+                                      childAspectRatio: 2.2,
+                                    ),
+                                    itemCount: ListTimeSlot1.length,
+                                    itemBuilder: (context,index){
+                                      return time1(ListTimeSlot1[index],"Am");
+                                    },
+                                  )
+                              ),
 
-                            SizedBox(height: 50,),
-                            // Container(
-                            //   margin: EdgeInsets.only(top: 20,left: 220),
-                            //   child:Icon(Icons.wb_cloudy,size: 100,color:Color(0xFF1C1C1C)),
-                            // ),
-                            Container(
+                              SizedBox(height:10,),
+                              Container(
+                                margin: EdgeInsets.only(top: 20,left: 290),
+                                child:Icon(Icons.wb_cloudy,size: 50,color:Color(0xFF1C1C1C)),
+                              ),
+                              SizedBox(height: 20,),
+                              Container(
 
-                                height: 200,
-                                child:GridView.builder(
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 20,
-                                    childAspectRatio: 2.2,
-                                  ),
-                                  itemCount: ListTimeSlot2.length,
-                                  itemBuilder: (context,index){
-                                    if(ListBlock.contains(ListTimeSlot2[index])){
-                                      while(true){
-                                        index++;
-                                        if(!ListBlock.contains(ListTime2[index])){break;}
+                                  height: 200,
+                                  child:GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 20,
+                                      childAspectRatio: 2.2,
+                                    ),
+                                    itemCount: ListTimeSlot2.length,
+                                    itemBuilder: (context,index){
+                                      if(ListBlock.contains(ListTimeSlot2[index])){
+                                        while(true){
+                                          index++;
+                                          if(!ListBlock.contains(ListTime2[index])){break;}
+                                        }
+                                        print(index);
                                       }
-                                      print(index);
-                                    }
-                                    return time1(ListTime2[index],"Pm");
-                                  },
-                                )
-                            ),
-                          ],
+                                      return time1(ListTime2[index],"Pm");
+                                    },
+                                  )
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
 
-              ]
-          ),
-    ),),),);
+                ]
+            ),
+          ),),),);
   }
 }
 Container time1(String time,String d)
@@ -320,24 +302,24 @@ Container time1(String time,String d)
       child: Container(
         margin: EdgeInsets.only(right: 4,),
         //padding: EdgeInsets.symmetric(horizontal: 5),
-       // height: 54,
-       // width: 119,
+        // height: 54,
+        // width: 119,
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Color(0xFF1C1C1C), width: 1.7),
           borderRadius: BorderRadius.circular(20),),
         child:Center(
-            child:Container(
-              color: Colors.white,
-              // margin: EdgeInsets.only(right: 20),
-              child:Text(time,
-                style: TextStyle(
-                  fontFamily: 'Changa',
-                  color: Color(0xFF1C1C1C),
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),),
-            ),
+          child:Container(
+            color: Colors.white,
+            // margin: EdgeInsets.only(right: 20),
+            child:Text(time,
+              style: TextStyle(
+                fontFamily: 'Changa',
+                color: Color(0xFF1C1C1C),
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+              ),),
+          ),
         ),),
     ),
   );}
@@ -349,33 +331,33 @@ Container time2(String time,String d)
   }
   else
   {
-  return Container(
-    child:GestureDetector(
-      onTap: (){},
-      child: Container(
-        margin: EdgeInsets.only(right: 8,),
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        height: 54,
-        width: 115,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 1.7),
-          borderRadius: BorderRadius.circular(20),),
-        child: Row(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              // margin: EdgeInsets.only(right: 20),
-              child:Text(time,
-                style: TextStyle(
-                  fontFamily: 'Changa',
-                  color: Color(0xFFECCB45),
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                ),),
-            ),
-          ],
-        ),),
-    ),
-  );}
+    return Container(
+      child:GestureDetector(
+        onTap: (){},
+        child: Container(
+          margin: EdgeInsets.only(right: 8,),
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          height: 54,
+          width: 115,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.black, width: 1.7),
+            borderRadius: BorderRadius.circular(20),),
+          child: Row(
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                // margin: EdgeInsets.only(right: 20),
+                child:Text(time,
+                  style: TextStyle(
+                    fontFamily: 'Changa',
+                    color: Color(0xFFECCB45),
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),),
+              ),
+            ],
+          ),),
+      ),
+    );}
 }

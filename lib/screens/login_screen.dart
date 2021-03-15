@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
@@ -63,7 +64,7 @@ class _Body extends State<Loginscreen> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return U_PROFILE(name:nameController.text,);
+            return U_PROFILE(name_Me:nameController.text,);
           },
         ),
       );
@@ -99,14 +100,13 @@ class _Body extends State<Loginscreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor:Color(0xFF1C1C1C),
+        backgroundColor:Color(0xF0B67CFB),
         // appBar: PreferredSize(
         // preferredSize: Size.fromHeight(180.0),
         //  child:AppBar(
         //   flexibleSpace: Image(
         //     image: AssetImage('assets/icons/ho.jpg'),
         //     fit: BoxFit.cover,
-        //   ),
         //   backgroundColor: Colors.transparent,
         // ),),
         body: Form(key: _formKey,
@@ -182,16 +182,16 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Color(0xFFECCB45),
-                                        prefixIcon: Icon(Icons.person,color: Color(0xFFD9BC43),),
+                                        fillColor: Colors.white,
+                                        prefixIcon: Icon(Icons.person,color: Colors.orangeAccent.withOpacity(0.5),),
                                         enabledBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Color(0xFFECCB45)),
+                                          borderSide:  BorderSide(color: Colors.orangeAccent),
 
                                         ),
                                         focusedBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Color(0xFFECCB45) ),
+                                          borderSide:  BorderSide(color: Colors.orangeAccent ),
 
                                         ),
                                         hintText: 'الاسم ',
@@ -254,25 +254,25 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Color(0xFFECCB45),
+                                        fillColor: Colors.white,
                                         prefixIcon: Icon(
                                           Icons.lock,
-                                          color: Color(0xFFD9BC43),
+                                          color: Colors.orangeAccent.withOpacity(0.5),
 
                                         ),
                                         suffixIcon: IconButton(
-                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color: Color(0xFFD9BC43),),
+                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color:Colors.orangeAccent.withOpacity(0.5),),
                                           color: Colors.cyan,
                                           onPressed:_togglevisibility,
                                         ),
                                         enabledBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Color(0xFFECCB45)),
+                                          borderSide:  BorderSide(color: Colors.orangeAccent),
 
                                         ),
                                         focusedBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Color(0xFFECCB45) ),
+                                          borderSide:  BorderSide(color: Colors.orangeAccent),
 
                                         ),
                                         hintText: 'كلمة السر',
@@ -355,7 +355,7 @@ class _Body extends State<Loginscreen> {
                                               side: BorderSide(color: Colors.transparent)
                                           ),
                                           // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-                                          color: Color(0xFF1C1C1C),
+                                          color: Colors.orangeAccent,
                                           onPressed: (){
                                             if (_formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
@@ -373,7 +373,7 @@ class _Body extends State<Loginscreen> {
                                           child: Text(
                                             "تسجيل الدخول",
                                             style: TextStyle(
-                                              color: Color(0xFFF3D657),
+                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                               fontSize: 21.0,
                                               fontFamily: 'Changa',
@@ -381,6 +381,7 @@ class _Body extends State<Loginscreen> {
                                           ),
                                         ),
                                       ),
+
                                       Container(height: 5,),
                                       AlreadyHaveAnAccountCheck(
                                         press: () {
@@ -403,8 +404,15 @@ class _Body extends State<Loginscreen> {
                       ),
                     ),
                   ),
-                )
-
+                ),
+                // ClipPath(
+                //   clipper: WaveClipperOne(reverse: true),
+                //   child: Container(
+                //     height: 200,
+                //     color: Colors.deepPurple,
+                //     child: Center(child: Text("WaveClipperOne(reverse: true)")),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -421,7 +429,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Color(0xFFF3D657);
+    paint.color = Colors.white;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();
