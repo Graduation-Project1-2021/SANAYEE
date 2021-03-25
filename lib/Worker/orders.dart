@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'ColorScheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/screens/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'cv.dart';
+import '../constants.dart';
 String IP4="192.168.1.8";
 DateTime _selectedDay = DateTime.now();
 
@@ -106,7 +105,7 @@ class _calendarPageState extends State<calendarPage> {
   Widget build(BuildContext context) {
     return  Directionality( textDirection: TextDirection.rtl,
     child:Scaffold(
-      backgroundColor: purple,
+      backgroundColor: B,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -256,7 +255,7 @@ class _calendarPageState extends State<calendarPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: TextStyle(
-                    color: purple,
+                    color: B,
                     fontWeight: FontWeight.w700
                 ),),
                 SizedBox(height: 10,),
@@ -268,10 +267,10 @@ class _calendarPageState extends State<calendarPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.timer, color: purple,),
+                    Icon(Icons.timer, color: B,),
                     SizedBox(width: 5,),
                     Text("$time - 5 pm", style: TextStyle(
-                        color: purple,
+                        color: B,
                         fontSize: 13,
                         fontWeight: FontWeight.w600
                     ),)
@@ -300,14 +299,14 @@ class _calendarPageState extends State<calendarPage> {
                 ),
                 Row(
                   children: [
-                    Icon(Icons.call, color: purple,),
+                    Icon(Icons.call, color: B,),
                     SizedBox(width: 5,),
-                    Icon(Icons.mail_outline, color: purple,),
+                    Icon(Icons.mail_outline, color: B,),
                     Expanded(
                       child: Container(),
                     ),
                     Text("\$50", style: TextStyle(
-                        color: purple,
+                        color: B,
                         fontSize: 16,
                         fontWeight: FontWeight.w600
                     ),)
@@ -375,7 +374,7 @@ class _new_order extends State<new_order> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name, style: TextStyle(
-                    color: purple,
+                    color: B,
                     fontWeight: FontWeight.w700
                 ),),
                 SizedBox(height: 10,),
@@ -387,16 +386,16 @@ class _new_order extends State<new_order> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.timer, color: purple,),
+                    Icon(Icons.timer, color: A,),
                     SizedBox(width: 5,),
                     Text(timeend +"-" +timestart, style: TextStyle(
-                        color: purple,
+                        color: A,
                         fontSize: 13,
                         fontWeight: FontWeight.w600
                     ),),
                     Text(" "),
                     Text(Am_Pm=="am"?"صباحا":"مساء", style: TextStyle(
-                        color: purple,
+                        color: A,
                         fontSize: 13,
                         fontWeight: FontWeight.w600
                     ),),

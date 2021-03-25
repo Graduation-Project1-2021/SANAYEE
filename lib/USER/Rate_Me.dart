@@ -1,4 +1,4 @@
-import 'package:flutterphone/Inside_the_app/user_Profile.dart';
+import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/components/review_face.dart';
 import 'package:http/http.dart' as http;
@@ -13,10 +13,11 @@ import 'WORKER_PROFILE.dart';
 String IP4="192.168.1.8";
 DateTime date=DateTime.now();
 class Rate extends StatefulWidget {
-  // final work;
-  // final name_Me;
-  // final location;
-  // Rate({this.work,this.name_Me,this.location});
+  final phoneuser;
+  final username;
+  final phoneworker;
+  final id;
+  Rate({this.phoneuser,this.phoneworker,this.id,this.username});
   @override
   _Body createState() => _Body();
 }
@@ -26,8 +27,8 @@ class _Body extends State<Rate> {
   Future rate()async{
     var url='https://'+IP4+'/testlocalhost/Rate.php';
     var ressponse = await http.post(url, body: {
-      "phoneworker":'+970595320479',
-      "phoneuser": '+97059479',
+      "phoneworker":widget.phoneworker,
+      "phoneuser": widget.phoneuser,
       "service": _rating1.toString(),
       "speed":  _rating2.toString(),
       "respect": _rating3.toString(),
@@ -36,6 +37,7 @@ class _Body extends State<Rate> {
       "happyornot":(value+1).toString(),
       "total":((_rating1+_rating2+_rating3+_rating4+_rating5+(value+1))/6.0).toString(),
       "date":date.toString(),
+      "id":widget.id,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
@@ -70,8 +72,8 @@ class _Body extends State<Rate> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          backgroundColor:Colors.yellow,
-          leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+          backgroundColor:Colors.white,
+          leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.black54,), onPressed: (){
             Navigator.pop(context);
           }),
         ),
@@ -81,7 +83,7 @@ class _Body extends State<Rate> {
             Container(
               height: 100,
               width: 500,
-              color: Colors.yellow,
+              color: Colors.white,
               child:Column(
                 children: [
                   Container(
@@ -91,7 +93,7 @@ class _Body extends State<Rate> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                         fontFamily: 'Changa',
                       ),),
                   ),
@@ -103,17 +105,22 @@ class _Body extends State<Rate> {
                     alignment: Alignment.topRight,
                     child:Row(
                       children: [
-                        Icon(Icons.info_outline,size:30,color: Colors.grey[600],),
+                        Icon(Icons.info_outline,size:30,color: Colors.black54,),
                         Text('  نأمل منك أن تقوم بتقييم الصنايعي بناء على المصداقية',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
+                            color: Colors.black54,
                             fontFamily: 'Changa',
                           ),),
                       ],
                     ),
                   ),
+                  SizedBox(height: 2.0,),
+                  Container(child: Divider(
+                    thickness: 1.0,
+                    color: Colors.black54.withOpacity(0.1),
+                  ),),
                   // Text('في النواحي التالية',
                   //   style: TextStyle(
                   //     fontSize: 14,
@@ -128,7 +135,7 @@ class _Body extends State<Rate> {
                child:Container(
                child: Column(
                  children: [
-                   SizedBox(height: 30.0,),
+                   SizedBox(height: 20.0,),
                    Row(
                      children: [
                        Container(margin:EdgeInsets.only(left:10),child: _ratingBar(_ratingBarMode1),),
@@ -214,6 +221,11 @@ class _Body extends State<Rate> {
               // ),
               child:  FlatButton(
                 onPressed: ()async{
+                  print(widget.phoneuser);
+                  print(widget.phoneworker);
+                  print(widget.id);
+                  print(widget.username);
+
                   print(value);
                   await rate();
                   _showMyDialog();
@@ -449,7 +461,7 @@ class _Body extends State<Rate> {
                         fontFamily: 'Changa',
                       ),),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.username,)));
                     },
                   ),),
               ],

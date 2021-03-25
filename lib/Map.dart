@@ -1,178 +1,147 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'custom_drop_button.dart';
-
-
-
-class MyApp4 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Flutter custom clipper example"),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(20.0),
-        children: <Widget>[
-          SimpleAccountMenu(
-            icons: [
-              Icon(Icons.person),
-              Icon(Icons.settings),
-              Icon(Icons.credit_card),
-            ],
-            iconColor: Colors.white,
-            onChange: (index) {
-              print(index);
-            },
-          ),
-
-          ClipPath(
-            clipper: MultipleRoundedCurveClipper(),
-            child: Container(
-              height: 100,
-              color: Colors.pink,
-              child: Center(child: Text("MultipleRoundedCurveClipper()")),
-            ),
-          ),
-          SizedBox(height: 20.0,),
-          ClipPath(
-            clipper: MultiplePointedEdgeClipper(),
-            child: Container(
-              height: 100,
-              color: Colors.green,
-              child: Center(child: Text("MultiplePointedEdgeClipper()")),
-            ),
-          ),
-          ClipPath(
-            clipper: MultiplePointedEdgeClipper(),
-            child: Container(
-              height: 100,
-              color: Colors.green,
-              child: Center(child: Text("MultiplePointedEdgeClipper()")),
-            ),
-          ),
-          SizedBox(height: 20.0,),
-          ClipPath(
-            clipper: OctagonalClipper(),
-            child: Container(
-              height: 220,
-              color: Colors.red,
-              child: Center(child: Text("OctagonalClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: HexagonalClipper(),
-            child: Container(
-              height: 220,
-              color: Colors.blueAccent,
-              child: Center(child: Text("HexagonalClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: HexagonalClipper(reverse: true),
-            child: Container(
-              height: 220,
-              color: Colors.orangeAccent,
-              child: Center(child: Text("HexagonalClipper(reverse: true)")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: ParallelogramClipper(),
-            child: Container(
-              height: 220,
-              color: Colors.pinkAccent,
-              child: Center(child: Text("ParallelogramClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: DiagonalPathClipperOne(),
-            child: Container(
-              height: 120,
-              color: Colors.red,
-              child: Center(child: Text("DiagonalPathClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: DiagonalPathClipperTwo(),
-            child: Container(
-              height: 120,
-              color: Colors.pink,
-              child: Center(child: Text("DiagonalPathClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: WaveClipperOne(),
-            child: Container(
-              height: 120,
-              color: Colors.deepPurple,
-              child: Center(child: Text("WaveClipperOne()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: WaveClipperOne(reverse: true),
-            child: Container(
-              height: 120,
-              color: Colors.deepPurple,
-              child: Center(child: Text("WaveClipperOne(reverse: true)")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: WaveClipperTwo(),
-            child: Container(
-              height: 120,
-              color: Colors.orange,
-              child: Center(child: Text("WaveClipperTwo()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: WaveClipperTwo(reverse: true),
-            child: Container(
-              height: 120,
-              color: Colors.orange,
-              child: Center(child: Text("WaveClipperTwo(reverse: true)")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          ClipPath(
-            clipper: RoundedDiagonalPathClipper(),
-            child: Container(
-              height: 320,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                color: Colors.orange,
-              ),
-              child: Center(child: Text("RoundedDiagonalPathClipper()")),
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          // ClipOval(
-          //   clipper: OvalTopBorderClipper(),
-          //   child: Container(
-          //     height: 120,
-          //     color: Colors.yellow,
-          //     child: Center(child: Text("OvalTopBorderClipper()")),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-}
+// import 'package:flutter/material.dart';
+// import 'package:percent_indicator/circular_percent_indicator.dart';
+//
+// void main() {
+//   runApp(MyApp());
+// }
+//
+// class MyApp extends StatelessWidget {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Circular Progress',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: MyHomePage(title: 'Circular Progress'),
+//     );
+//   }
+// }
+//
+// class MyHomePage extends StatefulWidget {
+//   MyHomePage({Key key, this.title}) : super(key: key);
+//
+//   final String title;
+//
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }
+//
+// class _MyHomePageState extends State<MyHomePage> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: new AppBar(
+//         title: new Text("Circular Percent Indicators"),
+//       ),
+//       body: Center(
+//         child: ListView(
+//             children: <Widget>[
+//               new CircularPercentIndicator(
+//                 radius: 100.0,
+//                 lineWidth: 10.0,
+//                 percent: 0.8,
+//                 header: new Text("Icon header"),
+//                 center: new Icon(
+//                   Icons.person_pin,
+//                   size: 50.0,
+//                   color: Colors.blue,
+//                 ),
+//                 backgroundColor: Colors.grey,
+//                 progressColor: Colors.blue,
+//               ),
+//               new CircularPercentIndicator(
+//                 radius: 130.0,
+//                 animation: true,
+//                 animationDuration: 1200,
+//                 lineWidth: 15.0,
+//                 percent: 0.4,
+//                 center: new Text(
+//                   "40 hours",
+//                   style:
+//                   new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+//                 ),
+//                 circularStrokeCap: CircularStrokeCap.butt,
+//                 backgroundColor: Colors.yellow,
+//                 progressColor: Colors.red,
+//               ),
+//               new CircularPercentIndicator(
+//                 radius: 120.0,
+//                 lineWidth: 13.0,
+//                 animation: true,
+//                 percent: 0.7,
+//                 center: new Text(
+//                   "70.0%",
+//                   style:
+//                   new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+//                 ),
+//                 footer: new Text(
+//                   "Sales this week",
+//                   style:
+//                   new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
+//                 ),
+//                 circularStrokeCap: CircularStrokeCap.round,
+//                 progressColor: Colors.purple,
+//               ),
+//               Padding(
+//                 padding: EdgeInsets.all(15.0),
+//                 child: new CircularPercentIndicator(
+//                   radius: 60.0,
+//                   lineWidth: 5.0,
+//                   percent: 1.0,
+//                   center: new Text("100%"),
+//                   progressColor: Colors.green,
+//                 ),
+//               ),
+//               Container(
+//                 padding: EdgeInsets.all(15.0),
+//                 child: new Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: <Widget>[
+//                     new CircularPercentIndicator(
+//                       radius: 45.0,
+//                       lineWidth: 4.0,
+//                       percent: 0.10,
+//                       center: new Text("10%"),
+//                       progressColor: Colors.red,
+//                     ),
+//                     new Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+//                     ),
+//                     new CircularPercentIndicator(
+//                       radius: 45.0,
+//                       lineWidth: 4.0,
+//                       percent: 0.30,
+//                       center: new Text("30%"),
+//                       progressColor: Colors.orange,
+//                     ),
+//                     new Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+//                     ),
+//                     new CircularPercentIndicator(
+//                       radius: 45.0,
+//                       lineWidth: 4.0,
+//                       percent: 0.60,
+//                       center: new Text("60%"),
+//                       progressColor: Colors.yellow,
+//                     ),
+//                     new Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+//                     ),
+//                     new CircularPercentIndicator(
+//                       radius: 45.0,
+//                       lineWidth: 4.0,
+//                       percent: 0.90,
+//                       center: new Text("90%"),
+//                       progressColor: Colors.green,
+//                     )
+//                   ],
+//                 ),
+//               )
+//             ]),
+//       ),
+//     );
+//   }
+// }

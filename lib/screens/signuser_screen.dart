@@ -1,27 +1,24 @@
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
+import 'package:flutterphone/screens/welcome.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'login_screen.dart';
 import 'welcome.dart';
-
-
-import '../LoginScreen.dart';
 String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
 
 FocusNode myFocusNode = new FocusNode();
+
 
 class SignuserScreen extends StatefulWidget {
   @override
@@ -31,10 +28,10 @@ class SignuserScreen extends StatefulWidget {
 
 class _Body extends State<SignuserScreen> {
 
-  String country_id;
+  String country_id="اختيار المنطقة";
   String hint="اختيار المنطقة";
   List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا","الخليل","قلقيلية"];
-
+  OverlayEntry floatingDropdown;
   TextEditingController nameController = TextEditingController();
   TextEditingController namefirstController = TextEditingController();
   TextEditingController namelastController = TextEditingController();
@@ -71,8 +68,12 @@ class _Body extends State<SignuserScreen> {
   bool Country=true;
   bool card1=true;
   bool card2=false;
+  bool isDropdownOpened=false;
+  bool ButtonDrop=false;
   var mytoken ;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  GlobalKey actionKey;
+  double height, width, xPosition, yPosition;
   @override
   void initState() {
 
@@ -97,6 +98,30 @@ class _Body extends State<SignuserScreen> {
   void _togglevisibility2() {
     setState(() {
       _showPassword2 = !_showPassword2;
+    });
+  }
+  void findDropdownData() {
+    RenderBox renderBox = actionKey.currentContext.findRenderObject();
+    height = renderBox.size.height;
+    width = renderBox.size.width;
+    Offset offset = renderBox.localToGlobal(Offset.zero);
+    xPosition = offset.dx;
+    yPosition = offset.dy;
+    print(height);
+    print(width);
+    print(xPosition);
+    print(yPosition);
+  }
+  OverlayEntry _createFloatingDropdown() {
+    return OverlayEntry(builder: (context) {
+      return Positioned(
+        left: 50,
+        top: 350,
+        height: 500,
+        child: Drop(
+
+        ),
+      );
     });
   }
 
@@ -158,7 +183,7 @@ class _Body extends State<SignuserScreen> {
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: [Colors.orangeAccent, Colors.orangeAccent.withOpacity(0.8)])),
+                                colors: [B,G]),),
 
                         // child: Center(child: Text("MultiplePointedEdgeClipper()")),
                       ),
@@ -233,15 +258,15 @@ class _Body extends State<SignuserScreen> {
                                                ),
                                                decoration: InputDecoration(
                                                  filled: true,
-                                                 fillColor: Colors.grey.withOpacity(0.05),
+                                                 fillColor:Colors.grey[100],
                                                  enabledBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                                   borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                  ),
                                                  focusedBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                                   borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                  ),
                                                  hintText: 'الاسم الأول ',
@@ -280,15 +305,15 @@ class _Body extends State<SignuserScreen> {
                                                ),
                                                decoration: InputDecoration(
                                                  filled: true,
-                                                 fillColor: Colors.grey.withOpacity(0.05),
+                                                 fillColor:Colors.grey[100],
                                                  enabledBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                                   borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                  ),
                                                  focusedBorder: new OutlineInputBorder(
                                                    borderRadius: new BorderRadius.circular(30.0),
-                                                   borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                                   borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                  ),
                                                  //contentPadding: EdgeInsets.only(),
@@ -351,16 +376,16 @@ class _Body extends State<SignuserScreen> {
                                         ),
                                         decoration: InputDecoration(
                                           filled: true,
-                                          fillColor: Colors.grey.withOpacity(0.05),
+                                          fillColor: Colors.grey[100],
                                           prefixIcon: Icon(Icons.person,color: Color(0xFF666360)),
                                           enabledBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                            borderSide:  BorderSide(color:Colors.grey[100]),
 
                                           ),
                                           focusedBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                            borderSide:  BorderSide(color:Colors.grey[100]),
 
                                           ),
                                           hintText: 'اسم المستخدم ',
@@ -424,7 +449,7 @@ class _Body extends State<SignuserScreen> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.05),
+                                            fillColor: Colors.grey[100],
                                             prefixIcon: Icon(Icons.lock, color:Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -436,12 +461,12 @@ class _Body extends State<SignuserScreen> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             hintText: ('كلمة السر'),
@@ -517,7 +542,7 @@ class _Body extends State<SignuserScreen> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.05),
+                                            fillColor: Colors.grey[100],
                                             prefixIcon: Icon(Icons.lock, color: Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -529,12 +554,12 @@ class _Body extends State<SignuserScreen> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             hintText: ('تأكيد كلمة السر'),
@@ -596,7 +621,7 @@ class _Body extends State<SignuserScreen> {
                                           onPressed: () {
                                             if(card1){
                                               Navigator.of(context).push(
-                                                  MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen1()));}
+                                                  MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
                                             if(!card1){
                                               card1=true;
                                               setState(() {
@@ -605,62 +630,106 @@ class _Body extends State<SignuserScreen> {
                                           },
                                           icon: Icon(
                                             Icons.arrow_back,
-                                            color:Colors.orangeAccent,
+                                            color:Colors.yellow,
                                             size: 20.0,
                                           ),),),
-                                      Directionality(textDirection:TextDirection.rtl, child:
-                                      Container(
-                                          margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                          padding: EdgeInsets.fromLTRB(20,15,20,10),
-                                          width: size.width * 0.8,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.05),
-                                            borderRadius: BorderRadius.circular(30.0),
-                                            // border: Border.all(color: Colors.grey, width: 1.2)
-                                          ),
-                                          child:DropdownButton(
-                                            isExpanded: true,
-                                            itemHeight: 50,
-                                            icon: Icon(Icons.pin_drop),
-                                            iconSize:30.0,
-                                            value: country_id,
-                                            dropdownColor: Colors.white,
-                                            onChanged: (value){
-                                                 setState(() {
-                                                   country_id=value;
-                                                   value=value;
-                                                   print(country_id);
-                                                   // Country=true;
-                                                 });
-                                            },
-                                            hint:Text(" اختيار المنطقة ",
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontFamily: 'Changa',
-                                                color: Color(0xFF666360),
-                                                fontWeight: FontWeight.bold,
-                                              ),),
-                                            underline: Container(color: Colors.transparent),
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Changa',
-                                              color: Color(0xFF666360),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            items:country.map((value){
-                                              return DropdownMenuItem(
-                                                child: Container(
-                                                  height: 50,
-                                                  width: 260.0,
-                                                  child: Text(value, textAlign: TextAlign.right),
-                                                ),
-                                                value: value,
-                                              );
-                                            }).toList(),
 
-                                          )
-                                      ),),
+                                      GestureDetector(
+                                        key: actionKey,
+                                        onTap: () {
+                                          setState(() {
+                                            if (isDropdownOpened) {
+                                              floatingDropdown.remove();
+                                            } else {
+                                              //findDropdownData();
+                                              floatingDropdown = _createFloatingDropdown();
+                                              Overlay.of(context).insert(floatingDropdown);
+                                            }
+                                            isDropdownOpened = !isDropdownOpened;
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 60,
+                                          width:size.width*0.8,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: Colors.grey[100],
+                                          ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                country_id,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Changa',
+                                                  color: Color(0xFF666360),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.location_on,
+                                                color: Color(0xFF666360),
+                                                size: 27,
+                                              ),
+                                            ],
+                                          ),
+                                        ),),
+
+                                      // Directionality(textDirection:TextDirection.rtl, child:
+                                      // Container(
+                                      //     margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                      //     padding: EdgeInsets.fromLTRB(20,15,20,10),
+                                      //     width: size.width * 0.8,
+                                      //     height: 60,
+                                      //     decoration: BoxDecoration(
+                                      //       color: Colors.grey[100],
+                                      //       borderRadius: BorderRadius.circular(30.0),
+                                      //       // border: Border.all(color: Colors.grey, width: 1.2)
+                                      //     ),
+                                      //     child:DropdownButton(
+                                      //       isExpanded: true,
+                                      //       itemHeight: 50,
+                                      //       icon: Icon(Icons.pin_drop),
+                                      //       iconSize:30.0,
+                                      //       value: country_id,
+                                      //       dropdownColor: Colors.white,
+                                      //       onChanged: (value){
+                                      //            setState(() {
+                                      //              country_id=value;
+                                      //              value=value;
+                                      //              print(country_id);
+                                      //              // Country=true;
+                                      //            });
+                                      //       },
+                                      //       hint:Text(" اختيار المنطقة ",
+                                      //         style: TextStyle(
+                                      //           fontSize: 16.0,
+                                      //           fontFamily: 'Changa',
+                                      //           color: Color(0xFF666360),
+                                      //           fontWeight: FontWeight.bold,
+                                      //         ),),
+                                      //       underline: Container(color: Colors.transparent),
+                                      //       style: TextStyle(
+                                      //         fontSize: 16.0,
+                                      //         fontFamily: 'Changa',
+                                      //         color: Color(0xFF666360),
+                                      //         fontWeight: FontWeight.bold,
+                                      //       ),
+                                      //       items:country.map((value){
+                                      //         return DropdownMenuItem(
+                                      //           child: Container(
+                                      //             height: 50,
+                                      //             width: 260.0,
+                                      //             child: Text(value, textAlign: TextAlign.right),
+                                      //           ),
+                                      //           value: value,
+                                      //         );
+                                      //       }).toList(),
+                                      //
+                                      //     )
+                                      // ),),
                                       Country ? Container(
                                           child: Text('',textAlign:TextAlign.end,
                                             style: TextStyle(
@@ -701,15 +770,15 @@ class _Body extends State<SignuserScreen> {
                                             },
                                             decoration: InputDecoration(
                                               filled: true,
-                                              fillColor: Colors.grey.withOpacity(0.05),
+                                              fillColor: Colors.grey[100],
                                               prefixIcon: Icon(Icons.phone,color: Color(0xFF666360),),
                                               enabledBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.05)),
+                                                borderSide:  BorderSide(color:Colors.grey[100]),
                                               ),
                                               focusedBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.white),
+                                                borderSide:  BorderSide(color:Colors.grey[100]),
 
                                               ),
                                               hintText: ('رقم الهاتف'),
@@ -717,6 +786,7 @@ class _Body extends State<SignuserScreen> {
                                                 fontSize: 16.0,
                                                 fontFamily: 'Changa',
                                                 color: Color(0xFF666360),
+                                                fontWeight: FontWeight.bold,
                                               ),
                                               floatingLabelBehavior: FloatingLabelBehavior.always,
                                             ),
@@ -773,9 +843,9 @@ class _Body extends State<SignuserScreen> {
                                               color: Color(0xFF1C1C1C),
                                               child:Text("إعادة إرسال الكود",
                                                 style:TextStyle(
-                                                  fontSize: 21.0,
+                                                  fontSize: 18.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Colors.orangeAccent,
+                                                  color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -790,7 +860,6 @@ class _Body extends State<SignuserScreen> {
                                               }
                                           ),
                                         ),
-
                                       ):Container(
                                         margin: EdgeInsets.only(top: 10),
                                         child: ClipRRect(
@@ -800,9 +869,9 @@ class _Body extends State<SignuserScreen> {
                                               color: Colors.white,
                                               child:Text("اضغط لإرسال الكود",
                                                 style:TextStyle(
-                                                  fontSize: 21.0,
+                                                  fontSize: 18.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Colors.orangeAccent,
+                                                  color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -811,7 +880,6 @@ class _Body extends State<SignuserScreen> {
                                                 if(Phone){
                                                   _verifyPhone(phoneNo);
                                                   setState(() {
-
                                                   });
                                                 }
                                                 //   if(Phone){
@@ -838,14 +906,14 @@ class _Body extends State<SignuserScreen> {
                                       codeSent?Center(
                                         child:Directionality(textDirection: TextDirection.ltr,
                                         child:Container(
-                                          margin: EdgeInsets.only(top:0,bottom: 35,left: 55,right: 55),
+                                          margin: EdgeInsets.only(top:0,bottom: 89,left: 15,right:5),
                                           // padding: EdgeInsets.only(top:0.05),
-                                          height: 60,
+                                          height: 55,
                                           // color:Colors.grey.withOpacity(0.1),
                                           child: PinEntryTextField(
                                             fields: 6,
-                                            fontSize: 12.0,
-                                            fieldWidth: 40.0,
+                                            fontSize: 16.0,
+                                            fieldWidth: 45.0,
                                             showFieldAsBox: true,
                                             onSubmit: (String pin){
 
@@ -869,7 +937,7 @@ class _Body extends State<SignuserScreen> {
                                         side: BorderSide(color: Colors.transparent)
                                     ),
                                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                                    color: PURPEL,
+                                    color: D,
                                     onPressed: () async {
                                       if(!card1) {
                                         setState(() {
@@ -891,7 +959,8 @@ class _Body extends State<SignuserScreen> {
                                           print(!passController.text.isEmpty);
                                         }}
                                       else{
-
+                                          if(country_id=="اختيار المنطقة"){Country=false;}
+                                          else{Country=true;}
                                         if(Phone && codeSent && Country){
                                           print(country_id);
                                           try {
@@ -949,7 +1018,7 @@ class _Body extends State<SignuserScreen> {
                                     margin: EdgeInsets.only(top: 30,left: 0,right: 190),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ? Colors.orangeAccent :  Colors.grey.withOpacity(0.5),
+                                      color: card1 ? D :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -958,7 +1027,7 @@ class _Body extends State<SignuserScreen> {
                                     margin: EdgeInsets.only(top: 30,left: 100,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ?  Colors.grey.withOpacity(0.5):Colors.orangeAccent,
+                                      color: card1 ?  Colors.grey.withOpacity(0.5):D,
                                     ),
                                   ),
 
@@ -978,12 +1047,12 @@ class _Body extends State<SignuserScreen> {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then((value) async {
-            if (value.user != null) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => InsideAPP()),
-                      (route) => false);
-            }
+            // if (value.user != null) {
+            //   Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => InsideAPP()),
+            //           (route) => false);
+            // }
           });
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -1055,6 +1124,72 @@ class _Body extends State<SignuserScreen> {
   //   //     codeSent: smsSent,
   //   //     codeAutoRetrievalTimeout: autoTimeout);
   // }
+  Widget Drop(){
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: 300,
+         // color: Colors.yellow,
+          padding: EdgeInsets.only(right: 238),
+          alignment: Alignment.topLeft,
+        child:Align(
+         // alignment: Alignment(10,20),
+          child: ClipPath(
+            clipper: ArrowClipper(),
+            child:Container(
+              height: 20,
+              width: 30,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    blurRadius: 0.02,
+                    color: Colors.black,
+                  ),
+                ],
+                  // boxShadow:
+                ),
+            // child: Card(
+            //   elevation: 5,
+            //   //margin: EdgeInsets.only(left: 50,right: 50),
+            //   // height: 20,
+            //   // width: 30,
+            ),
+          ),
+        ),),
+        Material(
+          elevation: 5,
+          //shape: ArrowShape(),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  DropDownItem("جنين"),
+                  DropDownItem("نابلس"),
+                  DropDownItem("طوباس"),
+                  DropDownItem("طولكرم"),
+                  DropDownItem("رام الله"),
+                  DropDownItem("بيت لحم"),
+                  DropDownItem("الخليل"),
+                  DropDownItem("قلقيلية"),
+                  DropDownItem("عكا"),
+                  DropDownItem("حيفا"),
+                  DropDownItem("يافا"),
+                ],
+              ),
+            ),
+          ),
+        ),],
+    );
+  }
   Widget image_profile(){
     return Center(
       child:Stack (children: <Widget>[
@@ -1072,6 +1207,43 @@ class _Body extends State<SignuserScreen> {
             child:Icon(Icons.camera_alt,color: Colors.grey,size: 35.0,),),),
       ],
       ),);
+  }
+  Widget DropDownItem(String text) {
+
+    return Directionality(textDirection: TextDirection.ltr,
+      child:Container(
+        width:300,
+        height: 50,
+        alignment: Alignment.topRight,
+        decoration: BoxDecoration(
+          color:Colors.white,
+        ),
+        //margin: EdgeInsets.only(right: 16,),
+        padding: EdgeInsets.only(left: 50, top: 8,bottom: 8),
+        child: Container(
+          width: 100,
+          margin: EdgeInsets.only(right: 5,),
+          padding: EdgeInsets.only(right: 5,),
+          alignment: Alignment.topRight,
+          child:FlatButton(
+            onPressed: (){
+              print(text);
+              setState(() {
+                isDropdownOpened=false;
+                floatingDropdown.remove();
+                country_id=text;
+              });
+            },
+            child: Text(text,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),),);
   }
   Widget buttom_camera(){
     return Container(
@@ -1108,20 +1280,20 @@ class _Body extends State<SignuserScreen> {
     });
   }
   //SignIn
-  signIn(AuthCredential authCreds) {
-    FirebaseAuth.instance.signInWithCredential(authCreds);
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            // FirebaseAuth.instance.signOut();
-            print(snapshot.data.toString());
-            return InsideAPP();
-          } else {
-            return SignuserScreen();
-          }
-        });
-  }
+  // signIn(AuthCredential authCreds) {
+  //   FirebaseAuth.instance.signInWithCredential(authCreds);
+  //   return StreamBuilder(
+  //       stream: FirebaseAuth.instance.onAuthStateChanged,
+  //       builder: (BuildContext context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           // FirebaseAuth.instance.signOut();
+  //           print(snapshot.data.toString());
+  //           return InsideAPP();
+  //         } else {
+  //           return SignuserScreen();
+  //         }
+  //       });
+  // }
 
   Future senddata()async{
     if(image_file==null){
@@ -1174,8 +1346,8 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Colors.orangeAccent;
-    paint.style = PaintingStyle.fill;
+    paint.color = A;
+    paint.style = PaintingStyle.stroke;
 
     Path path = Path();
     path.moveTo(0, 0);
@@ -1208,4 +1380,19 @@ class Clipper4 extends CustomClipper<Path> {
     return true;
   }
 
+}
+class ArrowClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+      path.moveTo(0, size.height);
+      path.lineTo(size.width /2, 0);
+      path.lineTo(size.width, size.height);
+
+      return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }

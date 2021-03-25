@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
-import 'package:flutterphone/commons/radial_progress.dart';
 import 'package:flutterphone/screens/login_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
+import 'package:flutterphone/screens/welcome.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -81,10 +80,20 @@ class  _PROFILE extends State< PROFILE> {
     // print(List2);
     // print(ListDate2);
   }
+  getChat(){
+    print(widget.name);
+    databaseMethods.getChatsMe(widget.name).then((val){
+      setState(() {
+        print(val.toString());
+        chatsRoom=val;
+      });
+    });
+  }
   void initState() {
     super.initState();
     getdata1();
     getdata2();
+    getChat();
 
   }
   Future getWorker()async{
@@ -96,24 +105,26 @@ class  _PROFILE extends State< PROFILE> {
     return json.decode(ressponse.body);
   }
   @override
-
+  DatabaseMethods databaseMethods=new DatabaseMethods();
+  Stream chatsRoom;
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return  Directionality( textDirection: TextDirection.rtl,
       child:Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar: CurvedNavigationBar(
-          color:  Color(0xFFECCB45),
-          buttonBackgroundColor: Color(0xFFECCB45),
-          backgroundColor: MY_BLACK,
+          color:A,
+          buttonBackgroundColor:A,
+          backgroundColor: Colors.white,
           height: 48,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Icon(Icons.home, size: 25),
-            Icon(Icons.settings, size: 25),
-            Icon(Icons.playlist_add_check, size: 25),
-            Icon(Icons.notifications, size: 25),
-            Icon(Icons.logout, size: 25),
+            Icon(Icons.home, size: 25,color: Colors.white,),
+            Icon(Icons.settings, size: 25,color: Colors.white,),
+            Icon(Icons.playlist_add_check, size: 25,color: Colors.white,),
+            Icon(Icons.notifications, size: 25,color: Colors.white,),
+            Icon(Icons.mark_chat_unread, size: 25,color: Colors.white,),
+            Icon(Icons.logout, size: 25,color: Colors.white,),
           ],
           onTap: (index) {
             setState(() {
@@ -122,22 +133,22 @@ class  _PROFILE extends State< PROFILE> {
                 // print(List2);
                 Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name: widget.name,)));
               }
-
-              if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Loginscreen()));}               // if(_page==1){
+              if(_page==4){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,user:false,)));}
+              if(_page==5){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}               // if(_page==1){
               //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
               // }
             });
           },
         ),
-        backgroundColor: Color(0xFFECCB45),
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40.0), // here the desired height
-            child: AppBar(
-              backgroundColor: Color(0xFFECCB45),
-              elevation: 0.0,
-              //leading: I,
-            )
-        ),
+        backgroundColor: D,
+        // appBar: PreferredSize(
+        //     preferredSize: Size.fromHeight(40.0), // here the desired height
+        //     child: AppBar(
+        //       backgroundColor: Color(0xFFECCB45),
+        //       elevation: 0.0,
+        //       //leading: I,
+        //     )
+        // ),
         body: Form(
           // child:SingleChildScrollView(
           child:Column(
@@ -204,12 +215,17 @@ class Profile_worker  extends StatefulWidget {
 }
 
 class _Profile_woeker extends State<Profile_worker> {
+
+  bool image=false;
+  bool info=true;
+  bool comment=false;
+  bool post=false;
+
   bool uploading = false;
   double val = 0;
   bool image_post = false;
   File uploadimage;
-  bool post=false;
-  bool image = false;
+
   // File _file;
   List<File> _image = []; //هاي هي
   int counter = 0;
@@ -220,7 +236,6 @@ class _Profile_woeker extends State<Profile_worker> {
 
   @override
   void initState() {
-    getChat();
     super.initState();
   }
 
@@ -242,32 +257,21 @@ class _Profile_woeker extends State<Profile_worker> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
-  DatabaseMethods databaseMethods=new DatabaseMethods();
-  Stream chatsRoom;
-  getChat(){
-    print(widget.name);
-    databaseMethods.getChatsMe(widget.name).then((val){
-      setState(() {
-        print(val.toString());
-        chatsRoom=val;
-      });
-    });
-  }
   @override
   Widget build(BuildContext context) {
     // getChat();
     return Column(
       children: <Widget>[
+        // Container(
+        //   margin: EdgeInsets.only(top:10),
+        //   child:IconButton(
+        //      onPressed: (){
+        //        //print(chatsRoom.toString());
+        //        //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,user:false,)));},
+        //     icon: Icon(Icons.chat_bubble),
+        //   ),),
         Container(
-          margin: EdgeInsets.only(top:10),
-          child:IconButton(
-             onPressed: (){
-               print(chatsRoom.toString());
-               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,user:false,)));},
-            icon: Icon(Icons.chat_bubble),
-          ),),
-        Container(
-          margin: EdgeInsets.only(top: 0),
+          margin: EdgeInsets.only(top: 37),
           //transform: Matrix4.translationValues(0, 5.0, 0),
           child: Center(
             child: CircleAvatar(backgroundImage: NetworkImage(
@@ -284,9 +288,9 @@ class _Profile_woeker extends State<Profile_worker> {
                 fontFamily: 'Changa',
                 fontWeight: FontWeight.bold,),),
           ),),
-        Row(children: [
-          GestureDetector(
 
+          Row(children: [
+          GestureDetector(
             child: Container(
               child: Column(
                 children: [
@@ -295,7 +299,8 @@ class _Profile_woeker extends State<Profile_worker> {
                     width: 40,
                     margin: EdgeInsets.only(right: 50, top: 30),
                     child: IconButton(
-                      icon: Icon(Icons.person),
+                      icon: Icon(Icons.person,
+                        color:info?Colors.white:Colors.black.withOpacity(0.5),),
                     ),
                   ),
                   Container(
@@ -333,7 +338,7 @@ class _Profile_woeker extends State<Profile_worker> {
                     margin: EdgeInsets.only(right: 50, top: 30),
                     child: IconButton(
                       icon: Icon(Icons.my_library_books_sharp,
-                        color: post == true ? MY_BLACK : Color(0xFF716C10),),
+                          color:post?Colors.white:Colors.black.withOpacity(0.5),),
                     ),
                   ),
                   Container(
@@ -372,9 +377,8 @@ class _Profile_woeker extends State<Profile_worker> {
                     margin: EdgeInsets.only(right: 50, top: 30),
                     child: IconButton(
                       icon: Icon(Icons.image,
-                        color: image == true ? MY_BLACK : Color(0xFF716C10),),
+                     color:image?Colors.white:Colors.black.withOpacity(0.5),),),
                     ),
-                  ),
                   Container(
                     height: 20,
                     width: 25,
@@ -400,7 +404,8 @@ class _Profile_woeker extends State<Profile_worker> {
                     width: 40,
                     margin: EdgeInsets.only(right: 50, top: 30),
                     child: IconButton(
-                      icon: Icon(Icons.comment),
+                      icon: Icon(Icons.comment,
+                      color:comment?Colors.white:Colors.black.withOpacity(0.5),),
                     ),
                   ),
                   Container(
@@ -426,10 +431,10 @@ class _Profile_woeker extends State<Profile_worker> {
         SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.only(top:30),
-            height: 700,
+            height: 500,
             width: 500,
             decoration: BoxDecoration(
-              color: MY_BLACK,
+              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(50),
                 topRight: Radius.circular(50),
@@ -940,7 +945,8 @@ class _Profile_woeker extends State<Profile_worker> {
                             ),
                           )
                         ],
-                      ),),),
+                      ),
+                    ),),
                 ],),
             ),
             // Container(

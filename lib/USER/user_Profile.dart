@@ -1,12 +1,18 @@
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/USER/List_worker_group.dart';
+import 'package:flutterphone/USER/WORKER_PROFILE.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
+import 'package:flutterphone/USER/search_user.dart';
+import 'package:flutterphone/USER/user_reserve_order.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
 import 'package:flutterphone/screens/login_screen.dart';
 import 'package:flutterphone/screens/welcome.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -14,8 +20,9 @@ import 'dart:convert';
 import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import '../database.dart';
-import 'WORKER_PROFILE.dart';
-import 'List_worker_group.dart';
+import '../mappp.dart';
+import 'ALL_SERVICE.dart';
+import 'favarate.dart';
 
 String  name_Me="";
 String  name="";
@@ -34,42 +41,26 @@ class U_PROFILE extends StatefulWidget {
 }
 class  _U_PROFILE extends State<U_PROFILE> {
   // AnimationController _animationController;
-  int _page = 0;
+  int _selectedIndex = 0;
+  List<String> _filterList;
+  var _searchview = new TextEditingController();
+
+  bool _firstSearch = false;
+  String _query = "";
   GlobalKey _bottomNavigationKey = GlobalKey();
   final List1 = [];
   var ListDate1 = [];
   final List2 = [];
   var ListDate2 = [];
   var ListBlock=["8.00 - 9.00 ","9.00 - 10.00","","","",];
-
-  Future getdata1() async {
-    var url = 'https://' + IP4 + '/testlocalhost/count.php';
-    var ressponse = await http.post(url, body: {
-      "phone": phone,
+  var Search=[];
+  Future getSearchall()async{
+    var url='https://'+IP4+'/testlocalhost/all_worker.php';
+    var ressponse=await http.post(url,body: {
     });
-    var responsepody = json.decode(ressponse.body);
-    for (int i = 0; i < responsepody.length; i++) {
-      //L.add(responsepody[i]['count']);
-      List1.add(responsepody[i]['id']);
-      ListDate1.add(responsepody[i]['date']);
-    }
-    // print(List1);
-    // print(ListDate1);
-  }
-
-  Future getdata2() async {
-    var url = 'https://' + IP4 + '/testlocalhost/count2.php';
-    var ressponse = await http.post(url, body: {
-      "phone": phone,
-    });
-    var responsepody = json.decode(ressponse.body);
-    for (int i = 0; i < responsepody.length; i++) {
-      //L.add(responsepody[i]['count']);
-      List2.add(responsepody[i]['id']);
-      ListDate2.add(responsepody[i]['date']);
-    }
-    // print(List2);
-    // print(ListDate2);
+    // ignore: deprecated_member_use
+    Search= await json.decode(ressponse.body);
+    return json.decode(ressponse.body);
   }
   getChat(){
     databaseMethods.getChatsMe(widget.name_Me).then((val){
@@ -79,11 +70,10 @@ class  _U_PROFILE extends State<U_PROFILE> {
       });
     });
   }
-  void initState() {
+  void initState(){
     super.initState();
-    getdata1();
-    getdata2();
     getChat();
+    getSearchall();
   }
 
   Future getUser() async {
@@ -94,38 +84,128 @@ class  _U_PROFILE extends State<U_PROFILE> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
+  _U_PROFILE() {
+    //Register a closure to be called when the object changes.
+    _searchview.addListener(() {
+      if (_searchview.text.isEmpty) {
+        //Notify the framework that the internal state of this object has changed.
+        setState(() {
+          _firstSearch = true;
+          _query = "bvn";
+        });
+      } else {
+        setState(() {
+          _firstSearch = false;
+          _query = _searchview.text;
+        });
+      }
+    });
+  }
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatsRoom;
   @override
   Widget build(BuildContext context) {
+    print(Search.toString());
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Directionality(textDirection: TextDirection.rtl,
-      child: Scaffold(
+      child:Stack(
+        children: [
+      Scaffold(
+        backgroundColor: Colors.white,
         key: _scaffoldKey,
-        bottomNavigationBar: CurvedNavigationBar(
-          color:E,
-          buttonBackgroundColor:E,
-          backgroundColor: Colors.white,
-          height: 48,
-          key: _bottomNavigationKey,
-          items: <Widget>[
-            Icon(Icons.home, size: 25,color: Colors.white,),
-            Icon(Icons.settings, size: 25,color: Colors.white,),
-            Icon(Icons.playlist_add_check, size: 25,color: Colors.white,),
-            Icon(Icons.mark_chat_unread, size: 25,color: Colors.white,),
-            Icon(Icons.logout, size: 25,color: Colors.white,),
-          ],
-          onTap: (index) {
-            setState(() {
-              getChat();
-              _page = index;
-              if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));}
-              if(_page==3){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));}
-              if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
+        bottomNavigationBar:Container(
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+          ]),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: GNav(
+                  rippleColor: Colors.grey[300],
+                  hoverColor: Colors.grey[100],
+                  gap: 8,
+                  activeColor: Colors.black,
+                  iconSize: 24,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  duration: Duration(milliseconds: 400),
+                  tabBackgroundColor: Colors.grey[100],
+                  tabs: [
+                    GButton(
+                      icon: Icons.home,
+                      text: 'الرئيسية',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.person,
+                      text: 'حسابي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.favorite_border,
+                      text: 'المفضلة',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      onPressed: (){
+                      },
+                      icon: Icons.calendar_today,
+                      text: 'طلباتي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      onPressed: (){
 
-            });
-          },
-        ),
+                      },
+                      icon: Icons.mark_chat_unread,
+                      text: 'شات',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  selectedIndex: _selectedIndex,
+                  onTabChange: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                      if(index==2){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.name_Me,phoneuser: phone,)));
+                      }
+                      if(index==3){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.name_Me,phoneuser: phone,)));
+                      }
+                      if(index==4){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true,phone:phone,)));
+                      }
+
+
+                    });
+                  }
+                  ),
+            ),
+          ),),
        // backgroundColor:PURPEL,
        //  appBar: PreferredSize(
        //      preferredSize: Size.fromHeight(1.0), // here the desired height
@@ -138,23 +218,35 @@ class  _U_PROFILE extends State<U_PROFILE> {
        //        //leading: I,
        //      )
        //  ),
-        body: Container(
-          decoration: BoxDecoration(
-            // color:ca,
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.topRight,
-                  colors: [G,A,B]),
-          ),
-          // child:SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
+        body: Form(
+         child:SingleChildScrollView(
+          child: Stack(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(child: Container(
-                height: 800,
+
+              Container(
+                  height: 210.0,
+                  width: 450.0,
+                  child: Carousel(
+                    indicatorBgPadding: 10,
+                    images: [
+                      NetworkImage('https://cdn-images-1.medium.com/max/2000/1*GqdzzfB_BHorv7V2NV7Jgg.jpeg',),
+                      NetworkImage('https://cdn-images-1.medium.com/max/2000/1*wnIEgP1gNMrK5gZU7QS0-A.jpeg'),
+                      ExactAssetImage("assets/icons/ho.jpg")
+                    ],
+                  )
+              ),
+              Image.asset(
+                "assets/icons/ho.jpg",
+                height:250,
+                width:450,
+                fit: BoxFit.fill,
+              ),
+             Container(
+                height: 500,
                 // color:  Color(0xFFF3D657),
-                margin: EdgeInsets.only(top: 0),
+                margin: EdgeInsets.only(top: 260),
                 decoration: BoxDecoration(
                   // color:Color(0xFF1C1C1C),
                   // borderRadius: BorderRadius.only(
@@ -176,7 +268,7 @@ class  _U_PROFILE extends State<U_PROFILE> {
                           namelast = snapshot.data[index]['namelast'];
                           token = snapshot.data[index]['token'];
 
-                            return USER_PROFILE(country: snapshot.data[index]['country'],name_Me: snapshot.data[index]['name'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phone: snapshot.data[index]['phone'], image: snapshot.data[index]['image'], token: snapshot.data[index]['token']);
+                            return USER_PROFILE(Search:Search,country: snapshot.data[index]['country'],name_Me: snapshot.data[index]['name'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phone: snapshot.data[index]['phone'], image: snapshot.data[index]['image'], token: snapshot.data[index]['token']);
 
                         },
                       );
@@ -184,8 +276,122 @@ class  _U_PROFILE extends State<U_PROFILE> {
                     return Center(child: CircularProgressIndicator());
                   },
                 ),
-              ),),
-            ],),),),);
+              ),
+            ],),),),),],),);
+  }
+  Widget _createSearchView() {
+
+    return new Container(
+      height: 55,
+      margin: EdgeInsets.only(top: 30),
+      padding: EdgeInsets.only(right: 10),
+      // decoration: BoxDecoration(border: Border.all(width: 1.0)),
+      child: new TextField(
+        controller: _searchview,
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Changa',
+        ),
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: "البحث عن مقدم خدمة",
+          hintStyle: new TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Changa',
+          ),
+          enabledBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(15.0),
+            borderSide:  BorderSide(color:Colors.grey[100]),
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(15.0),
+            borderSide:  BorderSide(color:Colors.grey[100]),
+
+          ),
+          suffixIcon: GestureDetector(
+            onTap: () {
+            },
+            child:  Container(
+              // margin: EdgeInsets.only(top: 5),
+              child:RotatedBox(
+                quarterTurns: 1,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color:Colors.black54,
+                    size: 25.0,
+                  ),
+                  onPressed: null,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _performSearch() {
+    _filterList = new List<String>();
+    for (int i = 0; i < Search.length; i++) {
+      var item = Search[i]['namefirst']+" ";
+
+      if (item.toLowerCase().contains(_query.toLowerCase())) {
+        _filterList.add(item);
+      }
+    }
+    return _createFilteredListView();
+  }
+  //Create the Filtered ListView
+  Widget _createFilteredListView() {
+
+    return new Stack(
+      children:[
+        SingleChildScrollView(
+          child:Directionality(textDirection: TextDirection.ltr,
+            child:Container(
+              width: 370,
+              height: 200,
+              alignment: Alignment.topRight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0,0.5),
+                    blurRadius: 0.01,
+                    color: Colors.black54,
+                  ),],
+              ),
+              child: new ListView.builder(
+                  itemCount: _filterList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new GestureDetector(
+                      onTap: (){
+                        // Navigator.push(context,
+                        //     MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:Listsearch[index]['Work'],image:Listsearch[index]['image'],phone:Listsearch[index]['phone'],name: Listsearch[index]['name'],namelast:Listsearch[index]['namelast'],name_Me: widget.name_Me,namefirst:Listsearch[index]['namefirst'],token:Listsearch[index]['token'],Information:Listsearch[index]['Information'],Experiance:Listsearch[index]['Experiance'],),));
+                      },
+                      child:  Container(
+                        alignment: Alignment.topRight,
+                        color: Colors.white,
+                        width: 200,
+                        margin: EdgeInsets.only(right: 20,top:10),
+                        padding:EdgeInsets.only(right: 5,),
+                        child: new Text("${_filterList[index]}",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Changa',
+                            color: Colors.black54,
+                          ),),
+                      ),
+                    );
+                  }),
+            ),),),],);
   }
 }
 class USER_PROFILE  extends StatefulWidget {
@@ -196,8 +402,8 @@ class USER_PROFILE  extends StatefulWidget {
   final  image;
   final  token;
   final country;
-
-  USER_PROFILE({this.country,this.name_Me,this.namelast,this.namefirst, this.phone, this.image,this.token,});
+  List<dynamic>Search;
+  USER_PROFILE({this.Search,this.country,this.name_Me,this.namelast,this.namefirst, this.phone, this.image,this.token,});
 
   @override
   _USER_PROFILE createState() => _USER_PROFILE();
@@ -214,7 +420,28 @@ class _USER_PROFILE extends State<USER_PROFILE> {
   File _file;
   final picker = ImagePicker();
   var Listsearch=[];
+  List<String> _filterList;
+  var _searchview = new TextEditingController();
 
+  bool _firstSearch = false;
+  String _query = "";
+  _USER_PROFILE() {
+    //Register a closure to be called when the object changes.
+    _searchview.addListener(() {
+      if (_searchview.text.isEmpty) {
+        //Notify the framework that the internal state of this object has changed.
+        setState(() {
+          _firstSearch = true;
+          _query = "bvn";
+        });
+      } else {
+        setState(() {
+          _firstSearch = false;
+          _query = _searchview.text;
+        });
+      }
+    });
+  }
   Future getdata()async{
     var url='https://'+IP4+'/testlocalhost/all_worker.php';
     var ressponse=await http.get(url);
@@ -246,98 +473,118 @@ class _USER_PROFILE extends State<USER_PROFILE> {
      getChat();
     return Column(
         children:<Widget>[
+          new Container(
+            margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 170),
+            child: new Column(
+              children: <Widget>[
+                _createSearchView(),
+                _firstSearch ? Text('hhhhhhhhhhhhhhhhhhhhhhhhhhhhh') : _performSearch()
+              ],
+            ),
+          ),
           // Container(
           //   margin: EdgeInsets.only(top:10),
           //   child:IconButton(
           //   onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));},
           //   icon: Icon(Icons.chat_bubble),
           //   ),),
-          Container(
-            margin: EdgeInsets.only(top:37),
-            //transform: Matrix4.translationValues(0, 5.0, 0),
-            child:Center(
-              child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 35.0,),),
-          ),
-          Container(
-            margin: EdgeInsets.only(top:10),
-            child:Center(
-              child: Text(widget.namefirst+ " "+widget.namelast,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                  fontFamily: 'Changa',
-                  fontWeight: FontWeight.bold,),),
-            ),),
+          // Container(
+          //   margin: EdgeInsets.only(top:20,left: 300),
+          //   //transform: Matrix4.translationValues(0, 5.0, 0),
+          //     child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 25.0,),
+          // ),
+          // Container(
+          //   margin: EdgeInsets.only(top:20,left: 100),
+          //   child:Center(
+          //     child: Text(widget.namefirst+ " "+widget.namelast,
+          //       style: TextStyle(
+          //         color: Colors.black,
+          //         fontSize: 15.0,
+          //         fontFamily: 'Changa',
+          //         fontWeight: FontWeight.bold,),),
+          //   ),),
 
+          // Container(
+          //   //margin: EdgeInsets.only(bottom: 5),
+          //   transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+          //   child:GestureDetector(
+          //     onTap: (){showSearch(context: context, delegate: DataSearch(list: Listsearch,name_Me:widget.name_Me));},
+          //     child: Container(
+          //       width: 360,
+          //       alignment: Alignment.center,
+          //       // margin: EdgeInsets.symmetric(horizontal: 40),
+          //       //  padding: EdgeInsets.symmetric(horizontal: 40),
+          //       height: 54,
+          //       decoration: BoxDecoration(
+          //         color:D,
+          //         borderRadius: BorderRadius.circular(20),
+          //         // boxShadow: [
+          //         //   BoxShadow(
+          //         //     offset: Offset(0, 1),
+          //         //     blurRadius: 20,
+          //         //     color: Color(0xFFECCB45),
+          //         //   ),
+          //         // ],
+          //       ),
+          //       child: Row(
+          //         children: <Widget>[
+          //           Container(
+          //             margin: EdgeInsets.only(left: 240,right: 20),
+          //             child:Text('ابحث',
+          //               style: TextStyle(
+          //                 fontFamily: 'Changa',
+          //                 color: Colors.white,
+          //                 fontSize: 20.0,
+          //                 fontWeight: FontWeight.bold,
+          //               ),),
+          //           ),
+          //           Container(
+          //             margin: EdgeInsets.only(top: 10),
+          //             child:RotatedBox(
+          //               quarterTurns: 1,
+          //               child: IconButton(
+          //                 icon: Icon(
+          //                   Icons.search,
+          //                   color:Colors.white,
+          //                   size: 40.0,
+          //                 ),
+          //                 onPressed: null,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),),
+          //   ),
+          // ),
           SingleChildScrollView(
               child: Container(
-              margin: EdgeInsets.only(top:30),
+              margin: EdgeInsets.only(top:0),
              height: 521,
              width: 500,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(50),
-              topRight: Radius.circular(50),
-            ),
-          ),
-          child: Column(
-            children: [
+             child: Column(
+              children: [
               Container(
-                //margin: EdgeInsets.only(bottom: 5),
-                transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                child:GestureDetector(
-                  onTap: (){showSearch(context: context, delegate: DataSearch(list: Listsearch,name_Me:widget.name_Me));},
-                  child: Container(
-                    width: 340,
-                    alignment: Alignment.center,
-                   // margin: EdgeInsets.symmetric(horizontal: 40),
-                  //  padding: EdgeInsets.symmetric(horizontal: 40),
-                    height: 54,
-                    decoration: BoxDecoration(
-                      color:D,
-                      borderRadius: BorderRadius.circular(20),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     offset: Offset(0, 1),
-                      //     blurRadius: 20,
-                      //     color: Color(0xFFECCB45),
-                      //   ),
-                      // ],
+              child:Column(
+              children:[
+              Container(
+                child:Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 35,),
+                      child: Text('اختر خدمة',
+                        style: TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),),
                     ),
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(left: 220,right: 20),
-                          child:Text('ابحث',
-                            style: TextStyle(
-                              fontFamily: 'Changa',
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child:RotatedBox(
-                            quarterTurns: 1,
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.search,
-                                color:Colors.white,
-                                size: 40.0,
-                              ),
-                              onPressed: null,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),),
+                  ],
                 ),
-              ),
+                ),
               Container(
                 color: Colors.white,
-                margin: EdgeInsets.only(top:0),
+                margin: EdgeInsets.only(top: 10,right: 22,left: 20),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -346,84 +593,217 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                         image: "assets/work/najar.jpg",
                         title: "نجّار",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
+                          print(widget.phone); print(widget.name_Me); print(widget.phone);
+                          print(widget.token);
+                          print(widget.country);
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp1()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(token_Me:widget.token,work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/sapak.jpg",
                         title: "سبّاك",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(token_Me:widget.token,work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/electric1.jpg",
                         title: "كهربائي",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'كهربائي',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'كهربائي',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/fix.jpg",
                         title: "تصليح",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'تصليح',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'تصليح',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/lock.jpg",
                         title: "أقفال",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'أقفال',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'أقفال',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/sapaak.jpg",
                         title: "سبّاك",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/dahan.jpg",
                         title: "دهّان",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'دهان',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'دهان',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/mec.jpg",
                         title: "ميكانيك",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'ميكانيك',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'ميكانيك',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/baleet.jpg",
                         title: "بلييط",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'بلييط',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'بلييط',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/repaier.jpg",
                         title: "إصلاح",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'إصلاح',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'إصلاح',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                     ],
                   ),
+
                 ),
               ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => All_Service(name_Me: widget.name_Me,)));
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 200,),
+                    child: Text('عرض جميع الخدمات',
+                      style: TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                  ),
+                ),
             ],
           ),
-        ),),
-        ],
+        ),],),
+    ),
+    ),],);
+  }
+  Widget _createSearchView() {
+
+    return new Container(
+      height: 55,
+      margin: EdgeInsets.only(top: 30),
+      padding: EdgeInsets.only(right: 10),
+      // decoration: BoxDecoration(border: Border.all(width: 1.0)),
+      child: new TextField(
+        controller: _searchview,
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Changa',
+        ),
+        textAlign: TextAlign.right,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          hintText: "البحث عن مقدم خدمة",
+          hintStyle: new TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Changa',
+          ),
+          enabledBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(15.0),
+            borderSide:  BorderSide(color:Colors.grey[100]),
+
+          ),
+          focusedBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(15.0),
+            borderSide:  BorderSide(color:Colors.grey[100]),
+
+          ),
+          suffixIcon: GestureDetector(
+            onTap: () {
+            },
+            child:  Container(
+              // margin: EdgeInsets.only(top: 5),
+              child:RotatedBox(
+                quarterTurns: 1,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color:Colors.black54,
+                    size: 25.0,
+                  ),
+                  onPressed: null,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
-}
 
+  Widget _performSearch() {
+    _filterList = new List<String>();
+    for (int i = 0; i < widget.Search.length; i++) {
+      var item = widget.Search[i]['namefirst']+" ";
+
+      if (item.toLowerCase().contains(_query.toLowerCase())) {
+        _filterList.add(item);
+      }
+    }
+    return _createFilteredListView();
+  }
+  //Create the Filtered ListView
+  Widget _createFilteredListView() {
+
+    return new Stack(
+      children:[
+        SingleChildScrollView(
+          child:Directionality(textDirection: TextDirection.ltr,
+            child:Container(
+              width: 370,
+              height: 200,
+              alignment: Alignment.topRight,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0,0.5),
+                    blurRadius: 0.01,
+                    color: Colors.black54,
+                  ),],
+              ),
+              child: new ListView.builder(
+                  itemCount: _filterList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new GestureDetector(
+                      onTap: (){
+                        // Navigator.push(context,
+                        //     MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:Listsearch[index]['Work'],image:Listsearch[index]['image'],phone:Listsearch[index]['phone'],name: Listsearch[index]['name'],namelast:Listsearch[index]['namelast'],name_Me: widget.name_Me,namefirst:Listsearch[index]['namefirst'],token:Listsearch[index]['token'],Information:Listsearch[index]['Information'],Experiance:Listsearch[index]['Experiance'],),));
+                      },
+                      child:  Container(
+                        alignment: Alignment.topRight,
+                        color: Colors.white,
+                        width: 200,
+                        margin: EdgeInsets.only(right: 20,top:10),
+                        padding:EdgeInsets.only(right: 5,),
+                        child: new Text("${_filterList[index]}",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Changa',
+                            color: Colors.black54,
+                          ),),
+                      ),
+                    );
+                  }),
+            ),),),],);
+  }
+}
 class RecomendPlantCard extends StatelessWidget {
   const RecomendPlantCard({
     Key key,
@@ -440,7 +820,7 @@ class RecomendPlantCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10,right: 10),
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10,right: 0),
       width: 100,
       height: 130,
       child: Column(

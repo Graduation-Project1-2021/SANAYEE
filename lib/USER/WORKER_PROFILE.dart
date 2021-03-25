@@ -6,15 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/Chat/Conversation.dart';
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
+import 'package:flutterphone/USER/user_slot.dart';
 import 'package:flutterphone/Worker/GET_IMGS.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-
+import 'package:intl/intl.dart';
+import 'dart:ui' as ui;
 import '../constants.dart';
 import '../database.dart';
+import 'Worker_Slot.dart';
 
 String  name="";
 String  phone="";
@@ -37,9 +41,9 @@ class user_worker extends StatefulWidget {
   final  Experiance;
   final  Information;
   final  token;
-
-
-  user_worker({this.name_Me,this.name,this.namelast,this.namefirst, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  final tokenuser;
+  final phoneuser;
+  user_worker({this.tokenuser,this.phoneuser,this.name_Me,this.name,this.namelast,this.namefirst, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
   _user_worker createState() =>  _user_worker();
 }
 class  _user_worker extends State<user_worker> {
@@ -55,6 +59,7 @@ class  _user_worker extends State<user_worker> {
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
+
   Future getRate() async {
     var url = 'https://'+IP4+'/testlocalhost/show_Rate.php';
     var ressponse = await http.post(url, body: {
@@ -67,9 +72,16 @@ class  _user_worker extends State<user_worker> {
   Widget build(BuildContext context) {
     getRate();
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    return  Directionality(textDirection: TextDirection.rtl,
-        child:Scaffold(
-          backgroundColor:D,
+    return  Directionality(textDirection: ui.TextDirection.rtl,
+        child:Stack(
+         children:[
+           Container(
+             //transform: Matrix4.translationValues(0.0, -70.0, 0.0),
+             child:Image(image:NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image,),),
+           ),
+           // Image(image:NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image,),),
+    Scaffold(
+          backgroundColor:Colors.transparent,
           key: _scaffoldKey,
           // appBar: AppBar(
           //   automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
@@ -85,8 +97,30 @@ class  _user_worker extends State<user_worker> {
           // backgroundColor: Colors.lightBlueAccent,
           body: Form(
             child: Container(
-              child:Stack(
+              color: Colors.transparent,
+              child:Column(
               children: [
+                Container(
+                  color: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top:50,left: 310),
+                        child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+                          Navigator.pop(context);
+                         // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                        }),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 50,),
+                        child:IconButton(icon:Icon(Icons.favorite_border,color: Colors.white,), onPressed: (){
+                          print("bbbbbbbbbb");
+                          Fluttertoast.showToast(msg: "لقد تمت إضافة العامل إللى قائمة المضلة لديك ",fontSize: 16,backgroundColor: Colors.red);
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
                 // Container(
                 //   margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 //   height: 400,
@@ -98,9 +132,106 @@ class  _user_worker extends State<user_worker> {
                 //     //     colors: [E,D]),
                 //   ),
                 // ),
-              Container(
-                height: 798,
-                color: D,
+              Stack(
+              children:[
+                Container(
+                  height: 70,
+                  color:Colors.white,
+                  margin: EdgeInsets.only(top:620.6,),
+                  child: Row(
+                    children:[
+                      Container(
+                        width:250,
+                        height: 55,
+                        margin: EdgeInsets.only(left: 8,right: 15),
+                        child: FlatButton(
+                          onPressed: (){
+                            DateTime date=DateTime.now();
+                            var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                            print(widget.phone);
+                            print(date);
+                           // Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:date,phoneworker: widget.phone,),),);
+                            print(widget.phoneuser); print(widget.name_Me); print(widget.phone);
+                             print(widget.token); print(widget.tokenuser);print("=====================================================");
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:date,name_Me:widget.name_Me,token_Me:widget.tokenuser,tokenworker: widget.token,phoneworker: widget.phone,phone: widget.phoneuser,),),);
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              side: BorderSide(color: Colors.transparent)
+                          ),
+                          // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                          color:Colors.blue,
+                          child: Text(
+                            "حجز الآن",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 21.0,
+                              fontFamily: 'Changa',
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          UrlLauncher.launch("tel://0595320479");
+                        },
+                        child:Container(
+                          width: 55,
+                          height: 55,
+                          margin: EdgeInsets.only(left:10,),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(1.0,1.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                          child:Icon(Icons.phone,
+                            color: Colors.blue,
+                            size: 30.0,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          //CreatChatRoom();
+                        },
+                        child:Container(
+                          width: 55,
+                          height: 55,
+                          margin: EdgeInsets.only(left:10,),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                blurRadius: 2.0,
+                                spreadRadius: 0.0,
+                                offset: Offset(1.0,1.0), // shadow direction: bottom right
+                              )
+                            ],
+                          ),
+                          child:Icon(Icons.mark_chat_unread,
+                            color: Colors.blue,
+                            size: 30.0,
+                          ),
+                        ),
+                      ),
+                    ],),
+                ),
+
+                SingleChildScrollView(
+                child: Container(
+                  height: 532,
+                  margin: EdgeInsets.only(top:90),
+                  color: Colors.transparent,
                 child:FutureBuilder(
                   future: getRate(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -115,16 +246,16 @@ class  _user_worker extends State<user_worker> {
                            bool AVG4=double.parse(snapshot.data[index]['AVG4'])>=4?true:false;
                            bool AVG5=double.parse(snapshot.data[index]['AVG5'])>=4?true:false;
                            bool AVG6=double.parse(snapshot.data[index]['AVG6'])>=4?true:false;
-                          return worker(AVG1:AVG1,AVG2:AVG2,AVG3:AVG3,AVG4:AVG4,AVG5:AVG5,AVG6:AVG6,Rate:Rate,phone:widget.phone,name: widget.name,namefirst: widget.namefirst,namelast: widget.namelast,image: widget.image,token: widget.token,Information: widget.Information,Experiance: widget.Experiance,name_Me: widget.name_Me,);
+                          return worker(AVG1:AVG1,AVG2:AVG2,AVG3:AVG3,AVG4:AVG4,AVG5:AVG5,AVG6:AVG6,Rate:Rate,phone:widget.phone,name: widget.name,namefirst: widget.namefirst,namelast: widget.namelast,image: widget.image,token: widget.token,Information: widget.Information,Experiance: widget.Experiance,name_Me: widget.name_Me,Work: widget.Work,);
                         },
                       );
                     }
                     return Center(child: CircularProgressIndicator());
                   },
                 ),
-              ),
-            ],),),),),
-    );
+              ),),
+            ],),],),),),),
+   ], ), );
 
 }}
 class worker extends StatefulWidget {
@@ -213,316 +344,156 @@ class  _worker extends State<worker> {
   GlobalKey _bottomNavigationKey = GlobalKey();
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    return  Stack(
+    return  Container(
+           height: 800,
+           color:Colors.white,
+          child:Column(
                 //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-
-                  Container(
-                    margin: EdgeInsets.only(top:10),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                    }),
-                  ),
-                  // Container(
-                  //   height: 350,
-                  //   width: 500,
-                  //   color: L_ORANGE,
-                  //   //Smargin: EdgeInsets.only(left:0,top:10,right: 340),
-                  // ),
-                  // Container(
-                  //   height: 20,
-                  //   width: 40,
-                  //   margin: EdgeInsets.only(left:0,top:10,right: 340),
-                  //   child: IconButton(
-                  //     onPressed: (){
-                  //       CreatChatRoom();
-                  //     },
-                  //     icon:Icon(Icons.mark_chat_unread,color: Colors.white,),
-                  //   ),
-                  // ),
-                  Container(
-                    //alignment: Alignment.topRight,
-                    margin: EdgeInsets.only(top:30,),
-                    //transform: Matrix4.translationValues(0, 5.0, 0),
-                    child:Center(
-                      child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 35.0,),),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top:100,),
-                    child:Center(
-                      child: Text(widget.namefirst+ " "+widget.namelast,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontFamily: 'Changa',
-                          fontWeight: FontWeight.bold,),),
-                    ),),
-                  Center(
-                    child:Container(
-                      width: 60,
-                      margin: EdgeInsets.only(top:127,),
-                    child:Row(
-                      children: [
-                        Icon(Icons.star,color: Colors.yellow,size: 27.0,),
-                        Text(widget.Rate.toString(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.0,
-                            fontFamily: 'Changa',
-                            fontWeight: FontWeight.bold,),),
-                      ],
-                    ),),
-                  ),
-                  Center(
-                    child:Container(
-                      margin: EdgeInsets.only(top:130),
-                      child:Row(
-                        children: [
-                          GestureDetector(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 20,
-                                    width: 40,
-                                    margin: EdgeInsets.only(right: 80, top: 30),
-                                    child: IconButton(
-                                      icon: Icon(Icons.person,
-                                      color:info?Colors.white:Colors.black.withOpacity(0.5),),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 20,
-                                  //   width: 25,
-                                  //   margin: EdgeInsets.only(right: 50, top: 10),
-                                  //   child: Text('حول',
-                                  //     style: TextStyle(
-                                  //       color: Colors.black,
-                                  //       fontSize: 13.3,
-                                  //       fontFamily: 'Changa',
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                //post = true;
-                                //image=false;
-                              });
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
-                            },
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 20,
-                                    width: 40,
-                                    margin: EdgeInsets.only(right: 30, top: 30),
-                                    child: IconButton(
-                                      icon: Icon(Icons.my_library_books_sharp,
-                                        color:post?Colors.white:Colors.black.withOpacity(0.5),
-                                      ),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 20,
-                                  //   width: 60,
-                                  //   margin: EdgeInsets.only(right: 50, top: 10),
-                                  //   child: Text('منشورات',
-                                  //     style: TextStyle(
-                                  //       color: Colors.black,
-                                  //       fontSize: 13.3,
-                                  //       fontFamily: 'Changa',
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                //image = true;
-                                //post = false;
-                              });
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
-                            },
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 20,
-                                    width: 40,
-                                    margin: EdgeInsets.only(right: 30, top: 30),
-                                    child: IconButton(
-                                      icon: Icon(Icons.image,
-                                        color:image?Colors.white:Colors.black.withOpacity(0.5),),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 20,
-                                  //   width: 25,
-                                  //   margin: EdgeInsets.only(right: 50, top: 10),
-                                  //   child: Text('صور',
-                                  //     style: TextStyle(
-                                  //       color: Colors.black,
-                                  //       fontSize: 13.3,
-                                  //       fontFamily: 'Changa',
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 20,
-                                    width: 40,
-                                    margin: EdgeInsets.only(right: 30, top: 30),
-                                    child: IconButton(
-                                      icon: Icon(Icons.comment,
-                                          color:comment?Colors.white:Colors.black.withOpacity(0.5),),
-                                    ),
-                                  ),
-                                  // Container(
-                                  //   height: 20,
-                                  //   width: 50,
-                                  //   margin: EdgeInsets.only(right: 50, top: 10),
-                                  //   child: Text('تعليقات',
-                                  //     style: TextStyle(
-                                  //       color: Colors.black,
-                                  //       fontSize: 13.3,
-                                  //       fontFamily: 'Changa',
-                                  //       fontWeight: FontWeight.bold,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 510,
-                    margin: EdgeInsets.only(top: 240),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(40),
-                        topRight: Radius.circular(40),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child:Container(
-                      height: 60,
-                      width: 300,
-                      margin: EdgeInsets.only(top: 210),
-                      padding: EdgeInsets.only(top: 5,left: 0),
-                      decoration: BoxDecoration(
-                        //color: Colors.white,
-                        // border: Border.all(
-                        //   color: Colors.white,
-                        // ),
-                        borderRadius: BorderRadius.circular(20),
-                          gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.topRight,
-                              colors: [G,B]),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 2.0,
-                            spreadRadius: 0.0,
-                            offset: Offset(1.0,1.0), // shadow direction: bottom right
-                          )
-                        ],
-                      ),
-                      child: Row (
-                        children: [
-                          SizedBox(width: 35,),
-                          GestureDetector(
-                            child:Column(
-                              children: [
-                                Text('منشورات',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.8,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-                                Text('123',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 30,),
-                          GestureDetector(
-                            child:Column(
-                              children: [
-                                Text('تعليقات',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.8,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-                                Text('15',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 40,),
-                          GestureDetector(
-                            child:Column(
-                              children: [
-                                Text('عملاء',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.8,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-                                Text('123',style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-
-                              ],
-                            ),
-                          ),
-
-                        ],
-                      ),
-                    ),),
                  // SizedBox(height: 10,),
-
                   Container(
-                    margin: EdgeInsets.only(top: 300,),
-                    height: 448,
+                    margin: EdgeInsets.only(top: 10,),
+                    color:Colors.white,
+                    height: 350,
                     width: 700,
                     child:Column(
                       children: [
+                        Container(
+                          margin: EdgeInsets.only(right:20,),
+                          width: 360,
+                          alignment: Alignment.topRight,
+                          child:Text(widget.namefirst+ " "+widget.namelast,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18.0,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,),),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right:20,),
+                          width: 360,
+                          alignment: Alignment.topRight,
+                          child:Text(widget.Work,style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontFamily: 'Changa',
+                            fontWeight: FontWeight.bold,),),
+                        ),
+                        Container(
+                          width: 370,
+                          margin: EdgeInsets.only(right:20,),
+                          child:Text(widget.Information + ', ' + widget.Experiance +'.',style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontFamily: 'Changa',
+                            fontWeight: FontWeight.bold,),),
+                        ),
+                        Center(
+                          child:Container(
+                            height: 60,
+                            width: 380,
+                            margin: EdgeInsets.only(top: 30),
+                            padding: EdgeInsets.only(top: 5,left: 0),
+                            decoration: BoxDecoration(
+                              //color: Colors.white,
+                              // border: Border.all(
+                              //   color: Colors.white,
+                              // ),
+                            ),
+                            child: Row (
+                              children: [
+                                SizedBox(width: 20,),
+                                GestureDetector(
+                                  child:Column(
+                                    children: [
+                                      Text('منشورات',style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+                                      Text('123',style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 50,),
+                                GestureDetector(
+                                  child:Column(
+                                    children: [
+                                      Text('تعليقات',style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+                                      Text('15',style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 50,),
+                                GestureDetector(
+                                  child:Column(
+                                    children: [
+                                      Text('عملاء',style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+                                      Text('123',style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 50,),
+                                GestureDetector(
+                                  child:Column(
+                                    children: [
+                                      Text('الريت',style: TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+                                      Container(
+                                        //margin: EdgeInsets.only(top:320,left: 290),
+                                        child:Row(
+                                          children: [
+                                            Text(widget.Rate.toString(),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14.0,
+                                                fontFamily: 'Changa',
+                                                fontWeight: FontWeight.bold,),),
+                                            Icon(Icons.star,color: Colors.yellow,size: 25.0,),
+                                          ],
+                                        ),),
+
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),),
+                        Container(
+                          width: 350,
+                         margin: EdgeInsets.only(top:15),
+                         child: Divider(
+                           thickness: 1.0,
+                           color: Colors.black26.withOpacity(0.1),
+                         ),
+                        ),
                         Container(
                           margin: EdgeInsets.only(top: 20),
                           child:Wrap(children:[
@@ -533,217 +504,47 @@ class  _worker extends State<worker> {
                             _MyButton(name:'التزام بالوقت',IS: widget.AVG5,),
                           ]),
                         ),
-                        Center(
-                          child:Container(
-                            width: 500,
-                            height: 200,
-                            color: Colors.white,
-                            alignment: Alignment.topRight,
-                            margin: EdgeInsets.only(top: 40,),
-                            padding: EdgeInsets.only(top: 20,right: 30,left:30),
-
-                            child:Column(
-                              children: [
-                                Text('معلومات                                                       ',style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-                                Text(widget.Information + ', ' + widget.Experiance +'.',style: TextStyle(
-                                  color: Colors.black.withOpacity(0.7),
-                                  fontSize: 15,
-                                  fontFamily: 'Changa',
-                                  fontWeight: FontWeight.bold,),),
-                                SizedBox(height: 20,),
-                                // Text('خبرة                                                               ',style: TextStyle(
-                                //   color: Colors.black,
-                                //   fontSize: 17,
-                                //   fontFamily: 'Changa',
-                                //   fontWeight: FontWeight.bold,),),
-                                // Text(widget.Experiance,style: TextStyle(
-                                //   color: Colors.black.withOpacity(0.7),
-                                //   fontSize: 15.8,
-                                //   fontFamily: 'Changa',
-                                //   fontWeight: FontWeight.bold,),),
-                              ],
-                            ),
-                          ),),
-                        Container(
-                          margin: EdgeInsets.only(top: 2,right: 20),
-                          child:Row(
-                            children: [
-                              Container(
-                                width: 55,
-                                //padding: EdgeInsets.symmetric(horizontal: 3),
-                                child: FlatButton(
-                                  onPressed: () {
-                                    UrlLauncher.launch("tel://0595320479");
-                                  },
-                                  child: new Icon(
-                                    Icons.phone,
-                                    color: Colors.white,
-                                    size: 23.0,
-                                  ),
-                                  shape: new CircleBorder(),
-                                  color: D,
-                                ),
-                              ),
-                              Container(
-                                width: 55,
-                                child: FlatButton(
-                                  onPressed: () {
-                                    CreatChatRoom();
-                                  },
-                                  child: new Icon(
-                                    Icons.mark_chat_unread,
-                                    color: Colors.white,
-                                    size: 23.0,
-                                  ),
-                                  shape: new CircleBorder(),
-                                  color: D,
-                                ),
-                              ),
-                              // Container(
-                              //   width: 50,
-                              //
-                              //   child: FlatButton(
-                              //     onPressed: () {
-                              //
-                              //     },
-                              //     child: new Icon(
-                              //       Icons.arrow_forward,
-                              //       color: Colors.white,
-                              //       size: 23.0,
-                              //     ),
-                              //     shape: new CircleBorder(),
-                              //     color: Colors.black12,
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ),
                        // Container(height: 200,color: Colors.white,)
                       ],
-
                     ),
-
-                    // child: Row(
-                    //   children: [
-                        // widget.AVG1?Container(
-                        //   margin: EdgeInsets.only(right: 50),
-                        //   padding: EdgeInsets.symmetric(horizontal:10,vertical:5),
-                        //   width: 60,
-                        //   height: 40,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: Colors.red,
-                        //     ),
-                        //   ),
-                        //   child:Text('جودة',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontSize: 16,
-                        //       fontFamily: 'Changa',
-                        //       fontWeight: FontWeight.bold,),
-                        //   ),
-                        // ):Container(),
-                        // widget.AVG2?Container(
-                        //   margin: EdgeInsets.only(right: 10),
-                        //   padding: EdgeInsets.symmetric(horizontal:10,vertical:5),
-                        //   width: 120,
-                        //   height: 40,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: Colors.red,
-                        //     ),
-                        //   ),
-                        //   child:Text('سرعة و إتقان',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontSize: 16,
-                        //       fontFamily: 'Changa',
-                        //       fontWeight: FontWeight.bold,),
-                        //   ),
-                        // ):Container(),
-                        // widget.AVG3?Container(
-                        //   margin: EdgeInsets.only(right: 10),
-                        //   padding: EdgeInsets.symmetric(horizontal:10,vertical:5),
-                        //   width: 60,
-                        //   height: 40,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: Colors.red,
-                        //     ),
-                        //   ),
-                        //   child:Text('احترام',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontSize: 16,
-                        //       fontFamily: 'Changa',
-                        //       fontWeight: FontWeight.bold,),
-                        //   ),
-                        // ):Container(),
-                        // widget.AVG4?Container(
-                        //   margin: EdgeInsets.only(right: 10),
-                        //   padding: EdgeInsets.symmetric(horizontal:10,vertical:5),
-                        //   width: 100,
-                        //   height: 40,
-                        //   decoration: BoxDecoration(
-                        //     border: Border.all(
-                        //       color: Colors.red,
-                        //     ),
-                        //   ),
-                        //   child:Text('سعر جيد',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontSize: 16,
-                        //       fontFamily: 'Changa',
-                        //       fontWeight: FontWeight.bold,),
-                        //   ),
-                    //     // ):Container(),
-                    //   ],
-                    // ),
                     ),
+                  Container(
+                    height: 400,
+                    margin: EdgeInsets.only(top: 20),
+                    color: Colors.white,
+                    child:FutureBuilder(
+                      future: getImages(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if(snapshot.hasData){
+                          return ListView.builder(
+                              itemCount: 1,
+                              itemBuilder: (context, index) {
+                                int num =snapshot.data.length-4;
+
+                                if(snapshot.data.length==0){
+                                  return myAlbum0();
+                                }
+                                if(snapshot.data.length==1){
+                                  return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
+                                }
+                                if(snapshot.data.length==2){
+                                  return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
+                                }
+                                if(snapshot.data.length>=3){
+                                  return worker_Images('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
+                                }
+                                // return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
+
+                                return Container();
+                              }
+                          );
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      },
+                    ),
+                  ),
                 ],
-
-
-
-          //         Container(
-          //           height: 400,
-          //           margin: EdgeInsets.only(top: 140),
-          //           color: Colors.white,
-          //           child:FutureBuilder(
-          //             future: getImages(),
-          //          builder: (BuildContext context, AsyncSnapshot snapshot) {
-          //         if(snapshot.hasData){
-          //            return ListView.builder(
-          //             itemCount: 1,
-          //             itemBuilder: (context, index) {
-          //               int num =snapshot.data.length-4;
-          //
-          //                 if(snapshot.data.length==0){
-          //                   return myAlbum0();
-          //                 }
-          //                 if(snapshot.data.length==1){
-          //                   return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
-          //                 }
-          //                 if(snapshot.data.length==2){
-          //                   return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
-          //                 }
-          //                 if(snapshot.data.length==3){
-          //                   return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
-          //                 }
-          //                 return myAlbum('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
-          //
-          //                 return Container();
-          //             }
-          //         );
-          //       }
-          //       return Center(child: CircularProgressIndicator());
-          //     },
-          //   ),
-          // ),
-    );
+          ),);
   }
   myAlbum(String asset1, String asset2, String asset3, String asset4, String more){
     return Container(
@@ -1128,6 +929,78 @@ class  _worker extends State<worker> {
           ],),),);
   }
 
+  worker_Images(String Image1,String Image2,String Image3){
+    return Container(
+      child:SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+
+            Container(
+              margin: EdgeInsets.only(left: 10,right: 30),
+              child:ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Image.network(
+                  Image1, height: 120,
+                  width: 160,
+                  fit: BoxFit.cover,),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 10,right: 10),
+              child:ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Image.network(
+                  Image2, height: 120,
+                  width: 160,
+                  fit: BoxFit.cover,),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 30,right: 10),
+              child: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      Image2, height: 120,
+                      width: 160,
+                      fit: BoxFit.cover,),
+                  ),
+                  Positioned(
+                    child: Container(
+                      height: 120,
+                      width: 160,
+                      decoration: BoxDecoration(
+                          color: Colors.black38,
+                          borderRadius: BorderRadius.circular(10.0)
+                      ),
+                      child: Center(
+                        child: Text("عرض كل الصور", style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              // child:ClipRRect(
+              //   borderRadius: BorderRadius.circular(5.0),
+              //   child: Image.network(
+              //     Image3, height: 120,
+              //     width: 160,
+              //     fit: BoxFit.cover,),
+              // ),
+            ),
+          ],
+        ),
+      ),);
+  }
+
 }
 class CustomMenuClipper extends CustomClipper<Path> {
   @override
@@ -1164,10 +1037,20 @@ class _MyButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal:10,vertical:5),
       decoration: BoxDecoration(
         //color: Colors.yellow,
-        border: Border.all(
-          color: Colors.yellow,
-          width: 1.2,
-        ),
+        // border: Border.all(
+        //   color: Colors.yellow,
+        //   width: 1.2,
+        // ),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 2.0,
+            spreadRadius: 0.0,
+            offset: Offset(1.0,1.0), // shadow direction: bottom right
+          )
+        ],
       ),
       child: Text(name,style: TextStyle(
         color: Colors.black.withOpacity(0.7),

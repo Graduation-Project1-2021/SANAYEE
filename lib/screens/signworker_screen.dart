@@ -1,8 +1,7 @@
 import 'package:flutterphone/screens/signuser_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
+import 'package:flutterphone/screens/welcome.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,6 +48,10 @@ class _Body extends State<SignWorker> {
 
   String phoneNo, verificationId, smsCode;
 
+  String country_id="اختيار المنطقة";
+  String work_id="اختيار مهنة";
+  String hint="اختيار المنطقة";
+  List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا","الخليل","قلقيلية"];
   bool codeSent = false;
   @override
   bool selected=true ;
@@ -72,6 +75,11 @@ class _Body extends State<SignWorker> {
   bool Work_Null=true;
   bool Info_Null=true;
   bool EXp_Null=true;
+  bool Country=true;
+  OverlayEntry floatingDropdown;
+  bool isDropdownOpened=false;
+  OverlayEntry floatingDropdown_country;
+  bool isDropdownOpened_country=false;
   String pass="";
   File _file;
   bool uploading = false;
@@ -106,6 +114,30 @@ class _Body extends State<SignWorker> {
       _showPassword2 = !_showPassword2;
     });
   }
+  OverlayEntry _createFloatingDropdown() {
+    return OverlayEntry(builder: (context) {
+      return Positioned(
+        left: 50,
+        top: 350,
+        height: 500,
+        child: Drop_Work(
+
+        ),
+      );
+    });
+  }
+  OverlayEntry _createFloatingDropdown_coutry() {
+    return OverlayEntry(builder: (context) {
+      return Positioned(
+        left: 50,
+        top: 350,
+        height: 500,
+        child: Drop_country(
+
+        ),
+      );
+    });
+  }
   PickedFile image_file;
   final ImagePicker image_picker =ImagePicker();
   int current_step=0;
@@ -121,7 +153,7 @@ class _Body extends State<SignWorker> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor:Color(0xFF1C1C1C),
+        backgroundColor:Colors.white,
 
         // appBar: AppBar(
         //   leading:  IconButton(
@@ -153,20 +185,28 @@ class _Body extends State<SignWorker> {
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                    height:MediaQuery.of(context).size.height * 0.28,
-                    child: CustomPaint(
-                      painter: CurvePainter(false),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
-                        ],),
+                Stack(
+                  children: [
+
+                    ClipPath(
+                      clipper: Clipper4(),
+                      child:  Container(
+                        height: 220,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [B,G]),),
+
+                        // child: Center(child: Text("MultiplePointedEdgeClipper()")),
+                      ),
                     ),
-                  ),
+                    Column(
+                      children: [
+                        Center(
+                          child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
+                      ],),
+                  ],
                 ),
                 GestureDetector(
 
@@ -215,15 +255,15 @@ class _Body extends State<SignWorker> {
                                                 ),
                                                 decoration: InputDecoration(
                                                   filled: true,
-                                                  fillColor: Colors.grey.withOpacity(0.1),
+                                                  fillColor: Colors.grey[100],
                                                   enabledBorder: new OutlineInputBorder(
                                                     borderRadius: new BorderRadius.circular(30.0),
-                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                    borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                   ),
                                                   focusedBorder: new OutlineInputBorder(
                                                     borderRadius: new BorderRadius.circular(30.0),
-                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                    borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                   ),
                                                   hintText: 'الاسم الأول ',
@@ -262,15 +302,15 @@ class _Body extends State<SignWorker> {
                                                 ),
                                                 decoration: InputDecoration(
                                                   filled: true,
-                                                  fillColor: Colors.grey.withOpacity(0.1),
+                                                  fillColor: Colors.grey[100],
                                                   enabledBorder: new OutlineInputBorder(
                                                     borderRadius: new BorderRadius.circular(30.0),
-                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                    borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                   ),
                                                   focusedBorder: new OutlineInputBorder(
                                                     borderRadius: new BorderRadius.circular(30.0),
-                                                    borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                    borderSide:  BorderSide(color:Colors.grey[100]),
 
                                                   ),
                                                   //contentPadding: EdgeInsets.only(),
@@ -333,16 +373,16 @@ class _Body extends State<SignWorker> {
                                         ),
                                         decoration: InputDecoration(
                                           filled: true,
-                                          fillColor: Colors.grey.withOpacity(0.1),
+                                          fillColor: Colors.grey[100],
                                           prefixIcon: Icon(Icons.person,color: Color(0xFF666360)),
                                           enabledBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                            borderSide:  BorderSide(color:Colors.grey[100]),
 
                                           ),
                                           focusedBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
-                                            borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                            borderSide:  BorderSide(color:Colors.grey[100]),
 
                                           ),
                                           hintText: 'الاسم ',
@@ -406,7 +446,7 @@ class _Body extends State<SignWorker> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey[100],
                                             prefixIcon: Icon(Icons.lock, color:Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -418,12 +458,12 @@ class _Body extends State<SignWorker> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             hintText: ('كلمة السر'),
@@ -496,7 +536,7 @@ class _Body extends State<SignWorker> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey[100],
                                             prefixIcon: Icon(Icons.lock, color: Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
@@ -508,12 +548,12 @@ class _Body extends State<SignWorker> {
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             hintText: ('تأكيد كلمة السر'),
@@ -580,50 +620,91 @@ class _Body extends State<SignWorker> {
                                           },
                                           icon: Icon(
                                             Icons.arrow_back,
-                                            color:Color(0xFFECCB45),
+                                            color:Colors.yellow,
                                             size: 20.0,
                                           ),),),
-                                      Container(
-                                        margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                        width: size.width * 0.8,
-                                        height: 60,
-                                        child: TextFormField(
-                                          controller: Work,
-                                          validator: (value) {
-                                            if (value.isEmpty) {
-                                              Work_Null=false;
-                                              return null;
+                                      // Container(
+                                      //   margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                      //   width: size.width * 0.8,
+                                      //   height: 60,
+                                      //   child: TextFormField(
+                                      //     controller: Work,
+                                      //     validator: (value) {
+                                      //       if (value.isEmpty) {
+                                      //         Work_Null=false;
+                                      //         return null;
+                                      //       } else {
+                                      //         Work_Null=true;
+                                      //         return null;
+                                      //       }
+                                      //     },
+                                      //     cursorColor: Colors.grey[600],
+                                      //     textAlign: TextAlign.right,
+                                      //     style: TextStyle(
+                                      //       fontSize: 16.0,
+                                      //       fontWeight: FontWeight.bold,
+                                      //       fontFamily: 'Changa',
+                                      //     ),
+                                      //     decoration: InputDecoration(
+                                      //       filled: true,
+                                      //       fillColor: Colors.grey[100],
+                                      //       enabledBorder: new OutlineInputBorder(
+                                      //         borderRadius: new BorderRadius.circular(28.0),
+                                      //         borderSide:  BorderSide(color:Colors.grey[100]),
+                                      //
+                                      //       ),
+                                      //       focusedBorder: new OutlineInputBorder(
+                                      //         borderRadius: new BorderRadius.circular(28.0),
+                                      //         borderSide:  BorderSide(color:Colors.grey[100]),
+                                      //
+                                      //       ),
+                                      //       labelText: ('المهنة'),
+                                      //       floatingLabelBehavior: FloatingLabelBehavior.always,
+                                      //       labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (isDropdownOpened) {
+                                              floatingDropdown.remove();
                                             } else {
-                                              Work_Null=true;
-                                              return null;
+                                              //findDropdownData();
+                                              floatingDropdown = _createFloatingDropdown();
+                                              Overlay.of(context).insert(floatingDropdown);
                                             }
-                                          },
-                                          cursorColor: Colors.grey[600],
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Changa',
+                                            isDropdownOpened = !isDropdownOpened;
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 60,
+                                          width:size.width*0.8,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: Colors.grey[100],
                                           ),
-                                          decoration: InputDecoration(
-                                            filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
-                                            enabledBorder: new OutlineInputBorder(
-                                              borderRadius: new BorderRadius.circular(28.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
-
-                                            ),
-                                            focusedBorder: new OutlineInputBorder(
-                                              borderRadius: new BorderRadius.circular(28.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
-
-                                            ),
-                                            labelText: ('المهنة'),
-                                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                                            labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
+                                          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                work_id,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Changa',
+                                                  color: Color(0xFF666360),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.arrow_drop_down,
+                                                color: Color(0xFF666360),
+                                                size: 27,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
+                                        ),),
                                       Work_Null ? Container(margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
                                         child: Text('',textAlign:TextAlign.end,
                                           style: TextStyle(
@@ -669,15 +750,15 @@ class _Body extends State<SignWorker> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey[100],
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             labelText: ('المعلومات'),
@@ -732,15 +813,15 @@ class _Body extends State<SignWorker> {
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: Colors.grey.withOpacity(0.1),
+                                            fillColor: Colors.grey[100],
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(40.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             focusedBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(40.0),
-                                              borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
 
                                             ),
                                             labelText: ('خبرة وتجارب سابقة'),
@@ -790,8 +871,123 @@ class _Body extends State<SignWorker> {
                                             color:Color(0xFFECCB45),
                                             size: 20.0,
                                           ),),),
+                                      // Directionality(textDirection:TextDirection.rtl, child:
+                                      // Container(
+                                      //     margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                      //     padding: EdgeInsets.fromLTRB(20,15,20,10),
+                                      //     width: size.width * 0.8,
+                                      //     height: 60,
+                                      //     decoration: BoxDecoration(
+                                      //       color: Colors.grey[100],
+                                      //       borderRadius: BorderRadius.circular(30.0),
+                                      //       // border: Border.all(color: Colors.grey, width: 1.2)
+                                      //     ),
+                                      //     child:DropdownButton(
+                                      //       isExpanded: true,
+                                      //       itemHeight: 50,
+                                      //       icon: Icon(Icons.pin_drop),
+                                      //       iconSize:30.0,
+                                      //       value: country_id,
+                                      //       dropdownColor: Colors.white,
+                                      //       onChanged: (value){
+                                      //         setState(() {
+                                      //           country_id=value;
+                                      //           value=value;
+                                      //           print(country_id);
+                                      //           // Country=true;
+                                      //         });
+                                      //       },
+                                      //       hint:Text(" اختيار المنطقة ",
+                                      //         style: TextStyle(
+                                      //           fontSize: 16.0,
+                                      //           fontFamily: 'Changa',
+                                      //           color: Color(0xFF666360),
+                                      //           fontWeight: FontWeight.bold,
+                                      //         ),),
+                                      //       underline: Container(color: Colors.transparent),
+                                      //       style: TextStyle(
+                                      //         fontSize: 16.0,
+                                      //         fontFamily: 'Changa',
+                                      //         color: Color(0xFF666360),
+                                      //         fontWeight: FontWeight.bold,
+                                      //       ),
+                                      //       items:country.map((value){
+                                      //         return DropdownMenuItem(
+                                      //           child: Container(
+                                      //             height: 50,
+                                      //             width: 260.0,
+                                      //             child: Text(value, textAlign: TextAlign.right),
+                                      //           ),
+                                      //           value: value,
+                                      //         );
+                                      //       }).toList(),
+                                      //
+                                      //     )
+                                      // ),),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (isDropdownOpened_country) {
+                                              floatingDropdown_country.remove();
+                                            } else {
+                                              //findDropdownData();
+                                              floatingDropdown_country = _createFloatingDropdown_coutry();
+                                              Overlay.of(context).insert(floatingDropdown_country);
+                                            }
+                                            isDropdownOpened_country = !isDropdownOpened_country;
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 60,
+                                          width:size.width*0.8,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: Colors.grey[100],
+                                          ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                country_id,
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Changa',
+                                                  color: Color(0xFF666360),
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Icon(
+                                                Icons.location_on,
+                                                color: Color(0xFF666360),
+                                                size: 27,
+                                              ),
+                                            ],
+                                          ),
+                                        ),),
+
+                                      Country ? Container(
+                                          child: Text('',textAlign:TextAlign.end,
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: 'Changa',
+                                              color: Colors.red,
+
+                                            ),)
+                                      ): Container(
+                                        margin: EdgeInsets.fromLTRB(180, 0, 0, 0),
+                                        child: Text('هذا الحقل مطلوب !',textAlign:TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: 'Changa',
+                                            color: Colors.red,
+
+                                          ),),
+                                      ),
                                       Container(
-                                          margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                          margin: EdgeInsets.fromLTRB(0,0,0,0),
                                           padding: EdgeInsets.symmetric(),
                                           width: size.width * 0.8,
                                           height: 60,
@@ -810,16 +1006,16 @@ class _Body extends State<SignWorker> {
                                             },
                                             decoration: InputDecoration(
                                               filled: true,
-                                              fillColor: Colors.grey.withOpacity(0.1),
+                                              fillColor: Colors.grey[100],
                                               prefixIcon: Icon(Icons.phone,color: Color(0xFF666360),),
                                               enabledBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                borderSide:  BorderSide(color:Colors.grey[100]),
 
                                               ),
                                               focusedBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
-                                                borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                                borderSide:  BorderSide(color:Colors.grey[100]),
 
                                               ),
                                               hintText: ('رقم الهاتف'),
@@ -827,6 +1023,7 @@ class _Body extends State<SignWorker> {
                                                 fontSize: 16.0,
                                                 fontFamily: 'Changa',
                                                 color: Color(0xFF666360),
+                                                fontWeight: FontWeight.bold,
                                               ),
                                               floatingLabelBehavior: FloatingLabelBehavior.always,
                                             ),
@@ -880,12 +1077,11 @@ class _Body extends State<SignWorker> {
                                           borderRadius: BorderRadius.circular(29),
                                           child: FlatButton(
                                               padding: EdgeInsets.symmetric(vertical: 9, horizontal: 50),
-                                              color: Color(0xFF1C1C1C),
                                               child:Text("إعادة إرسال الكود",
                                                 style:TextStyle(
-                                                  fontSize: 21.0,
+                                                  fontSize: 18.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Color(0xFFECCB45),
+                                                  color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -907,12 +1103,11 @@ class _Body extends State<SignWorker> {
                                           borderRadius: BorderRadius.circular(29),
                                           child: FlatButton(
                                               padding: EdgeInsets.symmetric(vertical:0, horizontal:0),
-                                              color: Color(0xFF1C1C1C),
                                               child:Text("اضغط لإرسال الكود",
                                                 style:TextStyle(
-                                                  fontSize: 21.0,
+                                                  fontSize: 18.0,
                                                   fontFamily: 'Changa',
-                                                  color:  Color(0xFFECCB45),
+                                                  color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
                                                 ),),
                                               onPressed: (){
@@ -946,27 +1141,27 @@ class _Body extends State<SignWorker> {
                                       //   ),
                                       // ),
                                       codeSent?Center(
-                                        child:Container(
-                                          margin: EdgeInsets.only(top:0,bottom: 75,left: 10),
-                                          // padding: EdgeInsets.only(top:0.05),
-                                          height: 90,
-                                          // color:Colors.grey.withOpacity(0.1),
-                                          child: PinEntryTextField(
-                                            fields: 6,
-                                            fontSize: 12.0,
-                                            fieldWidth: 40.0,
-                                            showFieldAsBox: true,
-                                            onSubmit: (String pin){
+                                        child:Directionality(textDirection: TextDirection.ltr,
+                                          child:Container(
+                                            margin: EdgeInsets.only(top:0,bottom: 68,left: 15,right:5),
+                                            // padding: EdgeInsets.only(top:0.05),
+                                            height: 55,
+                                            // color:Colors.grey.withOpacity(0.1),
+                                            child: PinEntryTextField(
+                                              fields: 6,
+                                              fontSize: 16.0,
+                                              fieldWidth: 45.0,
+                                              showFieldAsBox: true,
+                                              onSubmit: (String pin){
 
-                                              setState((){
-                                                this.smsCode=pin;
-                                                smscode=pin;
+                                                setState((){
+                                                  this.smsCode=pin;
+                                                  smscode=pin;
+                                                },
+                                                );
                                               },
-                                              );
-                                            },
-                                          ), //
-                                        ),):Container(height: 145,),
-
+                                            ), //
+                                          ),),):Container(height: 120,),
                                     ],
                                   ),
                                 ):Container(),
@@ -980,7 +1175,7 @@ class _Body extends State<SignWorker> {
                                         side: BorderSide(color: Colors.transparent)
                                     ),
                                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                                    color: Color(0xFFECCB45),
+                                    color: D,
                                     onPressed: () async {
                                       if (formKey.currentState.validate()) {print('validate');}
                                       else{print('not validate');}
@@ -991,11 +1186,15 @@ class _Body extends State<SignWorker> {
                                           print(!passController.text.isEmpty);
                                         }}
                                       else if(card2){
+                                        if(work_id=="اختيار مهنة"){Work_Null=false;}
+                                        else{Work_Null=true;}
                                         if(Work_Null && Info_Null && EXp_Null){
                                           card2=false;card3=true;
                                         }}
                                       else{
-                                        if(Phone && codeSent){
+                                        if(country_id=="اختيار مهنة"){Country=false;}
+                                        else{Country=true;}
+                                        if(Phone && codeSent&& Country){
                                           try {
                                             await FirebaseAuth.instance
                                                 .signInWithCredential(PhoneAuthProvider.credential(
@@ -1023,13 +1222,13 @@ class _Body extends State<SignWorker> {
                                       style: TextStyle(
                                         fontSize: 21.0,
                                         fontFamily: 'Changa',
-                                        color: Color(0xFF1C1C1C),
+                                        color:Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),):Text('استمرار',
                                         style: TextStyle(
                                           fontSize: 21.0,
                                           fontFamily: 'Changa',
-                                          color: Color(0xFF1C1C1C),
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ))),
                                   ),
@@ -1041,7 +1240,7 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,left: 0,right: 180),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ? Color(0xFFECCB45) :  Colors.grey.withOpacity(0.1),
+                                      color: card1 ? D :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -1050,7 +1249,7 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card2 ?  Color(0xFFECCB45) :  Colors.grey.withOpacity(0.1),
+                                      color: card2 ? D :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -1059,10 +1258,9 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,left: 150,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card3 ?  Color(0xFFECCB45) :  Colors.grey.withOpacity(0.1),
+                                      color: card3 ?  D :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
-
                                 ],),
                               ],
                             ),
@@ -1079,12 +1277,12 @@ class _Body extends State<SignWorker> {
           await FirebaseAuth.instance
               .signInWithCredential(credential)
               .then((value) async {
-            if (value.user != null) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => InsideAPP()),
-                      (route) => false);
-            }
+            // if (value.user != null) {
+            //   Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => InsideAPP()),
+            //           (route) => false);
+            // }
           });
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -1156,6 +1354,209 @@ class _Body extends State<SignWorker> {
   //   //     codeSent: smsSent,
   //   //     codeAutoRetrievalTimeout: autoTimeout);
   // }
+  Widget Drop_Work(){
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: 300,
+          // color: Colors.yellow,
+          padding: EdgeInsets.only(right: 238),
+          alignment: Alignment.topLeft,
+          child:Align(
+            // alignment: Alignment(10,20),
+            child: ClipPath(
+              clipper: ArrowClipper(),
+              child:Container(
+                height: 20,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 0.02,
+                      color: Colors.black,
+                    ),
+                  ],
+                  // boxShadow:
+                ),
+                // child: Card(
+                //   elevation: 5,
+                //   //margin: EdgeInsets.only(left: 50,right: 50),
+                //   // height: 20,
+                //   // width: 30,
+              ),
+            ),
+          ),),
+        Material(
+          elevation: 5,
+          //shape: ArrowShape(),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  DropDownItem("نجّار"),
+                  DropDownItem("حدّاد"),
+                  DropDownItem("سبّاك"),
+                  DropDownItem("ميكانيكي"),
+                  DropDownItem("كهربائي"),
+                  DropDownItem("تصليح أقفال"),
+                  DropDownItem("دهّان"),
+                  DropDownItem("بلييط"),
+                ],
+              ),
+            ),
+          ),
+        ),],
+    );
+  }
+  Widget DropDownItem(String text) {
+
+    return Directionality(textDirection: TextDirection.ltr,
+      child:Container(
+        width:300,
+        height: 50,
+        alignment: Alignment.topRight,
+        decoration: BoxDecoration(
+          color:Colors.white,
+        ),
+        //margin: EdgeInsets.only(right: 16,),
+        padding: EdgeInsets.only(left: 50, top: 8,bottom: 8),
+        child: Container(
+          width: 100,
+          margin: EdgeInsets.only(right: 5,),
+          padding: EdgeInsets.only(right: 5,),
+          alignment: Alignment.topRight,
+          child:FlatButton(
+            onPressed: (){
+              print(text);
+              setState(() {
+                isDropdownOpened=false;
+                floatingDropdown.remove();
+                work_id=text;
+              });
+            },
+            child: Text(text,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),),);
+  }
+  Widget Drop_country(){
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: 300,
+          // color: Colors.yellow,
+          padding: EdgeInsets.only(right: 238),
+          alignment: Alignment.topLeft,
+          child:Align(
+            // alignment: Alignment(10,20),
+            child: ClipPath(
+              clipper: ArrowClipper(),
+              child:Container(
+                height: 20,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 0.02,
+                      color: Colors.black,
+                    ),
+                  ],
+                  // boxShadow:
+                ),
+                // child: Card(
+                //   elevation: 5,
+                //   //margin: EdgeInsets.only(left: 50,right: 50),
+                //   // height: 20,
+                //   // width: 30,
+              ),
+            ),
+          ),),
+        Material(
+          elevation: 5,
+          //shape: ArrowShape(),
+          child: Container(
+            height: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  DropDownItem_country("جنين"),
+                  DropDownItem_country("نابلس"),
+                  DropDownItem_country("طوباس"),
+                  DropDownItem_country("طولكرم"),
+                  DropDownItem_country("رام الله"),
+                  DropDownItem_country("بيت لحم"),
+                  DropDownItem_country("الخليل"),
+                  DropDownItem_country("قلقيلية"),
+                  DropDownItem_country("عكا"),
+                  DropDownItem_country("حيفا"),
+                  DropDownItem_country("يافا"),
+                ],
+              ),
+            ),
+          ),
+        ),],
+    );
+  }
+  Widget DropDownItem_country(String text) {
+
+    return Directionality(textDirection: TextDirection.ltr,
+      child:Container(
+        width:300,
+        height: 50,
+        alignment: Alignment.topRight,
+        decoration: BoxDecoration(
+          color:Colors.white,
+        ),
+        //margin: EdgeInsets.only(right: 16,),
+        padding: EdgeInsets.only(left: 50, top: 8,bottom: 8),
+        child: Container(
+          width: 100,
+          margin: EdgeInsets.only(right: 5,),
+          padding: EdgeInsets.only(right: 5,),
+          alignment: Alignment.topRight,
+          child:FlatButton(
+            onPressed: (){
+              print(text);
+              setState(() {
+                isDropdownOpened_country=false;
+                floatingDropdown_country.remove();
+                country_id=text;
+              });
+            },
+            child: Text(text,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),),);
+  }
   Widget image_profile(){
     return Center(
       child:Stack (children: <Widget>[
@@ -1209,20 +1610,20 @@ class _Body extends State<SignWorker> {
     });
   }
   //SignIn
-  signIn(AuthCredential authCreds) {
-    FirebaseAuth.instance.signInWithCredential(authCreds);
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            // FirebaseAuth.instance.signOut();
-            print(snapshot.data.toString());
-            return InsideAPP();
-          } else {
-            return SignuserScreen();
-          }
-        });
-  }
+  // signIn(AuthCredential authCreds) {
+  //   FirebaseAuth.instance.signInWithCredential(authCreds);
+  //   return StreamBuilder(
+  //       stream: FirebaseAuth.instance.onAuthStateChanged,
+  //       builder: (BuildContext context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           // FirebaseAuth.instance.signOut();
+  //           print(snapshot.data.toString());
+  //           return InsideAPP();
+  //         } else {
+  //           return SignuserScreen();
+  //         }
+  //       });
+  // }
 
   Future senddata()async{
     if(image_file==null){
@@ -1238,6 +1639,7 @@ class _Body extends State<SignWorker> {
         "Experiance":Experiance.text,
         "Information":Information.text,
         "mytoken":mytoken,
+        "country": country_id,
       });
       String massage= json.decode(ressponse.body);
       print(massage);
@@ -1258,6 +1660,7 @@ class _Body extends State<SignWorker> {
       "Experiance":Experiance.text,
       "Information":Information.text,
       "mytoken":mytoken,
+      "country": country_id,
     });
     }
   }
@@ -1290,7 +1693,7 @@ class _Body extends State<SignWorker> {
                     fontFamily: 'Changa',
                   ),),
                 onPressed: () {
-                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen1()));
+                  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));
                 },
               ),),
           ],
@@ -1323,4 +1726,22 @@ class CurvePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+class Clipper4 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(size.width * 0.5,size.height - 110, size.width, size.height);
+    path.lineTo(size.width, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
+
 }

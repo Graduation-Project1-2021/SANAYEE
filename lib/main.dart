@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/screens/home2.dart';
 import 'package:flutterphone/screens/welcome.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:io';
 
-import 'Map.dart';
-import 'button.dart';
+import 'USER/Search.dart';
+import 'USER/xc.dart';
+import 'USER/Setting_user.dart';
+import 'mappp.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -28,6 +29,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
+  DateTime _selectedDay = DateTime.now();
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -38,8 +40,10 @@ class MyApp extends StatelessWidget {
        visualDensity: VisualDensity.adaptivePlatformDensity,
        // scaffoldBackgroundColor: Colors.white,
       ),
-          // home: MyApp4(),
-         home: WelcomeScreen(),
+        // home: My_SLot(phoneworker: '+970595320479',phone:'+97055',tokenworker:'lkk',time: _selectedDay,),
+        // home: not_conferm__order(time: _selectedDay,phone: '+970595320479'),
+          home: WelcomeScreen(),
+        //   home: Search_user(work:'نجار',),
     );
   }
 }

@@ -5,9 +5,8 @@ import 'package:flutterphone/Chat/chatListUser.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
-import 'package:flutterphone/commons/radial_progress.dart';
 import 'package:flutterphone/screens/login_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
+import 'package:flutterphone/screens/welcome.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -104,8 +103,8 @@ class  _U_PROFILE extends State<U_PROFILE> {
       child: Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar: CurvedNavigationBar(
-          color:L_ORANGE,
-          buttonBackgroundColor:L_ORANGE,
+          color:E,
+          buttonBackgroundColor:E,
           backgroundColor: Colors.white,
           height: 48,
           key: _bottomNavigationKey,
@@ -122,29 +121,30 @@ class  _U_PROFILE extends State<U_PROFILE> {
               _page = index;
               if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));}
               if(_page==3){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));}
-              if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Loginscreen()));}
+              if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
 
             });
           },
         ),
        // backgroundColor:PURPEL,
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(1.0), // here the desired height
-            child: AppBar(
-              backgroundColor: PURPEL,
-              elevation: 0.0,
-              actions: [],
-              titleSpacing: 0,
-              automaticallyImplyLeading: false,
-              //leading: I,
-            )
-        ),
+       //  appBar: PreferredSize(
+       //      preferredSize: Size.fromHeight(1.0), // here the desired height
+       //      child: AppBar(
+       //        backgroundColor: A,
+       //        elevation: 0.0,
+       //        actions: [],
+       //        titleSpacing: 0,
+       //        automaticallyImplyLeading: false,
+       //        //leading: I,
+       //      )
+       //  ),
         body: Container(
           decoration: BoxDecoration(
+            // color:ca,
               gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.topRight,
-                  colors: [P_PURPEL,PURPEL,LIGHT_PURPEL])
+                  colors: [G,A,B]),
           ),
           // child:SingleChildScrollView(
           child: Column(
@@ -272,7 +272,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
           SingleChildScrollView(
               child: Container(
               margin: EdgeInsets.only(top:30),
-             height: 520,
+             height: 521,
              width: 500,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -295,7 +295,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                   //  padding: EdgeInsets.symmetric(horizontal: 40),
                     height: 54,
                     decoration: BoxDecoration(
-                      color:Li_ORANGE,
+                      color:D,
                       borderRadius: BorderRadius.circular(20),
                       // boxShadow: [
                       //   BoxShadow(
@@ -346,63 +346,71 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                         image: "assets/work/najar.jpg",
                         title: "نجّار",
                         press: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => List_Worker(work: 'نجار',name_Me: widget.name_Me,location: widget.country,),),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/sapak.jpg",
                         title: "سبّاك",
                         press: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              // builder: (context) => DetailsScreen(),
-                            ),
-                          );
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
                         },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/electric1.jpg",
                         title: "كهربائي",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'كهربائي',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/fix.jpg",
                         title: "تصليح",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'تصليح',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/lock.jpg",
                         title: "أقفال",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'أقفال',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/sapaak.jpg",
                         title: "سبّاك",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/dahan.jpg",
                         title: "دهّان",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'دهان',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/mec.jpg",
                         title: "ميكانيك",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'ميكانيك',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/baleet.jpg",
                         title: "بلييط",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'بلييط',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                       RecomendPlantCard(
                         image: "assets/work/repaier.jpg",
                         title: "إصلاح",
-                        press: () {},
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(work: 'إصلاح',name_Me: widget.name_Me,location: widget.country,),),);
+                        },
                       ),
                     ],
                   ),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
@@ -5,21 +7,17 @@ import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/signworker_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
-import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
 
+import 'Comment.dart';
 import 'WORKER_PROFILE.dart';
 String IP4="192.168.1.8";
 
@@ -30,8 +28,12 @@ String country_choose;
 class List_Worker extends StatefulWidget {
   final work;
   final name_Me;
+  final namefirst_Me;
+  final nameLast_Me;
+  final phone_Me;
+  final image_Me;
   final location;
-  List_Worker({this.work,this.name_Me,this.location});
+  List_Worker({this.image_Me,this.namefirst_Me,this.nameLast_Me,this.phone_Me,this.work,this.name_Me,this.location});
   @override
   _Body createState() => _Body();
 }
@@ -39,14 +41,30 @@ class List_Worker extends StatefulWidget {
 class _Body extends State<List_Worker> {
 
 
+  double roundDouble(double value, int places){
+    double mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
   @override
   final formKey = new GlobalKey<FormState>();
   bool login=true;
-
+  OverlayEntry floatingDropdown_country;
+  bool isDropdownOpened_country=false;
   String country_id;
   String hint="اختيار المنطقة";
   List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا","الخليل","قلقيلية","جميع المناطق"];
-
+  OverlayEntry _createFloatingDropdown_coutry() {
+    return OverlayEntry(builder: (context) {
+      return Positioned(
+        left: 10,
+        top: 180,
+        //right: 40,
+        height: 500,
+        child: Drop_country(
+        ),
+      );
+    });
+  }
   Future getSearch()async{
     var url='https://'+IP4+'/testlocalhost/groupsearch.php';
     var ressponse=await http.post(url,body: {
@@ -67,7 +85,7 @@ class _Body extends State<List_Worker> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          backgroundColor:L_ORANGE.withOpacity(0.75),
+          backgroundColor:D,
           leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
             Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>U_PROFILE(name_Me: widget.name_Me,)));
 
@@ -77,11 +95,11 @@ class _Body extends State<List_Worker> {
       body:Column(
         children: [
           Container(
-          color: L_ORANGE.withOpacity(0.75),
+          color:D,
           child:Row(children:[
             Container(
-              margin: EdgeInsets.only(top:10,right: 30),
-              height: 80,
+              margin: EdgeInsets.only(top:20,right: 30),
+              height: 70,
               child: Text(widget.work,
                 style: TextStyle(
                   color: Colors.white,
@@ -89,55 +107,98 @@ class _Body extends State<List_Worker> {
                   fontFamily: 'Changa',
                   fontWeight: FontWeight.bold,),),
             ),
-            Container(
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (isDropdownOpened_country) {
+                    floatingDropdown_country.remove();
+                  } else {
+                    //findDropdownData();
+                    floatingDropdown_country = _createFloatingDropdown_coutry();
+                    Overlay.of(context).insert(floatingDropdown_country);
+                  }
+                  isDropdownOpened_country = !isDropdownOpened_country;
+                });
+              },
+              child: Container(
                 margin: EdgeInsets.only(right: 170,top:1),
-                padding: EdgeInsets.fromLTRB(8,10,10,10),
-                width: 145,
-                height: 50,
-                decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
+                    padding: EdgeInsets.fromLTRB(8,10,10,10),
+                    width: 145,
+                    height: 50,
+                    decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                        ),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      country_id,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                child:DropdownButton(
-                  isExpanded: true,
-                  elevation: 3,
-                  itemHeight: 50,
-                  icon: Icon(Icons.pin_drop,color: Colors.white,),
-                  iconSize:30.0,
-                  value: country_id,
-                  dropdownColor: Colors.white,
-                  onChanged: (value){
-                    setState(() {
-                      _showMyDialog();
-                      country_choose=value;
-                      value=value;
-                      print(country_id);
-                      // Country=true;
-                    });
-                  },
-
-                  underline: Container(color: Colors.transparent),
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontFamily: 'Changa',
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  items:country.map((value){
-                    return DropdownMenuItem(
-                      child: Container(
-                        height: 50,
-                        width: 240.0,
-                        margin: EdgeInsets.only(top:0),
-                        child: Text(value, textAlign: TextAlign.right),
-                      ),
-                      value: value,
-                    );
-                  }).toList(),
-
-                )
-            ),
+                    Spacer(),
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.white,
+                      size: 27,
+                    ),
+                  ],
+                ),
+              ),),
+            // Container(
+            //     margin: EdgeInsets.only(right: 170,top:1),
+            //     padding: EdgeInsets.fromLTRB(8,10,10,10),
+            //     width: 145,
+            //     height: 50,
+            //     decoration: BoxDecoration(
+            //           border: Border.all(
+            //             color: Colors.white,
+            //           ),
+            //         ),
+            //     child:DropdownButton(
+            //       isExpanded: true,
+            //       elevation: 3,
+            //       itemHeight: 50,
+            //       icon: Icon(Icons.pin_drop,color: Colors.white,),
+            //       iconSize:30.0,
+            //       value: country_id,
+            //       dropdownColor: Colors.white,
+            //       onChanged: (value){
+            //         setState(() {
+            //           _showMyDialog();
+            //           country_choose=value;
+            //           value=value;
+            //           print(country_id);
+            //           // Country=true;
+            //         });
+            //       },
+            //
+            //       underline: Container(color: Colors.transparent),
+            //       style: TextStyle(
+            //         fontSize: 16.0,
+            //         fontFamily: 'Changa',
+            //         color: Colors.black,
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //       items:country.map((value){
+            //         return DropdownMenuItem(
+            //           child: Container(
+            //             height: 50,
+            //             width: 240.0,
+            //             margin: EdgeInsets.only(top:0),
+            //             child: Text(value, textAlign: TextAlign.right),
+            //           ),
+            //           value: value,
+            //         );
+            //       }).toList(),
+            //
+            //     )
+            // ),
             // GestureDetector(
             //   child:Container(
             //     decoration: BoxDecoration(
@@ -173,16 +234,135 @@ class _Body extends State<List_Worker> {
                   return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      return Group(name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                      print(snapshot.data.length,);
+                      print(snapshot.data[index]['name']);
+                      print(snapshot.data);
+                      double Rate;
+                      if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                      {return Container();}
+                      if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                      else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                      return Group(namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                     },
                   );
                 }
+                else{return Container();}
                 return Center(child: CircularProgressIndicator());
               },
             ),),
 
         ],),
      ),);
+  }
+  Widget Drop_country(){
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          width: 300,
+          // color: Colors.yellow,
+          padding: EdgeInsets.only(right: 210),
+          alignment: Alignment.topLeft,
+          child:Align(
+            // alignment: Alignment(10,20),
+            child: ClipPath(
+              clipper: ArrowClipper(),
+              child:Container(
+                height: 20,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 1),
+                      blurRadius: 0.02,
+                      color: Colors.black,
+                    ),
+                  ],
+                  // boxShadow:
+                ),
+                // child: Card(
+                //   elevation: 5,
+                //   //margin: EdgeInsets.only(left: 50,right: 50),
+                //   // height: 20,
+                //   // width: 30,
+              ),
+            ),
+          ),),
+        Container(
+          margin: EdgeInsets.only(right: 105),
+        child:Material(
+          elevation: 5,
+          //shape: ArrowShape(),
+          child: Container(
+            height: 450,
+            width: 150,
+            //margin: EdgeInsets.only(right: 50),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  DropDownItem_country("جنين"),
+                  DropDownItem_country("نابلس"),
+                  DropDownItem_country("طوباس"),
+                  DropDownItem_country("طولكرم"),
+                  DropDownItem_country("رام الله"),
+                  DropDownItem_country("بيت لحم"),
+                  DropDownItem_country("الخليل"),
+                  DropDownItem_country("قلقيلية"),
+                  DropDownItem_country("عكا"),
+                  DropDownItem_country("حيفا"),
+                  DropDownItem_country("يافا"),
+                  DropDownItem_country("جميع المناطق"),
+                ],
+              ),
+            ),
+          ),
+        ),),],
+    );
+  }
+  Widget DropDownItem_country(String text) {
+
+    return Directionality(textDirection: ui.TextDirection.ltr,
+      child:Container(
+        width:150,
+        height: 50,
+        alignment: Alignment.topRight,
+        decoration: BoxDecoration(
+          color:Colors.white,
+        ),
+        //margin: EdgeInsets.only(left: 16,),
+        //padding: EdgeInsets.only(right:10, top: 8,bottom: 8),
+        child: Container(
+          width: 150,
+          color: Colors.white,
+          padding: EdgeInsets.only(right: 0,),
+         // alignment: Alignment.topRight,
+          child:FlatButton(
+            onPressed: (){
+              print(text);
+              setState(() {
+                ///////////////////////////////////////////////
+                isDropdownOpened_country=false;
+                floatingDropdown_country.remove();
+                country_choose=text;
+                _showMyDialog();
+              });
+            },
+            child: Text(text,
+              style: TextStyle(
+                fontSize: 15.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),),);
   }
   Future<void> _showMyDialog() async {
     return showDialog<void>(
@@ -256,8 +436,13 @@ class _Body extends State<List_Worker> {
   final  Experiance;
   final  Information;
   final  token;
+  final double Rate;
+  final namefirst_Me;
+  final nameLast_Me;
+  final phone_Me;
+  final image_Me;
 
-  Group({this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  Group({this.phone_Me,this.nameLast_Me,this.namefirst_Me,this.image_Me,this.Rate,this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
 
   @override
   _Group createState() => _Group();
@@ -324,7 +509,7 @@ class _Group extends State<Group> {
                 children: [
                   Container(
                     margin: EdgeInsets.only(top:58,right: 80),
-                    child: Text("4.9",
+                    child: Text(widget.Rate.toString(),
                       style: TextStyle(
                         color: Color(0xFF666360),
                       ),),
@@ -332,7 +517,7 @@ class _Group extends State<Group> {
                   Container(
                     margin: EdgeInsets.only(top:58,right: 3, left: 15,),
                     child: Icon(Icons.star,
-                      color: Color(0xFFECCB45),),
+                      color: Colors.yellow,),
                   ),
 
                 ],
@@ -348,11 +533,13 @@ class _Group extends State<Group> {
               //       fontWeight: FontWeight.bold,
               //     ),
               //   ),),
+
               Row(
                 children: [
-                  Container(
+                  Directionality(textDirection: ui.TextDirection.ltr,
+                  child:Container(
                     width: 110,
-                    margin: EdgeInsets.only(top: 80, right: 80),
+                    margin: EdgeInsets.only(top: 80, right: 70),
                     child: Text(widget.phone,
                       style: TextStyle(
                         fontSize: 15.0,
@@ -360,7 +547,7 @@ class _Group extends State<Group> {
                         color: Color(0xFF666360),
                         fontWeight: FontWeight.bold,
                       ),
-                    ),),
+                    ),),),
                   Container(
                     margin: EdgeInsets.only(top: 80, left: 10,),
                     child: Icon(Icons.phone,
@@ -376,7 +563,7 @@ class _Group extends State<Group> {
                       ),
                       padding: EdgeInsets.symmetric(
                           vertical: 10, horizontal: 2),
-                      color: L_ORANGE.withOpacity(0.75),
+                      color:A,
                       onPressed: () async {
                         DateTime _selectedDay = DateTime.now();
                         var dateParse = DateTime.parse(_selectedDay.toString());
@@ -402,7 +589,7 @@ class _Group extends State<Group> {
                       ),
                       padding: EdgeInsets.symmetric(
                           vertical: 10, horizontal: 2),
-                      color:L_ORANGE.withOpacity(0.75),
+                      color:A,
                       onPressed: () async {
 
                         Navigator.push(context,
@@ -416,6 +603,27 @@ class _Group extends State<Group> {
                           fontWeight: FontWeight.bold,
                         ),),),),
                   ),
+                ],),
+              Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 40,
+                    margin: EdgeInsets.only(right: 0, top: 87),
+                    child: IconButton(
+
+                      onPressed:() {
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => comments(image:widget.image_Me,namelast:widget.nameLast_Me,namefirst: widget.namefirst_Me,Phoneuser: widget.phone_Me,Phoneworker: widget.phone,)));
+                        // Navigator.of(context).push(comments);
+                      },
+                      icon: Icon(Icons.comment),
+                    ),
+                  ),
+                  // Container(height: 20,
+                  //     width: 40,
+                  //     margin: EdgeInsets.only(right: 30, top: 100),
+                  //     //child:Text("تعليق")
+                  // ),
                 ],),
               //Container (margin: EdgeInsets.only(top: 20,left: 150),child:Text(widget.name),),
               // Row(

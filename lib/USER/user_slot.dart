@@ -40,8 +40,12 @@ class My_SLot extends StatefulWidget {
   final namelast;
   final image;
   final phone;
+  final phoneworker;
+  final tokenworker;
+  final token_Me;
+  final DateTime date;
   final DateTime time;
-  My_SLot({this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
+  My_SLot({this.date,this.token_Me,this.phoneworker,this.tokenworker,this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
   _My_SLot createState() =>  _My_SLot();
 }
 class  _My_SLot extends State<My_SLot> {
@@ -57,20 +61,21 @@ class  _My_SLot extends State<My_SLot> {
 
 
   Future getMYslot()async{
-    var dateParse = DateTime.parse(widget.time.toString());
-    var formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay);
+    var formattedDate = DateFormat('yyyy-MM-dd').format(widget.date);
     var url='https://'+IP4+'/testlocalhost/show_slot_of_worker.php';
     var ressponse=await http.post(url,body: {
-      "phoneworker": '+970595320479',
+      "phoneworker":widget.phoneworker,
       "date":formattedDate,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
 
+  CalendarController _calendarController;
   @override
   void initState() {
     super.initState();
+    _calendarController = CalendarController();
     // getChat();
   }
   int _selectedIndex = 0;
@@ -81,11 +86,10 @@ class  _My_SLot extends State<My_SLot> {
   int _selectedItem = 0;
   Widget build(BuildContext context) {
     print(Listsearch.toString());
+    // print(widget.phone);print(widget.name_Me);  print(widget.phoneworker);   print(widget.token_Me);   print(widget.tokenworker); print("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Directionality(textDirection: ui.TextDirection.rtl,
-      child:Stack(
-        children: [
-          Scaffold(
+      child:Scaffold(
             backgroundColor: Colors.white,
             key: _scaffoldKey,
 
@@ -161,44 +165,42 @@ class  _My_SLot extends State<My_SLot> {
                       //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
                     }),
                   ),
-                  Container(
-                    height: 700,
-                    width: 500,
-                    // color:  Color(0xFFF3D657),
-                    margin: EdgeInsets.only(top:20),
-                    //padding:EdgeInsets.only(right:25,left: 25),
-                    decoration: BoxDecoration(
-                      // color:Color(0xFF1C1C1C),
-                      // borderRadius: BorderRadius.only(
-                      //   topLeft: Radius.circular(50),
-                      //   topRight: Radius.circular(50),
-                      // ),
-                    ),
-                      child:FutureBuilder(
-                        future: getMYslot(),
-                        builder: (BuildContext context, AsyncSnapshot snapshot) {
-                          if(snapshot.hasData){
-                            return ListView.builder(
-                              itemCount: 1,
-                              itemBuilder: (context, index) {
-                                var Listslot=snapshot.data;
-                                //return Container(child: Text('SARAH'),);
-                                return slot(List1:Listslot,time: widget.time,);
-                              },
-                            );
-                          }
-                          return Center(child: CircularProgressIndicator());
-                        },
-                      ),
-                    ),
-                ],),),),],),);
+                 Container(
+                   margin: EdgeInsets.only(top:50),
+                   child: FutureBuilder(
+                     future: getMYslot(),
+                     builder: (BuildContext context, AsyncSnapshot snapshot) {
+                       if(snapshot.hasData){
+                         return ListView.builder(
+                           itemCount: 1,
+                           itemBuilder: (context, index) {
+                             var Listslot=snapshot.data;
+                             //return Container(child: Text('SARAH'),);
+                             if(Listslot=="null"){
+                               print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+                               return Empty(date:widget.date,username:widget.name_Me,token:widget.token_Me,tokenworker: widget.tokenworker,phoneworker: widget.phoneworker,phone: widget.phone,);
+                             }
+                             return slot(List1:Listslot,date:widget.date,username:widget.name_Me,token:widget.token_Me,tokenworker: widget.tokenworker,phoneworker: widget.phoneworker,phone: widget.phone,);
+                           },
+                         );
+                       }
+                       return Center(child: CircularProgressIndicator());
+                     },
+                   ),
+                 ),
+
+                ],),),),);
   }
 }
 class slot extends StatefulWidget {
   final phone;
+  final token;
+  final tokenworker;
+  final phoneworker;
+  final username;
   List<dynamic> List1;
-  final DateTime time;
-  slot({this.phone,this.List1,this.time});
+  final DateTime date;
+  slot({this.phone,this.List1,this.date,this.tokenworker,this.phoneworker,this.token,this.username});
   @override
   _slot createState() => _slot();
 }
@@ -210,25 +212,6 @@ class _slot extends State<slot> {
   var List_Pm=[];
   var dateParse = DateTime.parse(_selectedDay.toString());
   var formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDay);
-  // StreamController<Map<DateTime, List>> _streamController;
-  // CalendarController _calendarController;
-  Map<DateTime, List<dynamic>> _events;
-  // var ListBlock=["8.00 - 9.00 ","9.00 - 10.00","","","",];
-  // Future getList() async {
-  //   var url = 'https://' + IP4 + '/testlocalhost/getList.php';
-  //   var ressponse = await http.post(url, body: {
-  //     "phone": widget.phone,
-  //     "date":formattedDate,
-  //   });
-  //   ListBlock=[];
-  //   var responsepody = json.decode(ressponse.body);
-  //   for (int i = 0; i < responsepody.length; i++) {
-  //     String start_to_end=responsepody[i]['timestart']+" "+"-"+" "+responsepody[i]['timeend'];
-  //     print("fgggggggggggggggggggggggggggggggggggggggggg");
-  //     ListBlock.add(start_to_end);
-  //     print(ListBlock);
-  //   }
-  // }
   CalendarController _calendarController;
   @override
   void initState() {
@@ -236,7 +219,6 @@ class _slot extends State<slot> {
     super.initState();
     _calendarController = CalendarController();
     // _streamController = StreamController();
-    _fetchEvents();
   }
   @override
   void seprate(){
@@ -250,34 +232,6 @@ class _slot extends State<slot> {
         }
       }
     }
-  }
-  void _fetchEvents() {
-    //
-    // ListDate11=widget.ListDate;
-    // int i=0;
-    // print(widget.List1);
-    // Map<DateTime, List<dynamic>> _events={};
-    // DateTime date;
-    // widget.List1.forEach(
-    //       (element) {
-    //     date = DateTime.tryParse(widget.ListDate[i]);i++;
-    //     if (_events[date] == null) _events[date] = [];
-    //     _events[date].add(element);
-    //   },
-    // );
-    // _streamController.add(_events);
-  }
-  void _onDaySelected(DateTime day, List events,List r) {
-       _selectedDay = day;
-       var dateParse = DateTime.parse(_selectedDay.toString());
-      formattedDate = DateFormat('yyyy-MM-dd').format(day);
-      print(formattedDate);
-      if(ListBlock.isEmpty){
-        print("Nulllll");
-      // print(_selectedDay);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(time: _selectedDay,),),);
-
-      }
   }
   var ListTimeSlot1=[];
   Container cheack1(){
@@ -299,6 +253,18 @@ class _slot extends State<slot> {
     }
     return Container();
   }
+  void _onDaySelected(DateTime day, List events,List r) {
+    _selectedDay = day;
+    formattedDate = DateFormat('yyyy-MM-dd').format(day);
+    print(formattedDate);
+    if(ListBlock.isEmpty){
+      print("Nulllll");
+
+      // print(_selectedDay);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:_selectedDay,name_Me:widget.username,token_Me:widget.token,tokenworker: widget.tokenworker,phoneworker: widget.phoneworker,phone: widget.phone,),),);
+
+    }
+  }
   @override
   int _page = 0;
   bool image=false;
@@ -307,150 +273,279 @@ class _slot extends State<slot> {
     seprate();
     print(List_Am.toString());
     print(List_Pm.toString());
+    //print(phone);   print(widget.phoneworker);   print(token);   print(widget.tokenworker); print(";;;;;;;;;;;;;;;;;;;;;;");
     return Container(
-        height: 700,
-        color: D,
-        child:Column(
-            children:<Widget>[
-              //StreamBuilder<Map<DateTime, List>>(
-              // stream: _streamController.stream,
-              // builder: (context, snapshot) {
-              //   if (!snapshot.hasData) {
-              //     return SizedBox(
-              //       height: 100.0,
-              //       width: 100.0,
-              //       child: Center(child: CircularProgressIndicator()),
-              //     );
-              //   }
+      height: 610,
+      color: A,
+      child:Column(
+                children: [
+                  Container(
+                    color: Colors.red,
+                    child:TableCalendar(
+                    onDaySelected: _onDaySelected,
+                    calendarController: _calendarController,
+                    //events: events,
+                    initialSelectedDay: widget.date,
+                    initialCalendarFormat: CalendarFormat.week,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    formatAnimation: FormatAnimation.slide,
+                    headerStyle: HeaderStyle(
+                      centerHeaderTitle: true,
+                      formatButtonVisible: false,
+                      titleTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16
+                      ),
+                      leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
+                      rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
+                      leftChevronMargin: EdgeInsets.only(left: 70),
+                      rightChevronMargin: EdgeInsets.only(right: 70),
+                    ),
+                    calendarStyle: CalendarStyle(
+                        todayColor: Color(0xFF1C1C1C),
+                        selectedColor: A,
+                        weekendStyle: TextStyle(
+                            color: Colors.white
+                        ),
+                        weekdayStyle: TextStyle(
+                            color: Colors.white
+                        )
+                    ),
+                    daysOfWeekStyle: DaysOfWeekStyle(
+                        weekendStyle: TextStyle(
+                            color: Colors.white
+                        ),
+                        weekdayStyle: TextStyle(
+                            color: Colors.white
+                        )
 
-              // final events = snapshot.data;
-              TableCalendar(
-                onDaySelected: _onDaySelected,
-                calendarController: _calendarController,
-                //events: events,
-                initialSelectedDay: widget.time,
-                initialCalendarFormat: CalendarFormat.week,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                formatAnimation: FormatAnimation.slide,
-                headerStyle: HeaderStyle(
-                  centerHeaderTitle: true,
-                  formatButtonVisible: false,
-                  titleTextStyle: TextStyle(
+                    ),),
+                  ),
+                  Container(
+                    width: 500,
+                    height: 470,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                       color: Colors.white,
-                      fontSize: 16
-                  ),
-                  leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
-                  rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
-                  leftChevronMargin: EdgeInsets.only(left: 70),
-                  rightChevronMargin: EdgeInsets.only(right: 70),
-                ),
-                calendarStyle: CalendarStyle(
-
-                    todayColor: Color(0xFF1C1C1C),
-                    selectedColor: A,
-                    weekendStyle: TextStyle(
-                        color: Colors.white
                     ),
-                    weekdayStyle: TextStyle(
-                        color: Colors.white
-                    )
-                ),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                    weekendStyle: TextStyle(
-                        color: Colors.white
-                    ),
-                    weekdayStyle: TextStyle(
-                        color: Colors.white
-                    )
+                    child: Container(
+                      height: 500,
+                      margin: EdgeInsets.only(right: 1),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            cheack1(),
+                            cheack2(),
+                            Container(
+                              margin: EdgeInsets.only(top: 20,left: 290),
+                              child:Icon(Icons.wb_sunny,size: 50,color: Colors.yellow,),
+                            ),
+                            //IconData(Icons.wb_sunny),),
+                            SizedBox(height: 20,),
+                            Container(
+                                height: 200,
+                                child:GridView.builder(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 20,
+                                    childAspectRatio: 2.2,
+                                  ),
+                                  itemCount: List_Am.length,
+                                  itemBuilder: (context,index){
+                                    return time1(List_Am[index]['timestart']+"  "+List_Am[index]['timeend'],"Am",List_Am[index]['id'],widget.phone,widget.phoneworker,widget.token,widget.tokenworker,widget.username);
+                                  },
+                                )
+                            ),
 
-                ),),
-              SizedBox(height: 5,),
-              SizedBox(height: 5,),
-              Expanded(
-                child: Container(
-                  width: 500,
-                  height: 500,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
-                    color: Colors.white,
-                  ),
-                  child: Container(
-                    height: 500,
-                    margin: EdgeInsets.only(right: 1),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          cheack1(),
-                          cheack2(),
-                          Container(
-                            margin: EdgeInsets.only(top: 20,left: 290),
-                            child:Icon(Icons.wb_sunny,size: 50,color: Colors.yellow,),
-                          ),
-                          //IconData(Icons.wb_sunny),),
-                          SizedBox(height: 20,),
-                          Container(
-                              height: 200,
-                              child:GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 20,
-                                  childAspectRatio: 2.2,
-                                ),
-                                itemCount: List_Am.length,
-                                itemBuilder: (context,index){
-                                  return time1(List_Am[index]['timestart']+"  "+List_Am[index]['timeend'],"Am");
-                                },
-                              )
-                          ),
+                            SizedBox(height:10,),
+                            Container(
+                              margin: EdgeInsets.only(top: 20,left: 290),
+                              child:Icon(Icons.wb_cloudy,size: 50,color:Color(0xFF1C1C1C)),
+                            ),
+                            SizedBox(height: 20,),
+                            Container(
 
-                          SizedBox(height:10,),
-                          Container(
-                            margin: EdgeInsets.only(top: 20,left: 290),
-                            child:Icon(Icons.wb_cloudy,size: 50,color:Color(0xFF1C1C1C)),
-                          ),
-                          SizedBox(height: 20,),
-                          Container(
-
-                              height: 200,
-                              child:GridView.builder(
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 20,
-                                  childAspectRatio: 2.2,
-                                ),
-                                itemCount: List_Pm.length,
-                                itemBuilder: (context,index){
-                                  return time1(List_Pm[index]['timestart']+"  "+List_Pm[index]['timeend'],"Am");
-                                },
-                              )
-                          ),
-                        ],
+                                height: 200,
+                                child:GridView.builder(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 20,
+                                    childAspectRatio: 2.2,
+                                  ),
+                                  itemCount: List_Pm.length,
+                                  itemBuilder: (context,index){
+                                    return time1(List_Pm[index]['timestart']+"  "+List_Pm[index]['timeend'],"Am",List_Pm[index]['id'],widget.phone,widget.phoneworker,widget.token,widget.tokenworker,widget.username);
+                                  },
+                                )
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-
-            ]
-        ),
-    );
+                ],),);
     }
-  Future<void> _dialogCall(String phone) {
+  Future<void> _dialogCall(String phone,String id,String phoneworker,String token,String workertoken,String username) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return MyDialog(phone: phone,);
+          return MyDialog(phone: phone,id:id,phoneworker:phoneworker,token:token,username:username,tokenworker:workertoken,);
         });
   }
-  Container time1(String time,String d)
+  Container time1(String time,String d,String id,String phone,String phoneworker,String token,String workertoken,String username)
   {
     return Container(
       child:GestureDetector(
         onTap: (){
-          _dialogCall("vffb");
+          _dialogCall(phone,id,phoneworker,token,workertoken,username);
+        },
+        child: Container(
+          margin: EdgeInsets.only(right: 4,),
+          //padding: EdgeInsets.symmetric(horizontal: 5),
+          // height: 54,
+          // width: 119,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Color(0xFF1C1C1C), width: 1.7),
+            borderRadius: BorderRadius.circular(20),),
+          child:Center(
+            child:Container(
+              color: Colors.white,
+              // margin: EdgeInsets.only(right: 20),
+              child:Text(time,
+                style: TextStyle(
+                  fontFamily: 'Changa',
+                  color: Color(0xFF1C1C1C),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),),
+            ),
+          ),),
+      ),
+    );}
+}
+
+
+
+class Empty extends StatefulWidget {
+  @override
+  final DateTime date;
+  final phone;
+  final token;
+  final tokenworker;
+  final phoneworker;
+  final username;
+  Empty({this.date,this.phoneworker,this.phone,this.token,this.tokenworker,this.username});
+  _Empty createState() => _Empty();
+}
+
+class _Empty extends State<Empty> {
+  CalendarController _calendarController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _calendarController = CalendarController();
+    // _streamController = StreamController();
+  }
+  @override
+  void _onDaySelected(DateTime day, List events,List r) {
+    _selectedDay = day;
+    var dateParse = DateTime.parse(_selectedDay.toString());
+    formattedDate = DateFormat('yyyy-MM-dd').format(day);
+    print(formattedDate);
+    if(ListBlock.isEmpty){
+      print("Nulllll");
+      // print(_selectedDay);
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:_selectedDay,phoneworker: widget.phoneworker,),),);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:_selectedDay,name_Me:widget.username,token_Me:widget.token,tokenworker:  widget.tokenworker,phoneworker: widget.phoneworker,phone: widget.phone,),),);
+
+    }
+  }
+  @override
+  int _page = 0;
+  bool image=false;
+  GlobalKey _bottomNavigationKey = GlobalKey();
+  Widget build(BuildContext context) {
+    return Container(
+      height: 610,
+      color: A,
+      child:Column(
+          children:<Widget>[
+            // final events = snapshot.data;
+            TableCalendar(
+              onDaySelected: _onDaySelected,
+              calendarController: _calendarController,
+              //events: events,
+              initialSelectedDay: widget.date,
+              initialCalendarFormat: CalendarFormat.week,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              formatAnimation: FormatAnimation.slide,
+              headerStyle: HeaderStyle(
+                centerHeaderTitle: true,
+                formatButtonVisible: false,
+                titleTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16
+                ),
+                leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
+                rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
+                leftChevronMargin: EdgeInsets.only(left: 70),
+                rightChevronMargin: EdgeInsets.only(right: 70),
+              ),
+              calendarStyle: CalendarStyle(
+
+                  todayColor: Color(0xFF1C1C1C),
+                  selectedColor: Colors.black,
+                  weekendStyle: TextStyle(
+                      color: Colors.white
+                  ),
+                  weekdayStyle: TextStyle(
+                      color: Colors.white
+                  )
+              ),
+              daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle(
+                      color: Colors.white
+                  ),
+                  weekdayStyle: TextStyle(
+                      color: Colors.white
+                  )
+
+              ),),
+            Expanded(
+              child: Container(
+                width: 500,
+                height: 500,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+                  color: Colors.white,
+                ),
+                ),
+              ),
+
+          ]
+      ),
+    );
+  }
+  Future<void> _dialogCall(String phone,String id,String phoneworker,String token,String workertoken,String username) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return MyDialog(phone: phone,id:id,phoneworker:phoneworker,token:token,tokenworker:workertoken,username:username);
+        });
+  }
+  Container time1(String time,String d,String id,String phone,String phoneworker,String token,String workertoken,String username)
+  {
+    return Container(
+      child:GestureDetector(
+        onTap: (){
+          _dialogCall(phone,id,phoneworker,token,workertoken,username);
         },
         child: Container(
           margin: EdgeInsets.only(right: 4,),
@@ -480,7 +575,12 @@ class _slot extends State<slot> {
 class MyDialog extends StatefulWidget {
   @override
   final phone;
-  MyDialog({this.phone});
+  final id;
+  final token;
+  final tokenworker;
+  final phoneworker;
+  final username;
+  MyDialog({this.phone,this.id,this.username,this.token,this.phoneworker,this.tokenworker});
   _MyDialogState createState() => new _MyDialogState();
 }
 
@@ -492,21 +592,25 @@ class _MyDialogState extends State<MyDialog> {
   File image_file;
   bool desc=true;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+    print(widget.phoneworker);   print(widget.phone);   print(widget.token); print(widget.username);   print(widget.tokenworker); print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
     return AlertDialog(
-      backgroundColor: MY_BLACK,
+      backgroundColor: Colors.white,
       actionsPadding: EdgeInsets.zero,
       content: new SingleChildScrollView(
         child: new ListBody(
           children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(left: 0, right: 259),
-                child: IconButton(icon: Icon(
-                    Icons.close,
-                    color: Colors.grey.withOpacity(0.5)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    })
+            GestureDetector(
+
+              child:Container(
+                  margin: EdgeInsets.only(left: 0, right: 259),
+                  child:Icon(
+                      Icons.close,
+                      color: Colors.grey.withOpacity(0.5)),
+              ),
+              onTap: (){
+                Navigator.pop(context);
+              },
             ),
             Container(
               width:500,
@@ -517,20 +621,21 @@ class _MyDialogState extends State<MyDialog> {
                 maxLines: 20,
                 controller: description,
                 style: TextStyle(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.black,
                   fontSize: 16.0,
                   fontFamily: 'Changa',
                   fontWeight: FontWeight.bold,
                 ),
+               //o: Desc(),
                 decoration: InputDecoration(
                   enabledBorder: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(30.0),
-                    borderSide:  BorderSide(color:MY_BLACK),
+                    borderSide:  BorderSide(color:Colors.white),
 
                   ),
                   focusedBorder: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(30.0),
-                    borderSide:  BorderSide(color:MY_BLACK),
+                    borderSide:  BorderSide(color:Colors.white),
 
                   ),
                   hintText: 'أضف تفصيل للطلب',
@@ -574,13 +679,23 @@ class _MyDialogState extends State<MyDialog> {
                   child:image,)
             ):Container(),
             GestureDetector(
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.image),
-                    Text('إضافة صورة قد تفيد في طلبك'),
-                    SizedBox(width: 5),
-                  ],
-                ),
+               child:Container(
+                 margin: EdgeInsets.only(left: 35),
+                 width: 350,
+                 child: Row(
+                   children: <Widget>[
+                     Text('إضافة صورة قد تفيد في طلبك',
+                       style: TextStyle(
+                         color: Colors.grey.withOpacity(0.5),
+                         fontSize: 16.0,
+                         fontFamily: 'Changa',
+                         fontWeight: FontWeight.bold,
+                       ),),
+                     Icon(Icons.image),
+                     SizedBox(width: 5),
+                   ],
+                 ),
+               ),
                 onTap: () async {
               await getImageGallory();
               setState(() {
@@ -597,14 +712,14 @@ class _MyDialogState extends State<MyDialog> {
               child:GestureDetector(
                   child: Row(
                     children: <Widget>[
-                      SizedBox(width: 60),
-                      Icon(Icons.create),
-                      SizedBox(width: 30),
+                      SizedBox(width: 125),
+                      // Icon(Icons.create),
                       Text('حجز',
                         style:  TextStyle(
                           fontSize: 20.0,
                           fontFamily: 'Changa',
-                          color: MY_BLACK,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),),
                       SizedBox(width: 5),
                     ],
@@ -614,6 +729,10 @@ class _MyDialogState extends State<MyDialog> {
                     if(description.text.isEmpty){
                       desc=false;
                     }
+
+                    else{
+                      await reserve();
+                    }
                     setState(() {
                     });
                   }),),
@@ -622,6 +741,12 @@ class _MyDialogState extends State<MyDialog> {
       ),
     );
   }
+  void Desc(){
+    desc=true;
+    setState(() {
+
+    });
+  }
   Future getImageGallory() async {
     final x = await ImagePicker.pickImage(source: ImageSource.gallery);
     imagePath = x.path;
@@ -629,34 +754,29 @@ class _MyDialogState extends State<MyDialog> {
     image = Image(image: FileImage(x),width: 400,height: 150,fit: BoxFit.cover,);
   }
 
-  Future senddata()async{
-    if(image==null){
-      print("image null");
-      var url = 'https://'+IP4+'/testlocalhost/add_post.php';
+  Future reserve()async{
+
+    DateTime date=DateTime.now();
+    var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    var formattedTime = DateFormat('HH:mm:ss').format(date);
+    print(widget.id);
+    print(widget.phone); print(widget.username); print(widget.phoneworker);
+    print(description.text); print(widget.tokenworker); print(widget.token); print(formattedDate); print(formattedTime);
+    print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
+    var url = 'https://'+IP4+'/testlocalhost/reserve.php';
       var ressponse = await http.post(url, body: {
-        "text": description.text,
+        "description": description.text,
         "phone": widget.phone,
-        "imagename": 'null',
-        "image64": '',
+        "id": widget.id,
+        "tokenuser":widget.token,
+        "tokenworker":widget.tokenworker,
+        "phoneworker":widget.phoneworker,
+        "username":widget.username,
+        "datesend":formattedDate,
+        "timesend":formattedTime,
       });
       String massage= json.decode(ressponse.body);
       print(massage);
-    }
-    else{ String base64;
-    String imagename;
-    File _file = File(image_file.path);
-    base64 = base64Encode(_file.readAsBytesSync());
-    imagename = _file.path.split('/').last;
-    var url = 'https://'+IP4+'/testlocalhost/add_post.php';
-    var ressponse = await http.post(url, body: {
-      "text": description.text,
-      "phone": widget.phone,
-      "imagename": imagename,
-      "image64": base64,
-    });
-    String massage= json.decode(ressponse.body);
-    print(massage);
-    }
   }
 
 }

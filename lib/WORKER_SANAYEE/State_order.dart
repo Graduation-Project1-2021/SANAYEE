@@ -36,6 +36,7 @@ String IP4="192.168.1.8";
 
 class State_order extends StatefulWidget {
   final id;
+  final name;
   final country;
   final namefirst;
   final namelast;
@@ -49,7 +50,7 @@ class State_order extends StatefulWidget {
   final timesend;
   final DateTime chooseDate;
 
-  State_order({this.chooseDate,this.id,this.timesend,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
+  State_order({this.name,this.chooseDate,this.id,this.timesend,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
   _State_order createState() =>  _State_order();
 }
 class  _State_order extends State<State_order> {

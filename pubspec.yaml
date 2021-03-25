@@ -63,7 +63,22 @@ dependencies:
   stacked: ^1.9.5
   wave: ^0.1.0
   flutter_custom_clippers: ^1.1.2
-
+  bottom_navy_bar: ^5.6.0
+  google_nav_bar: ^5.0.3
+  carousel_pro: ^1.0.0
+  toast: ^0.1.5
+  fdottedline: ^1.0.1
+  date_range_picker: ^1.0.7
+  google_maps_flutter: ^1.0.3
+  geolocator: ^6.1.1
+  time_range_picker: ^2.0.1
+  time_picker_widget: ^1.0.0+9
+  percent_indicator: "^2.1.5"
+  #google_maps_flutter:
+   #location: ^3.0.0
+  #geolocator: ^2.1.0
+  #flutter_plugin_android_lifecycle: ^1.0.0
+  #location_platform_interface: ^1.0.0
 
 
 
@@ -95,6 +110,8 @@ flutter:
     - assets/work/
     - assets/icons/x.png
     - assets/icons/y.png
+    - assets/work/house-reforms.png
+    - assets/work/taqaat.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -123,6 +140,10 @@ flutter:
     - family: Lemonada
       fonts:
         - asset: fonts/Lemonada-Medium.ttf
+
+    - family: vibes
+      fonts:
+        - asset: fonts/Vibes-Regular.ttf
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:flutterphone/Inside_the_app/user_Profile.dart';
+import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
-import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
+import 'package:flutterphone/WORKER_SANAYEE/Profile.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 String IP4="192.168.1.8";
@@ -100,7 +99,7 @@ class _Body extends State<Loginscreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor:Color(0xF0B67CFB),
+        backgroundColor:E,
         // appBar: PreferredSize(
         // preferredSize: Size.fromHeight(180.0),
         //  child:AppBar(
@@ -110,12 +109,20 @@ class _Body extends State<Loginscreen> {
         //   backgroundColor: Colors.transparent,
         // ),),
         body: Form(key: _formKey,
-          child: SingleChildScrollView(
+          child:  SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+              // color:ca,
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  // colors: [B,A,G]
+                  colors: [D,E]
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-
                 GestureDetector(
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
@@ -124,6 +131,7 @@ class _Body extends State<Loginscreen> {
                     child: CustomPaint(
                       painter: CurvePainter(true),
                       child: Container(
+                        height: 500,
                         padding: EdgeInsets.only(bottom: 5),
                         child: Center(
                           child: SingleChildScrollView(
@@ -134,7 +142,7 @@ class _Body extends State<Loginscreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    margin: EdgeInsets.only(top: 45,bottom: 5),
+                                    margin: EdgeInsets.only(top: 35,bottom: 5),
                                     height: 100,
                                     decoration: BoxDecoration(
                                       // color:Color(0xFF1C1C1C),
@@ -182,23 +190,23 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.white,
-                                        prefixIcon: Icon(Icons.person,color: Colors.orangeAccent.withOpacity(0.5),),
+                                        fillColor: Colors.grey[100],
+                                        prefixIcon: Icon(Icons.person,color:Color(0xFF666360),),
                                         enabledBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Colors.orangeAccent),
+                                          borderSide:  BorderSide(color: Colors.grey[100],),
 
                                         ),
                                         focusedBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Colors.orangeAccent ),
+                                          borderSide:  BorderSide(color: Colors.grey[100],),
 
                                         ),
                                         hintText: 'الاسم ',
                                         hintStyle: TextStyle(
                                           fontSize: 16.0,
                                           fontFamily: 'Changa',
-                                          color: Colors.black26,
+                                          color: Color(0xFF666360),
                                         ),
                                         floatingLabelBehavior: FloatingLabelBehavior.always,
 
@@ -254,32 +262,32 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.white,
+                                        fillColor: Colors.grey[100],
                                         prefixIcon: Icon(
                                           Icons.lock,
-                                          color: Colors.orangeAccent.withOpacity(0.5),
+                                          color:Color(0xFF666360),
 
                                         ),
                                         suffixIcon: IconButton(
-                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color:Colors.orangeAccent.withOpacity(0.5),),
-                                          color: Colors.cyan,
+                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color:Color(0xFF666360),),
+                                          color: B,
                                           onPressed:_togglevisibility,
                                         ),
                                         enabledBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Colors.orangeAccent),
+                                          borderSide:  BorderSide(color: Colors.grey[100]),
 
                                         ),
                                         focusedBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
-                                          borderSide:  BorderSide(color: Colors.orangeAccent),
+                                          borderSide:  BorderSide(color:Colors.grey[100]),
 
                                         ),
                                         hintText: 'كلمة السر',
                                         hintStyle: TextStyle(
                                           fontSize: 16.0,
                                           fontFamily: 'Changa',
-                                          color: Colors.black26,
+                                          color: Color(0xFF666360),
                                         ),
                                         floatingLabelBehavior: FloatingLabelBehavior.always,
                                       ),
@@ -355,7 +363,7 @@ class _Body extends State<Loginscreen> {
                                               side: BorderSide(color: Colors.transparent)
                                           ),
                                           // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-                                          color: Colors.orangeAccent,
+                                          color:A,
                                           onPressed: (){
                                             if (_formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
@@ -413,10 +421,10 @@ class _Body extends State<Loginscreen> {
                 //     child: Center(child: Text("WaveClipperOne(reverse: true)")),
                 //   ),
                 // ),
-              ],
+               ],
             ),
           ),
-        ),),);
+        ),),),);
   }
 }
 

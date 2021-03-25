@@ -1,11 +1,5 @@
 import 'package:flutterphone/screens/signuser_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
-import 'package:flutterphone/components/already_have_an_account_acheck.dart';
-import 'package:flutterphone/constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
@@ -468,20 +462,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
   //SignIn
-  signIn(AuthCredential authCreds) {
-    FirebaseAuth.instance.signInWithCredential(authCreds);
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            // FirebaseAuth.instance.signOut();
-            print(snapshot.data.toString());
-            return InsideAPP();
-          } else {
-            return SignuserScreen();
-          }
-        });
-  }
+  // signIn(AuthCredential authCreds) {
+  //   FirebaseAuth.instance.signInWithCredential(authCreds);
+  //   return StreamBuilder(
+  //       stream: FirebaseAuth.instance.onAuthStateChanged,
+  //       builder: (BuildContext context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           // FirebaseAuth.instance.signOut();
+  //           print(snapshot.data.toString());
+  //           return InsideAPP();
+  //         } else {
+  //           return SignuserScreen();
+  //         }
+  //       });
+  // }
 
   Future<void> _showMyDialog() async {
     return showDialog<void>(

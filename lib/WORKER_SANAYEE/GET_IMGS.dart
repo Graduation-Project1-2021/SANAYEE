@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'IMG_BIG.dart';
-import 'PROFILE_PAGE_WORKER.dart';
 String IP4="192.168.1.8";
 List<Images> imagesFromJson(String str) => List<Images>.from(json.decode(str).map((x) => Images.fromJson(x)));
 

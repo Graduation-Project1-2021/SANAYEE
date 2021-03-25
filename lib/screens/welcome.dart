@@ -3,10 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/screens/signworker_screen.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_cloud_messaging/firebase_cloud_messaging.dart';
-import 'package:flutterphone/Inside_the_app/inside.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,20 +13,21 @@ import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
-
+import 'dart:ui' as ui;
+import '../Map.dart';
 import 'login_screen.dart';
 String IP4="192.168.1.8";
 String _verificationCode;
 String smscode ;
 FocusNode myFocusNode = new FocusNode();
 
-class WelcomeScreen1 extends StatefulWidget {
+class WelcomeScreen extends StatefulWidget {
   @override
 
   _Body createState() => _Body();
 }
 
-class _Body extends State<WelcomeScreen1> {
+class _Body extends State<WelcomeScreen> {
 
   @override
   final formKey = new GlobalKey<FormState>();
@@ -57,15 +56,24 @@ class _Body extends State<WelcomeScreen1> {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor:Colors.orange,
+      child:Stack(
+        children: [
+          // Image.asset(
+          //   "assets/icons/ho.jpg",
+          //   height: MediaQuery.of(context).size.height,
+          //   width: MediaQuery.of(context).size.width,
+          //   fit: BoxFit.cover,
+          // ),
+      Scaffold(
+        //backgroundColor: Colors.transparent,
+        //backgroundColor:Colors.white,
         body: Form(key: formKey,
           child: SingleChildScrollView(
             child: Column(
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-
+                //Image.asset('assets/icons/ho.jpg',fit: BoxFit.cover,) ,
                 GestureDetector(
                   // onTap: () {
                   //   setState(() {
@@ -75,24 +83,43 @@ class _Body extends State<WelcomeScreen1> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.38,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     child: CustomPaint(
                       painter: CurvePainter(true),
                       child: Container(
                         //padding: EdgeInsets.only(bottom:50),
+                        decoration: BoxDecoration(
+                          // color:ca,
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                             // colors: [B,A,G]
+                              colors: [X,Z]
+                          ),
+                        ),
                         child: Center(
                           child: SingleChildScrollView(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 0),
                               child:Column(
                                 children: [
+                                  // Container(
+                                  //   margin: EdgeInsets.only(top:60,right: 170),
+                                  //   child:CustomDropdown(),),
+                                  // Container(
+                                  //   height: 200,
+                                  //   width: 400,
+                                  // ),
                                   Container(
                                     margin: EdgeInsets.only(top:60,right: 170),
                                     padding: EdgeInsets.only(left: 5,right:5),
                                     decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Color(0xFF1C1C1C),
-                                      ),
+                                        border:Border(
+                                          bottom: BorderSide( //
+                                            color: Colors.black54,
+                                            width: 1.0,
+                                          ),
+                                        )
                                     ),
                                     child:GestureDetector(
                                         onTap: (){
@@ -117,17 +144,17 @@ class _Body extends State<WelcomeScreen1> {
                                       // color:Color(0xFF1C1C1C),
                                       image: DecorationImage(
                                         image: new AssetImage(
-                                          'assets/icons/vb.png',
+                                          'assets/work/house-reforms.png',
                                         ),
                                       ),),),
                                   Container(
                                       child:Text('صنايعي ',
                                         style: TextStyle(
-                                          fontSize: 35,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                          //fontWeight: FontWeight.bold,
                                           color: Colors.black,
-                                          fontFamily: 'Changa',
-                                          fontStyle: FontStyle.italic,
+                                          fontFamily: 'vibes',
+                                          //fontStyle: FontStyle.italic,
                                         ),)
                                   ),
 
@@ -158,7 +185,7 @@ class _Body extends State<WelcomeScreen1> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.62,
+                    height: MediaQuery.of(context).size.height * 0.60,
                     child: Container(
                         color: Colors.transparent,
                         padding: EdgeInsets.only(top: 0),
@@ -177,7 +204,7 @@ class _Body extends State<WelcomeScreen1> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color:Colors.white,
+                                              color:Colors.black87,
                                               fontFamily: 'Changa',
                                             ),)
                                       ),
@@ -192,7 +219,7 @@ class _Body extends State<WelcomeScreen1> {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                                color: Colors.black,
                                                 decoration: TextDecoration.underline,
                                                 fontFamily: 'Changa',),)
 
@@ -206,9 +233,9 @@ class _Body extends State<WelcomeScreen1> {
                                           },
                                           child:Text('هل لديك حساب ؟ تسجيل الدخول',
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 15.3,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color:Colors.black87,
                                               // decoration: TextDecoration.underline,
                                               fontFamily: 'Changa',),)
 
@@ -255,7 +282,7 @@ class _Body extends State<WelcomeScreen1> {
               ],
 
             ),),
-        ),),);
+        ),),],),);
   }
 }
 class CurvePainter extends CustomPainter {
@@ -267,7 +294,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color =Colors.white;
+    paint.color =Z;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();

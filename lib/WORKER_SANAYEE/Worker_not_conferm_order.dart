@@ -11,6 +11,7 @@ import 'dart:ui' as ui;
 
 import 'State_order.dart';
 import 'State_order_accept.dart';
+import 'orders_workers.dart';
 
 String IP4="192.168.1.8";
 
@@ -18,8 +19,9 @@ DateTime _selectedDay = DateTime.now();
 
 class not_conferm__order extends StatefulWidget {
   final phone;
+  final name;
   final DateTime time;
-  not_conferm__order({this.phone,this.time});
+  not_conferm__order({this.phone,this.time,this.name});
   @override
   _not_conferm__order createState() => _not_conferm__order();
 }
@@ -88,7 +90,7 @@ class _not_conferm__order extends State<not_conferm__order> {
             key: _scaffoldKey,
             body: Form(
               // child:SingleChildScrollView(
-              child: Stack(
+              child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -110,8 +112,9 @@ class _not_conferm__order extends State<not_conferm__order> {
                   //   ),
                   // ),
                   Container(
-                    margin: EdgeInsets.only(top: 50),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+                    margin: EdgeInsets.only(top: 50,left:365),
+                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(phone: widget.phone,name:widget.name,)));
                       //  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
                       //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
                     }),

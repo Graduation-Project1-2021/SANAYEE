@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
-import 'package:flutterphone/Worker/ColorScheme.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -11,9 +10,6 @@ import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
 import '../constants.dart';
-import 'WORKER_PROFILE.dart';
-import 'WORKER_PROFILE.dart';
-import 'WORKER_PROFILE.dart';
 var ListBlock=[];
 String IP4="192.168.1.8";
 String name="";
@@ -147,7 +143,7 @@ class _user_order extends State<user_order> {
         appBar: AppBar(
           automaticallyImplyLeading: false, // this will hide Drawer hamburger icon
           elevation: 0,
-          backgroundColor:PURPEL,
+          backgroundColor:D,
           leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
             Navigator.pop(context);
             // Navigator.pop(context);
@@ -157,7 +153,7 @@ class _user_order extends State<user_order> {
         body: Form(
           child:Container(
             height: 670,
-            color: PURPEL,
+            color: D,
             child:Column(
                 children:<Widget>[
                   Container(),
@@ -195,7 +191,7 @@ class _user_order extends State<user_order> {
                     calendarStyle: CalendarStyle(
 
                         todayColor: Color(0xFF1C1C1C),
-                        selectedColor: L_ORANGE,
+                        selectedColor: A,
                         weekendStyle: TextStyle(
                             color: Colors.white
                         ),

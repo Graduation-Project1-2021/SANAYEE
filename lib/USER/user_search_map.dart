@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'List_worker_group.dart';
 String IP4="192.168.1.8";
 // var url = "http://maps.google.com/mapfiles/ms/icons/";
 // url + = "blue";
@@ -21,6 +22,15 @@ class MyHttpOverrides extends HttpOverrides{
 }
 
 class MyApp1 extends StatefulWidget {
+  final token;
+  final name_Me;
+  final namefirst;
+  final namelast;
+  final image;
+  final phone;
+  final country;
+  final work;
+  MyApp1({this.country,this.work,this.phone,this.name_Me,this.namelast,this.namefirst,this.image,this.token});
   _mState createState() => _mState();
 }
 
@@ -32,6 +42,7 @@ class _mState extends State<MyApp1> {
     print(json.decode(ressponse.body));
     print("vvxbccccccccccccccccccccccc");
     return json.decode(ressponse.body);
+
 
   }
   @override
@@ -75,7 +86,15 @@ class _mState extends State<MyApp1> {
 }
 class w extends StatefulWidget {
   List<dynamic>Location;
-  w({this.Location});
+  final token;
+  final name_Me;
+  final namefirst;
+  final namelast;
+  final image;
+  final phone;
+  final country;
+  final work;
+  w({this.country,this.work,this.phone,this.name_Me,this.namelast,this.namefirst,this.image,this.token,this.Location});
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -84,7 +103,7 @@ class _MyHomePageState extends State<w> {
   PermissionStatus _permissionGranted;
   bool serviceEnabled;
   int i=0;
-  var List_Worker=[];
+  var ListWorker=[];
   List<Marker> markers=[];
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -109,9 +128,12 @@ class _MyHomePageState extends State<w> {
   @override
   Widget build(BuildContext context) {
     Fetch();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(token_Me:widget.token,work: widget.work,name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,)));
+
     return S?Container(
       height: 700,
       child:showgooglemap(markers),):Center(child: CircularProgressIndicator());
+
     //  child:FutureBuilder(
     //    future: checkLocationServicesInDevice(),
     //      builder: (BuildContext context, AsyncSnapshot <double>snapshot) {
@@ -143,10 +165,10 @@ class _MyHomePageState extends State<w> {
         print(_location.latitude.toString() + " " + _location.longitude.toString());
         double lat=_location.latitude;
         double log=_location.longitude;
-        Marker m=new Marker(markerId: MarkerId("User Location"),infoWindow: InfoWindow(title:"your current location"), position: LatLng(32.08371
-            ,35.18079));
+        Marker m=new Marker(markerId: MarkerId("User Location"),infoWindow: InfoWindow(title:"your current location"), position: LatLng(32.460000
+            ,35.300000));
         markers.add(m);
-        double d= calculateDistance(34.4833,136.84186,lat1,lng1);
+        double d= calculateDistance(32.460000,35.300000,lat1,lng1);
         print(lat1);
         print(lng1);
         print(d);
@@ -155,8 +177,7 @@ class _MyHomePageState extends State<w> {
 
 
 
-//for more  than one location(continuous taking of the location)
-
+        //for more  than one location(continuous taking of the location)
         // location.onLocationChanged.listen((LocationData currentLocation) {
         //   print(currentLocation.latitude.toString() + " " +
         //       currentLocation.longitude.toString());
@@ -180,8 +201,9 @@ class _MyHomePageState extends State<w> {
         }
         else{
           //Here
-          SystemNavigator.pop();
-
+          // SystemNavigator.pop();
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker));
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(token_Me:widget.token,work: widget.work,name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,)));
         }
 
       }
@@ -210,8 +232,7 @@ class _MyHomePageState extends State<w> {
             print('user allowed');
 
           }else{
-
-            SystemNavigator.pop();
+            //SystemNavigator.pop();
 
           }
 
@@ -220,7 +241,8 @@ class _MyHomePageState extends State<w> {
 
       }else{
 
-        SystemNavigator.pop();
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => List_Worker(token_Me:widget.token,work: widget.work,name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,)));
+        //SystemNavigator.pop();
 
       }
 
@@ -238,8 +260,8 @@ class _MyHomePageState extends State<w> {
     print(12742 * asin(sqrt(a)));
     double distance=12742 * asin(sqrt(a));
 
-    if(distance<100){
-      List_Worker.add(widget.Location[i]);
+    if(distance<10000){
+      ListWorker.add(widget.Location[i]);
       var random = new Random();
       int id =random.nextInt(100000);
       Marker m=new Marker(markerId: MarkerId(id.toString()), infoWindow: InfoWindow(title:widget.Location[i]['namefirst']+" "+widget.Location[i]['namelast']+"على بعد "+distance.toString()), position: LatLng(double.parse(widget.Location[i]['lat']),double.parse(widget.Location[i]['lng'])),);

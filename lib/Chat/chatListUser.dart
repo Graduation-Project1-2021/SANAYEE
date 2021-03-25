@@ -5,8 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/Inside_the_app/WORKER_PROFILE.dart';
-import 'package:flutterphone/Inside_the_app/user_Profile.dart';
+import 'package:flutterphone/USER/user_Profile.dart';
+import 'package:flutterphone/USER/favarate.dart';
+import 'package:flutterphone/USER/user_reserve_order.dart';
+import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
 import 'package:flutterphone/screens/login_screen.dart';
+import 'package:flutterphone/screens/welcome.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import '../constants.dart';
 import '../database.dart';
 import 'Conversation.dart';
@@ -17,10 +22,11 @@ String IP4="192.168.1.8";
 
 class Chat extends StatefulWidget{
   final name_Me;
+  final phone;
   Stream chatsRoomList;
   final bool user;
   @override
-  Chat({this.name_Me,this.chatsRoomList,this.user});
+  Chat({this.phone,this.name_Me,this.chatsRoomList,this.user});
   _Chat createState() =>  _Chat();
 }
 class  _Chat extends State<Chat> {
@@ -41,7 +47,7 @@ class  _Chat extends State<Chat> {
     return Container(
       height: 500,
       color: Colors.white,
-      margin: EdgeInsets.only(top: 50),
+      margin: EdgeInsets.only(top: 0),
       child:StreamBuilder(stream: widget.chatsRoomList,
           builder: (context,snapshot){
             return snapshot.hasData?ListView.builder(
@@ -64,51 +70,124 @@ class  _Chat extends State<Chat> {
   }
   initeState(){
     // initiateSearch();
-    //getChat();
+    getChat();
     super.initState();
   }
-  int _page=3;
+  int _selectedIndex=4;
   GlobalKey _bottomNavigationKey = GlobalKey();
   Stream chatsRoom;
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
       return Directionality(textDirection: TextDirection.rtl,
       child: Scaffold(
-        key: _scaffoldKey,
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _page,
-        color:L_ORANGE,
-        buttonBackgroundColor:L_ORANGE,
         backgroundColor: Colors.white,
-        height: 48,
-        key: _bottomNavigationKey,
-        items: <Widget>[
-          Icon(Icons.home, size: 25,color: Colors.white,),
-          Icon(Icons.settings, size: 25,color: Colors.white,),
-          Icon(Icons.playlist_add_check, size: 25,color: Colors.white,),
-          Icon(Icons.mark_chat_unread, size: 25,color: Colors.white,),
-          Icon(Icons.logout, size: 25,color: Colors.white,),
-        ],
-        onTap: (index) {
-          setState(() {
-            _page  = index;
-           if (_page == 0) {Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));}
-           if(_page==3){Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));}
-           if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>Loginscreen()));}
+        key: _scaffoldKey,
+        bottomNavigationBar:Container(
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+          ]),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+              child: GNav(
+                  rippleColor: Colors.grey[300],
+                  hoverColor: Colors.grey[100],
+                  gap: 8,
+                  activeColor: Colors.black,
+                  iconSize: 24,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  duration: Duration(milliseconds: 400),
+                  tabBackgroundColor: Colors.grey[100],
+                  tabs: [
+                    GButton(
+                      icon: Icons.home,
+                      text: 'الرئيسية',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.person,
+                      text: 'حسابي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.favorite_border,
+                      text: 'المفضلة',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      onPressed: (){
+                      },
+                      icon: Icons.calendar_today,
+                      text: 'طلباتي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      onPressed: (){
 
-          });
-        },
-      ),
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(80.0), // here the desired height
-            child:AppBar(
-              elevation: 0.0,
-              backgroundColor:L_ORANGE.withOpacity(0.75),
-              leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-              }),
+                      },
+                      icon: Icons.mark_chat_unread,
+                      text: 'شات',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  selectedIndex: _selectedIndex,
+                  onTabChange: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                      if(index==0){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                      }
+                      if(index==2){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.name_Me,phoneuser: widget.phone,)));
+                      }
+                      if(index==3){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.name_Me,phoneuser: widget.phone,)));
+                      }
+                      // if(index==4){
+                      //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));
+                      // }
+
+
+                    });
+                  }
+              ),
             ),
-        ),
+          ),),
+        // appBar: PreferredSize(
+        //     preferredSize: Size.fromHeight(80.0), // here the desired height
+        //     child:AppBar(
+        //       elevation: 0.0,
+        //       backgroundColor:G,
+        //       leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+        //         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+        //       }),
+        //     ),
+        // ),
       // appBar: AppBar(
       //   backgroundColor:L_ORANGE.withOpacity(0.75),
       //   leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
@@ -117,32 +196,28 @@ class  _Chat extends State<Chat> {
       // ),
       body: Stack(
        children:[
-         Container(
-           margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-           height: 180,
-           decoration: BoxDecoration(
-             color: L_ORANGE.withOpacity(0.75),
-           ),
-         ),
+      GestureDetector(
+        onTap: (){widget.user?Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,))):Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => PROFILE(name: widget.name_Me,)));},
+        child:  Container(
+          margin: EdgeInsets.only(top: 70,right: 10),
+          child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
+          ),
+      ),
       Container(
-        height: 700,
+        height: 650,
         width: 500,
         //transform: Matrix4.translationValues(0.0, -30.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
+        margin: EdgeInsets.only(top: 90,bottom: 0),
+        child:SingleChildScrollView(
+          // child: Column(
+          //   children: <Widget>[
+          child:Container(
+           // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+            child: ChatsRoomList(),),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              ChatsRoomList(),
-            ],
-          ),
-        ),
-      ),],),),);
+
+      ],),),);
   }
 
 
@@ -178,10 +253,11 @@ class  _ChatRooTile extends State<ChatRooTile> {
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Container(
-                height: 80,
+               height: 80,
                 // color:  Color(0xFFF3D657),
                 margin: EdgeInsets.only(top:0),
                 decoration: BoxDecoration(
+                  color: Colors.white
                 ),
                 child:FutureBuilder(
                   future: widget.user?getWorker():getUser(),
@@ -241,12 +317,13 @@ class  _ChatBlock extends State<ChatBlock> {
   }
 
   Widget build(BuildContext context) {
-  return  GestureDetector(
+  return GestureDetector(
           onTap: (){
             CreatChatRoom();
           },
       child:Container(
         width:300,
+        color:Colors.white,
         //color: PURPEL,
      margin: EdgeInsets.only(top: 10,bottom: 5),
        child: Row(
@@ -258,9 +335,10 @@ class  _ChatBlock extends State<ChatBlock> {
             radius: 25.0,),
         ),
         Container(
-          width: 100,
+          width: 250,
+          //color: Colors.green,
           alignment: Alignment.centerRight,
-          margin: EdgeInsets.only(top: 5,bottom: 5,left: 170,right:30),
+          margin: EdgeInsets.only(top: 5,bottom: 5,left: 50,right:10),
           child: Text(widget.namefirst + " " + widget.namelast,
             style: TextStyle(
               color: Colors.black,
