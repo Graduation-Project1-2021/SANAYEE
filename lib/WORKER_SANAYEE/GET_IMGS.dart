@@ -6,7 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import '../constants.dart';
 import 'IMG_BIG.dart';
+import 'Profile.dart';
 String IP4="192.168.1.8";
 List<Images> imagesFromJson(String str) => List<Images>.from(json.decode(str).map((x) => Images.fromJson(x)));
 
@@ -64,14 +66,6 @@ class  _Get_Images extends State< Get_Images> {
   Widget build(BuildContext context) {
     return Directionality( textDirection: TextDirection.rtl,
     child:Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40.0), // here the desired height
-          child: AppBar(
-            backgroundColor: Color(0xFFECCB45),
-            elevation: 0.0,
-            //leading: I,
-          )
-      ),
       // backgroundColor: Colors.lightBlueAccent,
       body: Form(
         child: Column(
@@ -79,15 +73,14 @@ class  _Get_Images extends State< Get_Images> {
           children: <Widget>[
             Stack(
                 children:[
-
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: 180,
-                     decoration: BoxDecoration(
-                     color:  Color(0xFFECCB45),
-                     ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name:widget.name)));},
+                    child:  Container(
+                      margin: EdgeInsets.only(top: 60,right: 10),
+                      child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
+                    ),
                   ),
-
                   // Container(
                   //   margin: EdgeInsets.fromLTRB(100, 50, 1, 0),
                   //   child: IconButton(
@@ -119,11 +112,11 @@ class  _Get_Images extends State< Get_Images> {
                     child:Column(
                       children: <Widget>[
                       Container(
-                      height:617.5,
-                      margin: EdgeInsets.only(top:91),
+                      height:657.5,
+                      margin: EdgeInsets.only(top:140),
                       padding: EdgeInsets.only(top:30,right: 15,left: 15,),
                       decoration: BoxDecoration(
-                        color: Color(0xFF1C1C1C),
+                        color: chat,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(50),
                           topRight: Radius.circular(50),
@@ -161,7 +154,7 @@ class  _Get_Images extends State< Get_Images> {
                                                height: 150,
                                                width: 150,
                                                decoration: BoxDecoration(
-                                                   color: Colors.grey.withOpacity(0.1),
+                                                   color: Colors.grey.withOpacity(0.3),
                                                    borderRadius: BorderRadius.circular(10.0)
                                                ),
                                                child: Center(

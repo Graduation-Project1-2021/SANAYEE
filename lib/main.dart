@@ -6,10 +6,11 @@ import 'package:flutterphone/constants.dart';
 import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:io';
 
+import 'Localnotification.dart';
 import 'USER/Search.dart';
 import 'USER/xc.dart';
 import 'USER/Setting_user.dart';
-import 'mappp.dart';
+import 'notificationscreen.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -33,7 +34,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       title: 'Flutter Auth',
       theme: ThemeData(
        primaryColor: MY_YELLOW,

@@ -20,7 +20,6 @@ import 'dart:convert';
 import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import '../database.dart';
-import '../mappp.dart';
 import 'ALL_SERVICE.dart';
 import 'favarate.dart';
 
@@ -597,7 +596,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                           print(widget.token);
                           print(widget.country);
                           //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp1()));
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(token_Me:widget.token,work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
                       RecomendPlantCard(

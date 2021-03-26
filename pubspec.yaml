@@ -74,6 +74,8 @@ dependencies:
   time_range_picker: ^2.0.1
   time_picker_widget: ^1.0.0+9
   percent_indicator: "^2.1.5"
+  flutter_local_notifications: ^1.4.4+1
+  rxdart: ^0.24.1
   #google_maps_flutter:
    #location: ^3.0.0
   #geolocator: ^2.1.0

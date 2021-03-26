@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutterphone/components/Drop_Down_country.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +10,7 @@ import 'Comment.dart';
 import 'WORKER_PROFILE.dart';
 String IP4="192.168.1.8";
 
-
+String country_choose;
 //Our MyApp class. Represents our application
 //Represents the Homepage widget
 class Search_user extends StatefulWidget {
@@ -21,7 +22,8 @@ class Search_user extends StatefulWidget {
   final image_Me;
   final token_Me;
   final location;
-  Search_user({this.token_Me,this.image_Me,this.namefirst_Me,this.nameLast_Me,this.phone_Me,this.work,this.name_Me,this.location});
+  final country;
+  Search_user({this.country,this.token_Me,this.image_Me,this.namefirst_Me,this.nameLast_Me,this.phone_Me,this.work,this.name_Me,this.location});
   //`createState()` will create the mutable state for this widget at
   //a given location in the tree.
   @override
@@ -41,7 +43,23 @@ class _HomeState extends State<Search_user> {
 
   List<String> _nebulae;
   List<String> _filterList;
-
+  OverlayEntry floatingDropdown_country;
+  bool isDropdownOpened_country=false;
+  String country_id;
+  String hint="اختيار المنطقة";
+  List<String>country=["جنين","نابلس","طولكرم","رام الله","طوباس","حيفا","يافا","عكا","الخليل","قلقيلية","جميع المناطق"];
+  OverlayEntry _createFloatingDropdown_coutry() {
+    return OverlayEntry(builder: (context) {
+      return Positioned(
+        left: 10,
+        top: 180,
+        //right: 40,
+        height: 500,
+        child: Drop_country(
+        ),
+      );
+    });
+  }
   double roundDouble(double value, int places){
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
@@ -49,6 +67,7 @@ class _HomeState extends State<Search_user> {
   @override
   void initState() {
     super.initState();
+    country_id=widget.country;
   }
   var Listsearch=[];
   Future getdata()async{
@@ -82,6 +101,14 @@ class _HomeState extends State<Search_user> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
+  Future getSearchall_rate()async{
+    var url='https://'+IP4+'/testlocalhost/searchall_rate.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
   Future getSearchavalibel()async{
     var url='https://'+IP4+'/testlocalhost/searchavalibel.php';
     var ressponse=await http.post(url,body: {
@@ -90,8 +117,55 @@ class _HomeState extends State<Search_user> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
+  Future getSearchavalibel_rate()async{
+    var url='https://'+IP4+'/testlocalhost/searchavalibal_rate.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  Future getSearchcoutry(String country)async{
+    var url='https://'+IP4+'/testlocalhost/searchcoutry.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+      "country":country,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  Future getSearchcoutry_rate(String country)async{
+    var url='https://'+IP4+'/testlocalhost/searchcountry_rate.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+      "country":country,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  Future searchavalibelcountry(String country)async{
+    var url='https://'+IP4+'/testlocalhost/searchavalibelcountry.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+      "country":country,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  Future searchcountry_avalibel_rate(String country)async{
+    var url='https://'+IP4+'/testlocalhost/searchcountry_avalibel_rate.php';
+    var ressponse=await http.post(url,body: {
+      "Work":widget.work,
+      "country":country,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
   bool button1=true;
   bool button2=false;
+  bool button3=false;
+  bool button4=true;
+
 
 //Build our Home widget
   @override
@@ -134,8 +208,8 @@ class _HomeState extends State<Search_user> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: (){
-                        button1=true;
                         button2=false;
+                        button1=!button1;
                         setState(() {
 
                         });
@@ -161,7 +235,7 @@ class _HomeState extends State<Search_user> {
                     GestureDetector(
                       onTap: (){
                         button1=false;
-                        button2=true;
+                        button2=!button2;
                         setState(() {
 
                         });
@@ -186,7 +260,17 @@ class _HomeState extends State<Search_user> {
                     ),
                     SizedBox(width: 30,),
                     GestureDetector(
+                      onTap: (){
+                        button3=!button3;
+                        setState(() {
+
+                        });
+                      },
                       child: Container(
+                        decoration: BoxDecoration(
+                          color:button3==true?Colors.red:Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Text('الريت',
                           style: TextStyle(
                             fontSize: 14.0,
@@ -198,6 +282,53 @@ class _HomeState extends State<Search_user> {
 
                       ),
                     ),
+                    SizedBox(width: 30,),
+                    GestureDetector(
+                      onTap: (){
+                        button4=!button4;
+                        setState(() {
+
+                        });
+                      },
+                      child: Container(
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color:button4==true?Colors.red:Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Text(country_id,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontFamily: 'Changa',
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  if (isDropdownOpened_country) {
+                                    floatingDropdown_country.remove();
+                                  } else {
+                                    //findDropdownData();
+                                    floatingDropdown_country = _createFloatingDropdown_coutry();
+                                    Overlay.of(context).insert(floatingDropdown_country);
+                                  }
+                                  isDropdownOpened_country = !isDropdownOpened_country;
+                                });
+                              },
+                              child:Icon(
+                              Icons.arrow_drop_down_outlined,
+                              color: Colors.black,
+                              size: 27,
+                            ),),
+                          ],
+                        ),
+                      ),),
+                    SizedBox(width: 30,),
                     SizedBox(width: 30,),
                     GestureDetector(
                       child: Container(
@@ -217,9 +348,7 @@ class _HomeState extends State<Search_user> {
               ),
             ),
 
-
-
-            button1==true?  Container(
+            button1==true && button3==false && button2==false && button4==false?  Container(
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
@@ -239,7 +368,6 @@ class _HomeState extends State<Search_user> {
                     return ListView.builder(
                       itemCount:snapshot.data.length,
                       itemBuilder: (context, index) {
-                        print(snapshot.data.length);print('dddddddddddddddddddddddddd');
                         var Listslot=snapshot.data;
                         double Rate;
                         if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
@@ -255,7 +383,42 @@ class _HomeState extends State<Search_user> {
                 },
               ),
             ):Container(),
-            button2==true?  Container(
+            button1==true && button3==true && button2==false && button4==false? Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: getSearchall_rate(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var Listslot=snapshot.data;
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button2==true && button3==false && button1==false && button4==false ? Container(
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
@@ -275,8 +438,221 @@ class _HomeState extends State<Search_user> {
                     return ListView.builder(
                       itemCount:snapshot.data.length,
                       itemBuilder: (context, index) {
-                        print(snapshot.data.length);print('dddddddddddddddddddddddddd');
                         var Listslot=snapshot.data;
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button2==true && button3==true && button1==false && button4==false? Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: getSearchavalibel_rate(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var Listslot=snapshot.data;
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button3==true && button1==false && button2==false && button4==false? Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: getSearchall_rate(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        var Listslot=snapshot.data;
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button4==true && button3==false && button2==false?Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: getSearchcoutry(country_id),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        print(snapshot.data.length);print('bbbbbbbbbbbbbbbbbbbbb');
+                        var Listslot=snapshot.data;print(country_id.toString());
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button4==true && button3==true && button2==false?Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: getSearchcoutry_rate(country_id),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        print(snapshot.data.length);print('bbbbbbbbbbbbbbbbbbbbb');
+                        var Listslot=snapshot.data;print(country_id.toString());
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button4==true && button3==false && button2==true?Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: searchavalibelcountry(country_id),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        print(snapshot.data.length);print('bbbbbbbbbbbbbbbbbbbbb');
+                        var Listslot=snapshot.data;print(country_id.toString());
+                        double Rate;
+                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
+                        {return Container();}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Container(child: Text('bggngn'),);
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+            ):Container(),
+            button4==true && button3==true && button2==true?Container(
+              height: 500,
+              width: 500,
+              // color:  Color(0xFFF3D657),
+              margin: EdgeInsets.only(top:150),
+              //padding:EdgeInsets.only(right:25,left: 25),
+              decoration: BoxDecoration(
+                // color:Color(0xFF1C1C1C),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(50),
+                //   topRight: Radius.circular(50),
+                // ),
+              ),
+              child:FutureBuilder(
+                future: searchcountry_avalibel_rate(country_id),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return ListView.builder(
+                      itemCount:snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        print(snapshot.data.length);print('bbbbbbbbbbbbbbbbbbbbb');
+                        var Listslot=snapshot.data;print(country_id.toString());
                         double Rate;
                         if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
                         {return Container();}
@@ -305,6 +681,155 @@ class _HomeState extends State<Search_user> {
           ],
         ),
       ),);
+  }
+  Widget Drop_country(){
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 50,top: 50),
+          child:Material(
+            elevation: 5,
+            //shape: ArrowShape(),
+            child: Container(
+              height: 400,
+              width: 120,
+              //margin: EdgeInsets.only(right: 50),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child:SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    DropDownItem_country("جنين"),
+                    DropDownItem_country("نابلس"),
+                    DropDownItem_country("طوباس"),
+                    DropDownItem_country("طولكرم"),
+                    DropDownItem_country("رام الله"),
+                    DropDownItem_country("بيت لحم"),
+                    DropDownItem_country("الخليل"),
+                    DropDownItem_country("قلقيلية"),
+                    DropDownItem_country("عكا"),
+                    DropDownItem_country("حيفا"),
+                    DropDownItem_country("يافا"),
+                    DropDownItem_country("جميع المناطق"),
+                  ],
+                ),
+              ),
+            ),
+          ),),],
+    );
+  }
+  Widget DropDownItem_country(String text) {
+
+    return Directionality(textDirection: TextDirection.ltr,
+      child:Container(
+        width:150,
+        height: 50,
+        alignment: Alignment.topRight,
+        decoration: BoxDecoration(
+          color:Colors.white,
+        ),
+        //margin: EdgeInsets.only(left: 16,),
+        //padding: EdgeInsets.only(right:10, top: 8,bottom: 8),
+        child: Container(
+          width: 150,
+          color: Colors.white,
+          padding: EdgeInsets.only(right: 0,),
+          // alignment: Alignment.topRight,
+          child:FlatButton(
+            onPressed: (){
+              print(text);
+              setState(() {
+                isDropdownOpened_country=false;
+                floatingDropdown_country.remove();
+                 country_id=text;
+                setState(() {
+
+                });
+              });
+            },
+            child: Text(text,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontFamily: 'Changa',
+                color: Color(0xFF666360),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),),);
+  }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      //this means the user must tap a button to exit the Alert Dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.only(right: 20,left: 30,top: 15),
+          actions: <Widget>[
+            Directionality(textDirection: TextDirection.rtl,
+              child: Container(
+                width: 300,
+                alignment: Alignment.topRight,
+                padding:EdgeInsets.only(top:50,left: 10,right: 30),
+                //margin: EdgeInsets.only(top:50,left: 50,right: 10),
+                child:Text('!ذا قمت باختيار منطقة أخرى غير منطقتك فإن  الوقت لتلبية طلبك قد يتأخر لأن الحرفي من مدينة أخرى ومن الممكن أن يلغى طلبك هل أنت متأكد ؟',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],
+                    fontFamily: 'Changa',
+                  ),),
+              ),),
+            Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 10,bottom: 20,right:10,top: 30),
+                  child:FlatButton(
+                    child: Text('إلغاء',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600],
+                        fontFamily: 'Changa',
+                      ),),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),),
+                Container(
+                  margin: EdgeInsets.only(left: 20,right:90,bottom: 20,top: 30),
+                  child:FlatButton(
+                    child: Text('حسنا',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600],
+                        fontFamily: 'Changa',
+                      ),),
+                    onPressed: () {
+                      country_id=country_choose;
+                      //Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:country_id,work: 'نجار',name_Me: widget.name_Me,location: widget.country,),),);
+                      Navigator.pop(context);
+                      setState(() {
+                        button4=!button4;
+                        button3=button2=button1=false;
+
+                      });
+                     // Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>List_Worker(work:widget.work,location:country_choose,name_Me: widget.name_Me,)));
+                    },
+                  ),),
+              ],
+            ),
+
+          ],
+        );
+      },
+    );
   }
   //Create a SearchView
   Widget _createSearchView() {
