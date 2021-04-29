@@ -15,10 +15,10 @@ class DismissibleWidget<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Dismissible(
         key: ObjectKey(item),
-        background: buildSwipeActionLeft(),
-        secondaryBackground: buildSwipeActionRight(),
+         secondaryBackground:buildSwipeAction(),
+         background: buildSwipeActionLeft(),
         child: child,
-        onDismissed: onDismissed,
+        //onDismissed: onDismissed,
       );
 
   Widget buildSwipeActionLeft() => Container(
@@ -34,4 +34,18 @@ class DismissibleWidget<T> extends StatelessWidget {
         color: Colors.red,
         child: Icon(Icons.delete_forever, color: Colors.white, size: 32),
       );
+  Widget buildSwipeAction() => Container(
+    color: Colors.red,
+    alignment: Alignment.topLeft,
+    padding: EdgeInsets.symmetric(horizontal: 0),
+    child:Row(
+    children: [
+      GestureDetector(
+        child: Icon(Icons.delete_forever, color: Colors.white, size: 32),
+      ),
+      GestureDetector(
+        child: Icon(Icons.archive_sharp, color: Colors.white, size: 32),
+      ),
+    ],
+    ),);
 }

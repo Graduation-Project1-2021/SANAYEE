@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutterphone/USER/user_Profile.dart';
+import 'package:flutterphone/WORKER_SANAYEE/homepage.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/WORKER_SANAYEE/Profile.dart';
@@ -74,7 +75,7 @@ class _Body extends State<Loginscreen> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return PROFILE(name:nameController.text);
+            return Home_Page(name:nameController.text);
             //  return ProfilePage(nameController.text);
 
           },
@@ -98,8 +99,24 @@ class _Body extends State<Loginscreen> {
         .size;
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor:E,
+      child:Stack(
+        children: [
+      Container(
+      decoration: BoxDecoration(
+      color: Colors.grey.withOpacity(0.3),
+      image: new DecorationImage(
+        fit: BoxFit.cover,
+        colorFilter:
+        ColorFilter.mode(Colors.blue.withOpacity(0.3),
+            BlendMode.dstATop),
+        image: new AssetImage(
+          'assets/work/cv.jpg',
+        ),
+      ),
+    )
+    ),
+    Scaffold(
+         backgroundColor: Colors.transparent,
         // appBar: PreferredSize(
         // preferredSize: Size.fromHeight(180.0),
         //  child:AppBar(
@@ -108,17 +125,11 @@ class _Body extends State<Loginscreen> {
         //     fit: BoxFit.cover,
         //   backgroundColor: Colors.transparent,
         // ),),
-        body: Form(key: _formKey,
-          child:  SingleChildScrollView(
-          child: Container(
+        body:Form(key: _formKey,
+        child:SingleChildScrollView(
+        child:Container(
             decoration: BoxDecoration(
-              // color:ca,
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  // colors: [B,A,G]
-                  colors: [D,E]
-              ),
+              // color: Colors.yellowAccent,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,45 +138,57 @@ class _Body extends State<Loginscreen> {
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: CustomPaint(
-                      painter: CurvePainter(true),
-                      child: Container(
+                    height: MediaQuery.of(context).size.height * 1.0,
+                     child:Container(
                         height: 500,
+                        decoration: BoxDecoration(
+                          color:Colors.transparent,
+                          // gradient: LinearGradient(
+                          //     begin: Alignment.topCenter,
+                          //     end: Alignment.bottomCenter,
+                          //
+                          //    // colors: [Y1,Y3,Y3,Y3,Y4,Y4,Y4]
+                          //     colors: [Y1,Y3,X4,X4,X4]
+                          // ),
+                        ),
                         padding: EdgeInsets.only(bottom: 5),
                         child: Center(
                           child: SingleChildScrollView(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 5),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    margin: EdgeInsets.only(top: 35,bottom: 5),
+                                    margin: EdgeInsets.only(top: 90,),
                                     height: 100,
                                     decoration: BoxDecoration(
-                                      // color:Color(0xFF1C1C1C),
+                                      color:Colors.transparent,
                                       image: DecorationImage(
+                                        colorFilter:
+                                        ColorFilter.mode(Colors.transparent,
+                                            BlendMode.colorBurn),
                                         image: new AssetImage(
-                                          'assets/icons/vb.png',
-                                        ),
-                                      ),),),
-                                  Container(
-                                    margin: EdgeInsets.only(top:0,bottom:40),
-                                    child:Center(
-                                      child: Text('صنايعي',
-                                        style: TextStyle(
-                                          color: Color(0xFF1C1C1C),
-                                          fontFamily: 'Changa',
-                                          fontSize: 30.0,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.bold,
+                                          'assets/work/output-onlinepngtools1.png',
                                         ),
                                       ),
-                                    ),),
+
+                                    ),
+                                  ),
                                   Container(
-                                    margin: EdgeInsets.only(top:0),
+                                    child:Center(
+                                      child:Text('صنايعي ',
+                                        style: TextStyle(
+                                          fontSize: 55,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.white,
+                                          fontFamily: 'vibes',
+                                          //fontStyle: FontStyle.italic,
+                                        ),)
+                                  ),),
+                                  Container(
+                                    margin: EdgeInsets.only(top:30),
                                     padding: EdgeInsets.symmetric(horizontal: 0),
                                     width: size.width * 0.82,
                                     height: 55,
@@ -179,7 +202,6 @@ class _Body extends State<Loginscreen> {
                                           Name_Null=true;
                                           return null;
                                         }},
-
                                       cursorColor:Colors.grey[600],
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
@@ -190,7 +212,7 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.grey[100],
+                                        fillColor: Colors.white,
                                         prefixIcon: Icon(Icons.person,color:Color(0xFF666360),),
                                         enabledBorder: new OutlineInputBorder(
                                           borderRadius: new BorderRadius.circular(30.0),
@@ -204,7 +226,7 @@ class _Body extends State<Loginscreen> {
                                         ),
                                         hintText: 'الاسم ',
                                         hintStyle: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 15.0,
                                           fontFamily: 'Changa',
                                           color: Color(0xFF666360),
                                         ),
@@ -262,14 +284,15 @@ class _Body extends State<Loginscreen> {
                                       ),
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: Colors.grey[100],
+                                        fillColor: Colors.white,
                                         prefixIcon: Icon(
                                           Icons.lock,
+                                          size:24,
                                           color:Color(0xFF666360),
 
                                         ),
                                         suffixIcon: IconButton(
-                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,  color:Color(0xFF666360),),
+                                          icon: Icon(_showPassword ? Icons.visibility : Icons.visibility_off,size:24,  color:Color(0xFF666360),),
                                           color: B,
                                           onPressed:_togglevisibility,
                                         ),
@@ -285,7 +308,7 @@ class _Body extends State<Loginscreen> {
                                         ),
                                         hintText: 'كلمة السر',
                                         hintStyle: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 15.0,
                                           fontFamily: 'Changa',
                                           color: Color(0xFF666360),
                                         ),
@@ -363,7 +386,7 @@ class _Body extends State<Loginscreen> {
                                               side: BorderSide(color: Colors.transparent)
                                           ),
                                           // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-                                          color:A,
+                                          color:Colors.black54,
                                           onPressed: (){
                                             if (_formKey.currentState.validate()) {print('validate');}
                                             else{print('not validate');}
@@ -404,7 +427,12 @@ class _Body extends State<Loginscreen> {
                                         },
                                       ),
                                     ],),
+                                  // Container(
+                                  //   height: 500,
+                                  //   color: Colors.red,
+                                  // ),
                                 ],
+
                               ),
                             ),
                           ),
@@ -412,7 +440,6 @@ class _Body extends State<Loginscreen> {
                       ),
                     ),
                   ),
-                ),
                 // ClipPath(
                 //   clipper: WaveClipperOne(reverse: true),
                 //   child: Container(
@@ -424,7 +451,7 @@ class _Body extends State<Loginscreen> {
                ],
             ),
           ),
-        ),),),);
+        ),),),],),);
   }
 }
 

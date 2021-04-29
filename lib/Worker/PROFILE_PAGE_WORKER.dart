@@ -16,7 +16,7 @@ import 'GET_IMGS.dart';
 import 'accept_order.dart';
 import 'edit.dart';
 import 'change_pass.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/Chatworker/chatListworker.dart';
 
 String  name="";
 String  phone="";
@@ -133,7 +133,9 @@ class  _PROFILE extends State< PROFILE> {
                 // print(List2);
                 Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name: widget.name,)));
               }
-              if(_page==4){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,user:false,)));}
+              if(_page==4){
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,)));
+              }
               if(_page==5){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}               // if(_page==1){
               //   Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>SettingPage(name: widget.name,phone: phone,image: image,Work: Work,Experiance: Experiance,Information: Information,token: token,)));
               // }

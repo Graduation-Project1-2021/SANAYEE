@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
@@ -11,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/components/pin_entry_text_field.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:ui' as ui;
@@ -50,143 +54,77 @@ class _Body extends State<WelcomeScreen> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
+    // Timer(Duration(milliseconds: 6000), () {
+    //   Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => Loginscreen(),
+    //       ));
+    // });
     super.initState();
   }
   Widget build(BuildContext context) {
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child:Stack(
         children: [
+
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.3),
+                image: new DecorationImage(
+                  fit: BoxFit.cover,
+                  colorFilter:
+                  ColorFilter.mode(Colors.blue.withOpacity(0.3),
+                      BlendMode.dstATop),
+                  image: new AssetImage(
+                    'assets/work/cv.jpg',
+                  ),
+                ),
+              )
+
+            // decoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage('assets/work/background.jpg'),
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            // child: BackdropFilter(
+            //   filter: ImageFilter.blur(sigmaX: 2, sigmaY: 1),
+            //   child: Container(
+            //     color: Colors.black.withOpacity(0.2),
+            //   ),
+            // ),
+
+          ),
           // Image.asset(
-          //   "assets/icons/ho.jpg",
+          //   "assets/work/background.jpg",
           //   height: MediaQuery.of(context).size.height,
           //   width: MediaQuery.of(context).size.width,
           //   fit: BoxFit.cover,
+          //  // color: Colors.grey.withOpacity(0.1),
           // ),
+
+
       Scaffold(
-        //backgroundColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         //backgroundColor:Colors.white,
         body: Form(key: formKey,
           child: SingleChildScrollView(
+
             child: Column(
               // crossAxisAlignment: CrossAxisAlignment.stretch,
               // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+
                 //Image.asset('assets/icons/ho.jpg',fit: BoxFit.cover,) ,
-                GestureDetector(
-                  // onTap: () {
-                  //   setState(() {
-                  //     login = false;
-                  //   });
-                  // },
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: CustomPaint(
-                      painter: CurvePainter(true),
-                      child: Container(
-                        //padding: EdgeInsets.only(bottom:50),
-                        decoration: BoxDecoration(
-                          // color:ca,
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                             // colors: [B,A,G]
-                              colors: [X,Z]
-                          ),
-                        ),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 0),
-                              child:Column(
-                                children: [
-                                  // Container(
-                                  //   margin: EdgeInsets.only(top:60,right: 170),
-                                  //   child:CustomDropdown(),),
-                                  // Container(
-                                  //   height: 200,
-                                  //   width: 400,
-                                  // ),
-                                  Container(
-                                    margin: EdgeInsets.only(top:60,right: 170),
-                                    padding: EdgeInsets.only(left: 5,right:5),
-                                    decoration: BoxDecoration(
-                                        border:Border(
-                                          bottom: BorderSide( //
-                                            color: Colors.black54,
-                                            width: 1.0,
-                                          ),
-                                        )
-                                    ),
-                                    child:GestureDetector(
-                                        onTap: (){
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (BuildContext context) => SignWorker()));
-                                        },
-                                        child:Text('تسجيل الدخول كمقدم خدمة ',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1C1C1C),
-                                            // backgroundColor: Colors.orange,
-                                            // decoration: TextDecoration.underline,
-                                            fontFamily: 'Changa',),)
-
-                                    ),),
-
-                                  Container(
-                                    margin: EdgeInsets.only(top: 60,),
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      // color:Color(0xFF1C1C1C),
-                                      image: DecorationImage(
-                                        image: new AssetImage(
-                                          'assets/work/house-reforms.png',
-                                        ),
-                                      ),),),
-                                  Container(
-                                      child:Text('صنايعي ',
-                                        style: TextStyle(
-                                          fontSize: 45,
-                                          //fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          fontFamily: 'vibes',
-                                          //fontStyle: FontStyle.italic,
-                                        ),)
-                                  ),
-
-                                  // Container(
-                                  //     child:Text('هل أنت مقدم خدمة؟ سجل معنا الآن ',
-                                  //       style: TextStyle(
-                                  //         fontSize: 25,
-                                  //         fontWeight: FontWeight.bold,
-                                  //         color: Colors.grey[600],
-                                  //         fontFamily: 'Changa',
-                                  //       ),)
-                                  // )
-                                ],),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
                 GestureDetector(
                   // onTap: () {
                   //   setState(() {
                   //     login = true;
                   //   });
                   // },
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                    height: MediaQuery.of(context).size.height * 0.60,
-                    child: Container(
+                  child:Container(
                         color: Colors.transparent,
                         padding: EdgeInsets.only(top: 0),
                         child: Center(
@@ -195,52 +133,164 @@ class _Body extends State<WelcomeScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                               child:Column(
                                 children: [
-
-                                  Stack(
-                                    children:[
-                                      Container(
-                                          margin: EdgeInsets.only(top:60),
-                                          child:Text(' تطبيق صنايعي هو تطبيق يقدم العديد من الخدمات المنزلية كنجار وكهربائي ... سجل معنا الآن لتتلقى جميع خدمات صنايعي ',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color:Colors.black87,
-                                              fontFamily: 'Changa',
-                                            ),)
+                                  Container(
+                                    margin: EdgeInsets.only(top: 178,),
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color:Colors.transparent,
+                                      image: DecorationImage(
+                                        colorFilter:
+                                        ColorFilter.mode(Colors.transparent,
+                                            BlendMode.colorBurn),
+                                        image: new AssetImage(
+                                          'assets/work/output-onlinepngtools1.png',
+                                        ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(top:120,right: 145),
-                                        child:GestureDetector(
-                                            onTap: (){
-                                              Navigator.of(context).push(MaterialPageRoute(
-                                                  builder: (BuildContext context) => SignuserScreen()));
-                                            },
-                                            child:Text('سجّل معنا',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                decoration: TextDecoration.underline,
-                                                fontFamily: 'Changa',),)
 
-                                        ),),
-                                      Container(
-                                        margin: EdgeInsets.only(top:220,right: 0),
-                                        child: GestureDetector(
-                                          onTap: (){
-                                            Navigator.of(context).push(MaterialPageRoute(
-                                                builder: (BuildContext context) => Loginscreen()));
-                                          },
-                                          child:Text('هل لديك حساب ؟ تسجيل الدخول',
-                                            style: TextStyle(
-                                              fontSize: 15.3,
-                                              fontWeight: FontWeight.bold,
-                                              color:Colors.black87,
-                                              // decoration: TextDecoration.underline,
-                                              fontFamily: 'Changa',),)
-
-                                      ),),
-                                    ],),
+                                    ),
+                                  ),
+                                  Container(
+                                      child:Text('صنايعي ',
+                                        style: TextStyle(
+                                          fontSize: 55,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.white,
+                                          fontFamily: 'vibes',
+                                          //fontStyle: FontStyle.italic,
+                                        ),)
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    height: 60,
+                                    margin: EdgeInsets.only(top:80,),
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          side: BorderSide(color: Colors.transparent)
+                                      ),
+                                      // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                                      color:Y2,
+                                      onPressed: (){
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Loginscreen()));
+                                      },
+                                      child: Text(
+                                        "تسجيل الدخول",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17.0,
+                                          fontFamily: 'Changa',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    height: 60,
+                                    margin: EdgeInsets.only(top:10,),
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          side: BorderSide(color: Colors.transparent)
+                                      ),
+                                      // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                                      color:Colors.white,
+                                      onPressed: (){
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SignWorker()));
+                                      },
+                                      child: Text(
+                                        " تسجيل الدخول كمقدم خدمة",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17.0,
+                                          fontFamily: 'Changa',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    height: 60,
+                                    margin: EdgeInsets.only(top:10,),
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          side: BorderSide(color: Colors.transparent)
+                                      ),
+                                      // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                                      color:Colors.white,
+                                      onPressed: (){
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => SignuserScreen()));
+                                      },
+                                      child: Text(
+                                        "إنشاء حساب جديد",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17.0,
+                                          fontFamily: 'Changa',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // Stack(
+                                  //   children:[
+                                  //     Container(
+                                  //         margin: EdgeInsets.only(top:60),
+                                  //         child:Text(' تطبيق صنايعي هو تطبيق يقدم العديد من الخدمات المنزلية كنجار وكهربائي ... سجل معنا الآن لتتلقى جميع خدمات صنايعي ',
+                                  //           style: TextStyle(
+                                  //             fontSize: 16,
+                                  //             fontWeight: FontWeight.bold,
+                                  //             color:Colors.black87,
+                                  //             fontFamily: 'Changa',
+                                  //           ),)
+                                  //     ),
+                                  //     Container(
+                                  //       margin: EdgeInsets.only(top:120,right: 145),
+                                  //       child:GestureDetector(
+                                  //           onTap: (){
+                                  //             Navigator.of(context).push(MaterialPageRoute(
+                                  //                 builder: (BuildContext context) => SignuserScreen()));
+                                  //           },
+                                  //           child:Text('سجّل معنا',
+                                  //             style: TextStyle(
+                                  //               fontSize: 16,
+                                  //               fontWeight: FontWeight.bold,
+                                  //               color: Colors.black,
+                                  //               decoration: TextDecoration.underline,
+                                  //               fontFamily: 'Changa',),)
+                                  //
+                                  //       ),),
+                                  //     Container(
+                                  //       margin: EdgeInsets.only(top:220,right: 0),
+                                  //       child: GestureDetector(
+                                  //         onTap: (){
+                                  //           Navigator.of(context).push(MaterialPageRoute(
+                                  //               builder: (BuildContext context) => Loginscreen()));
+                                  //         },
+                                  //         child:Text('هل لديك حساب ؟ تسجيل الدخول',
+                                  //           style: TextStyle(
+                                  //             fontSize: 15.3,
+                                  //             fontWeight: FontWeight.bold,
+                                  //             color:Colors.black87,
+                                  //             // decoration: TextDecoration.underline,
+                                  //             fontFamily: 'Changa',),)
+                                  //
+                                  //     ),),
+                                  //      Container(
+                                  //        margin: EdgeInsets.only(top:250,right: 0),
+                                  //        child:LinearPercentIndicator(
+                                  //       alignment: MainAxisAlignment.center,
+                                  //       width: 240.0,
+                                  //       lineHeight: 4.0,
+                                  //       animation: true,
+                                  //       percent:1.0,
+                                  //       animationDuration: 6000,
+                                  //       backgroundColor: Colors.grey,
+                                  //       progressColor: Colors.yellow,
+                                  //     ),),
+                                  //   ],),
 
 
                                   // Container(
@@ -277,8 +327,6 @@ class _Body extends State<WelcomeScreen> {
                         )
                     ),
                   ),
-                ),
-
               ],
 
             ),),
@@ -294,7 +342,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color =Z;
+    paint.color =Colors.transparent;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();

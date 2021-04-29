@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/WORKER_SANAYEE/Worker_conferm_order.dart';
 import 'package:flutterphone/WORKER_SANAYEE/GET_IMGS.dart';
+import 'package:flutterphone/WORKER_SANAYEE/warshate.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
 import 'package:flutterphone/screens/login_screen.dart';
@@ -15,11 +16,14 @@ import 'dart:convert';
 import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import '../database.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
-
+import 'package:flutterphone/Chatworker/chatListworker.dart';
+import 'view.dart';
 import 'Profile.dart';
-import 'Worker_not_conferm_order.dart';
+import 'Worker_Slot.dart';
 import 'Worker_notconferm_order.dart';
+import 'homepage.dart';
+import 'longtimework.dart';
+import 'menue_Page.dart';
 
 String  name="";
 String  phone="";
@@ -31,9 +35,19 @@ String  token="";
 String IP4="192.168.1.8";
 
 class order_worker extends StatefulWidget {
-  final name;
-  final phone;
-  order_worker({this.name,this.phone});
+  final  name;
+  final  phone;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  final lat;
+  final lng;
+  order_worker({this.lat,this.lng,this.namefirst,this.namelast,this.name, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+
   _order_worker createState() =>  _order_worker();
 }
 class  _order_worker extends State<order_worker> {
@@ -69,6 +83,14 @@ class  _order_worker extends State<order_worker> {
     // print(List1);
     // print(ListDate1);
   }
+  Future vc()async{
+    var url='https://'+IP4+'/testlocalhost/viewOrder.php';
+    var ressponse=await http.post(url,body: {
+      "phone": widget.phone,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
   Future getdata2()async{
     var url='https://'+IP4+'/testlocalhost/count2.php';
     var ressponse=await http.post(url,body: {
@@ -99,6 +121,7 @@ class  _order_worker extends State<order_worker> {
     getChat();
 
   }
+
   Future getWorker()async{
     var url='https://'+IP4+'/testlocalhost/getworker.php';
     var ressponse=await http.post(url,body: {
@@ -107,18 +130,20 @@ class  _order_worker extends State<order_worker> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
   @override
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatsRoom;
   Widget build(BuildContext context) {
+    print(widget.name);
+    print('order_worker');
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return  Directionality( textDirection: TextDirection.rtl,
       child:Scaffold(
         key: _scaffoldKey,
         bottomNavigationBar:Container(
           decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+            BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(.1))
           ]),
           child: SafeArea(
             child: Padding(
@@ -136,16 +161,6 @@ class  _order_worker extends State<order_worker> {
                     GButton(
                       icon: Icons.home,
                       text: 'الرئيسية',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
-                      icon: Icons.person,
-                      text: 'حسابي',
                       textStyle:TextStyle(
                         fontFamily: 'Changa',
                         color: Colors.black,
@@ -179,8 +194,18 @@ class  _order_worker extends State<order_worker> {
                       ),
                     ),
                     GButton(
-                      icon: Icons.settings,
-                      text: 'الإعدادت',
+                      icon: Icons.person,
+                      text: 'حسابي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.menu,
+                      text: 'القائمة',
                       textStyle:TextStyle(
                         fontFamily: 'Changa',
                         color: Colors.black,
@@ -193,16 +218,25 @@ class  _order_worker extends State<order_worker> {
                   onTabChange: (index) {
                     setState(() {
                       _selectedIndex = index;
-                      if(index==1){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PROFILE(name: widget.name,)));
+                      if(index==0){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home_Page(name: widget.name)));
                       }
                       if(index==2){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(name: widget.name,phone: phone,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
                       }
                       if(index==3){
-                        // DateTime date=DateTime.now();
-                        // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(phone: phone,time:date,)));
+                        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                        print(widget.image);
+                        print(widget.name);
+                        print(widget.phone);
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PROFILE(name:widget.name,phone:widget.phone,)));
                       }
+                      if(index==4){
+                        DateTime date=DateTime.now();
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MenuePage(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst,)));
+                      }
+
+
                     });
                   }
               ),
@@ -225,37 +259,211 @@ class  _order_worker extends State<order_worker> {
             clipper: ClippingClass(),
             child: Container(
               width: double.infinity,
-              height: MediaQuery.of(context).size.height*3/7,
+              height: MediaQuery.of(context).size.height*0.32,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.blue.withOpacity(0.2),Colors.blue.withOpacity(0.2)],
-                ),
+                // gradient: LinearGradient(
+                //     begin: Alignment.topCenter,
+                //     end: Alignment.bottomCenter,
+                //     // colors: [B,A,G]
+                //     colors: [Y1,Y4]
+                // ),
               ),
+              child: Image.asset('assets/work/intro3.jpg',width:500,fit: BoxFit.fitWidth,),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 60,right: 10),
-            child:IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.white,), onPressed: (){
-              Navigator.pop(context);
-             // Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-              //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-            }),
+            margin: EdgeInsets.only(top: 260,right: 150),
+            child: Row(
+              children: [
+
+               GestureDetector(
+                  onTap: (){
+                    print(widget.phone);
+                    DateTime date=DateTime.now();
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Worker_SLot(name: widget.name,phone: widget.phone,time:date,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
+                  },
+                  child:SizedBox(
+                    height: 100,
+                    width: 100,
+                    child: Card(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      elevation: 5,
+                      child: Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.calendar_today),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child:Text(
+                                      'جدول أعمالي',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+
+            ),
           ),
+          // Container(
+          //     alignment: Alignment.center,
+          //     transform: Matrix4.translationValues(0, -120.0, 0),
+          //     margin: EdgeInsets.only(top: 0,),
+          //     child:Text('ورشاتي حجوزاتي طلباتي',
+          //       style: TextStyle(
+          //         fontSize: 30,
+          //         fontWeight: FontWeight.w400,
+          //         color: Colors.black,
+          //         fontFamily: 'vibes',
+          //         //fontStyle: FontStyle.italic,
+          //       ),)
+          // ),
           Container(
-            margin: EdgeInsets.only(top: 230),
+            margin: EdgeInsets.only(top: 370),
             child:Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                _customCard1(
-                  imageUrl: "assets/work/house-reforms.png",
-                  item: "ورشاتي الحاية",
+                GestureDetector(
+                  onTap: (){
+                    print(widget.phone);
+                    DateTime date=DateTime.now();
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => viewWarsha(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone)));
+                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => viewreservation(phoneuserd:widget.phone,workerphoned:widget.phone,nameofworkd:widget.name,namefirstd:widget.namefirst,namelastd:widget.namelast,)));
+                  },
+                  child:SizedBox(
+                    height: 100,
+                    width: 150,
+                    child: Card(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      elevation: 5,
+                      child: Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.playlist_add_outlined),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child:Text(
+                                      'طلبات الورشات',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: (){
+                    print(widget.phone);
+                    DateTime date=DateTime.now();
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => not_conferm_order(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,time:date,)));
+                  },
+                  child:SizedBox(
+                    height: 100,
+                    width: 150,
+                    child: Card(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      elevation: 5,
+                      child: Padding(
+                        padding: EdgeInsets.all(2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.notifications),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child:Text(
+                                      'طلبات الطقات',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 480),
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Warshat(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone)));
+                  },
+                  child: _customCard1(
+                    imageUrl: "assets/work/house-reforms.png",
+                    item: "ورشاتي الحاية",
+                  ),
                 ),
                 GestureDetector(
                   onTap: (){
                     DateTime date=DateTime.now();
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(name:widget.name,phone: widget.phone,time:date,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,time:date,)));
                   },
                 child:_customCard2(
                   imageUrl: "assets/work/taqaat.png",
@@ -265,29 +473,6 @@ class  _order_worker extends State<order_worker> {
             ),
           ),
           SizedBox(height: 40,),
-          Container(
-            margin: EdgeInsets.only(top: 410),
-            child:Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                _customCard3(
-                  imageUrl: "clean.png",
-                  item: "طلبات الورشات",
-                ),
-               GestureDetector(
-                 onTap: (){
-                   print(widget.phone);
-                   DateTime date=DateTime.now();
-                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => not_conferm_order(name:widget.name,phone: widget.phone,time:date,)));
-                 },
-                 child:_customCard3(
-                   imageUrl: "clean.png",
-                   item: "طلبات الطقات",
-                 ),
-               ),
-              ],
-            ),
-          ),
         ],
        ),),);
   }}
@@ -299,9 +484,9 @@ _customCard1({String imageUrl, String item}){
     child: Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20)
+          borderRadius: BorderRadius.circular(15)
       ),
-      elevation: 10,
+      elevation: 5,
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Column(
@@ -320,7 +505,7 @@ _customCard1({String imageUrl, String item}){
                       item,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.0,
+                        fontSize: 15.0,
                         fontFamily: 'Changa',
                         fontWeight: FontWeight.bold,
                       ),
@@ -342,9 +527,9 @@ _customCard2({String imageUrl, String item}){
     child: Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20)
+          borderRadius: BorderRadius.circular(15)
       ),
-      elevation: 10,
+      elevation: 5,
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Column(
@@ -364,7 +549,7 @@ _customCard2({String imageUrl, String item}){
                       item,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16.0,
+                        fontSize: 15.0,
                         fontFamily: 'Changa',
                         fontWeight: FontWeight.bold,
                       ),
@@ -429,7 +614,7 @@ class ClippingClass extends CustomClipper<Path>{
   Path getClip(Size size) {
     var path = Path();
     path.lineTo(0.0, size.height);
-    var controlPoint = Offset(size.width - (size.width / 2), size.height - 120);
+    var controlPoint = Offset(size.width - (size.width / 2), size.height - 90);
     var endPoint = Offset(size.width, size.height);
     path.quadraticBezierTo(
         controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);

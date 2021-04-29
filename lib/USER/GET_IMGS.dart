@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 
+import '../constants.dart';
 import 'IMG_BIG.dart';
-import 'PROFILE_PAGE_WORKER.dart';
 String IP4="192.168.1.8";
 List<Images> imagesFromJson(String str) => List<Images>.from(json.decode(str).map((x) => Images.fromJson(x)));
 
@@ -68,7 +68,7 @@ class  _Get_Images extends State< Get_Images> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(40.0), // here the desired height
           child: AppBar(
-            backgroundColor: Color(0xFFECCB45),
+            backgroundColor:Y2,
             elevation: 0.0,
             //leading: I,
           )
@@ -85,7 +85,7 @@ class  _Get_Images extends State< Get_Images> {
                     margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     height: 180,
                      decoration: BoxDecoration(
-                     color:  Color(0xFFECCB45),
+                     color:Y2,
                      ),
                   ),
 
@@ -124,7 +124,7 @@ class  _Get_Images extends State< Get_Images> {
                       margin: EdgeInsets.only(top:91),
                       padding: EdgeInsets.only(top:30,right: 15,left: 15,),
                       decoration: BoxDecoration(
-                        color: Color(0xFF1C1C1C),
+                        color: Colors.white,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(50),
                           topRight: Radius.circular(50),
@@ -141,44 +141,9 @@ class  _Get_Images extends State< Get_Images> {
                                 crossAxisSpacing: 15,
                                 mainAxisSpacing: 15,
                               ),
-                              itemCount: snapshot.data.length+1,
+                              itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
                                 int count=0;
-                                if(index==snapshot.data.length){
-                                 return  Container(
-                                   // child: IconButton(icon: Icon(Icons.add),),
-                                   child:GestureDetector(
-                                     onTap: (){
-                                       chooseImage();
-                                     },
-                                     child: Container(
-                                       // margin: EdgeInsets.only(right: 10,bottom: 10),
-                                       child:Stack(
-                                         overflow: Overflow.visible,
-                                         children: <Widget>[
-                                           Positioned(
-
-                                             child: Container(
-                                               height: 150,
-                                               width: 150,
-                                               decoration: BoxDecoration(
-                                                   color: Colors.grey.withOpacity(0.1),
-                                                   borderRadius: BorderRadius.circular(10.0)
-                                               ),
-                                               child: Center(
-                                                 child: Text("+", style: TextStyle(
-                                                   color: Colors.white,
-                                                   fontSize: 40,
-                                                 ),),
-                                               ),
-                                             ),
-                                           )
-                                         ],
-                                       ),),),
-                                 );
-                                 False();
-                                }
-                                else{
                                 return RawMaterialButton(
                                   onPressed: () {
                                     Navigator.push(context,MaterialPageRoute(
@@ -211,7 +176,6 @@ class  _Get_Images extends State< Get_Images> {
                                     ),
                                   ),
                                 );}
-                              },
 
                             );
                           }

@@ -1,14 +1,6 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fdottedline/fdottedline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
-import 'package:flutterphone/Inside_the_app/Comment.dart';
-import 'package:flutterphone/Inside_the_app/List_worker_group.dart';
-import 'package:flutterphone/Inside_the_app/WORKER_PROFILE.dart';
-import 'package:flutterphone/USER/user_Profile.dart';
-import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
@@ -22,7 +14,7 @@ import '../buttom_bar.dart';
 import '../constants.dart';
 import '../database.dart';
 import 'State_order_accept.dart';
-import 'Worker_not_conferm_order.dart';
+import 'Worker_notconferm_order.dart';
 
 String  name_Me="";
 String  name="";
@@ -48,9 +40,10 @@ class State_order extends StatefulWidget {
   final time;
   final datesend;
   final timesend;
+  final workername;
   final DateTime chooseDate;
 
-  State_order({this.name,this.chooseDate,this.id,this.timesend,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
+  State_order({this.workername,this.name,this.chooseDate,this.id,this.timesend,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
   _State_order createState() =>  _State_order();
 }
 class  _State_order extends State<State_order> {
@@ -79,8 +72,10 @@ class  _State_order extends State<State_order> {
   @override
   int _selectedItem = 0;
   Widget build(BuildContext context) {
+
     print(Listsearch.toString());
     print(widget.phoneworker);
+    print(widget.workername);
     print('===================================================================================================================================');
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Directionality(textDirection: ui.TextDirection.rtl,
@@ -103,19 +98,36 @@ class  _State_order extends State<State_order> {
                       color:Colors.white,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 60),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: (){
-                      Navigator.pop(context);
-                      //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                    }),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) =>
+                            not_conferm_order(time: widget.chooseDate,
+                              phone: widget.phoneworker,
+                              name: widget.workername,)));
+                    },
+                    child:  Container(
+                      margin: EdgeInsets.only(top: 60,left: 300,right: 10),
+                      child:Icon(Icons.arrow_back,color: Colors.black54,size: 25,),
+                    ),
                   ),
+                  // Container(
+                  //   margin: EdgeInsets.only(top: 60),
+                  //   child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: (){
+                  //     print(widget.chooseDate);
+                  //     print(widget.phoneworker);print(widget.name);
+                  //
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm_order(time:widget.chooseDate,phone:widget.phoneworker,name:widget.name,),),);
+                  //     //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                  //   }),
+                  // ),
                   Container(
-                    height: 200,
+                    height: 190,
                     width: 400,
                     margin: EdgeInsets.only(top:120,right: 15,left: 15),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.2),
+                      color:Colors.grey[100],
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
@@ -127,10 +139,10 @@ class  _State_order extends State<State_order> {
                           child:Row(
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top:10,right: 10),
-                                child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 25.0,),),
+                                margin: EdgeInsets.only(top:10,right: 5),
+                                child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 20.0,),),
                               Container(
-                                margin: EdgeInsets.only(top:0,right: 10),
+                                margin: EdgeInsets.only(top:5,right: 10),
                                 child: Text(widget.namefirst + " "+widget.namelast, style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
@@ -142,40 +154,41 @@ class  _State_order extends State<State_order> {
                             ],
                           ),
                         ),
-                        Container(
-                          width: 390,
-                          margin: EdgeInsets.only(top:10,right:20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(width: 5,),
-                              // Text(widget.date.toString(), style: TextStyle(
-                              //   fontSize: 17,
-                              //   fontWeight: FontWeight.w700,
-                              //   color: Colors.grey[600],
-                              //   fontFamily: 'Changa',
-                              // ),),
-                              SizedBox(width: 5,),
-                              Text(widget.time, style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey[600],
-                                fontFamily: 'Changa',
-                              ),),
-                              Text(" "),
-                              Text(widget=="am"?"صباحا":"مساء", style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey[600],
-                                fontFamily: 'Changa',
-                              ),),
-                            ],
-                          ),),
+                        // Container(
+                        //   width: 390,
+                        //   height: 30,
+                        //   margin: EdgeInsets.only(top:0,right:20),
+                        //   child: Row(
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       SizedBox(width: 40,),
+                        //       // Text(widget.date.toString(), style: TextStyle(
+                        //       //   fontSize: 17,
+                        //       //   fontWeight: FontWeight.w700,
+                        //       //   color: Colors.grey[600],
+                        //       //   fontFamily: 'Changa',
+                        //       // ),),
+                        //       Text(widget.time, style: TextStyle(
+                        //         fontSize: 15,
+                        //         fontWeight: FontWeight.w700,
+                        //         color: Colors.grey[600],
+                        //         fontFamily: 'Changa',
+                        //       ),),
+                        //       Text(" "),
+                        //       Text(widget=="am"?"صباحا":"مساء", style: TextStyle(
+                        //         fontSize: 15,
+                        //         fontWeight: FontWeight.w700,
+                        //         color: Colors.grey[600],
+                        //         fontFamily: 'Changa',
+                        //       ),),
+                        //     ],
+                        //   ),),
                         Container(
                           width: 400,
-                          margin: EdgeInsets.only(right:30),
+                          height: 80,
+                          margin: EdgeInsets.only(right:64),
                           child: Text("تفاصيل الطلب "+widget.description, style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.grey[600],
                             fontFamily: 'Changa',
@@ -183,7 +196,7 @@ class  _State_order extends State<State_order> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top: 2,right: 20),
+                          margin: EdgeInsets.only(top: 0,right:10),
                           child:Row(
                             children: [
                               Container(
@@ -199,7 +212,7 @@ class  _State_order extends State<State_order> {
                                     size: 23.0,
                                   ),
                                   shape: new CircleBorder(),
-                                  color: D,
+                                  color: Y,
                                 ),
                               ),
                               Container(
@@ -214,22 +227,7 @@ class  _State_order extends State<State_order> {
                                     size: 23.0,
                                   ),
                                   shape: new CircleBorder(),
-                                  color: D,
-                                ),
-                              ),
-                              Container(
-                                width: 55,
-                                child: FlatButton(
-                                  onPressed: () {
-                                    //CreatChatRoom();
-                                  },
-                                  child: new Icon(
-                                    Icons.location_on,
-                                    color: Colors.white,
-                                    size: 23.0,
-                                  ),
-                                  shape: new CircleBorder(),
-                                  color: D,
+                                  color:Y,
                                 ),
                               ),
                               // Container(
@@ -258,7 +256,7 @@ class  _State_order extends State<State_order> {
                     height: 600,
                     width: 450,
                     // color:  Color(0xFFF3D657),
-                    margin: EdgeInsets.only(top:350),
+                    margin: EdgeInsets.only(top:340),
                     padding:EdgeInsets.only(right:25,left: 25),
                     decoration: BoxDecoration(
                       // color:Color(0xFF1C1C1C),
@@ -542,13 +540,13 @@ class  _State_order extends State<State_order> {
                                 side: BorderSide(color: Colors.transparent)
                             ),
                             // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-                            color:Colors.indigo,
+                            color:Y,
                             child: Text(
                               "إلغاء الطلب",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 21.0,
+                                fontSize: 20.0,
                                 fontFamily: 'Changa',
                               ),
                             ),
@@ -560,16 +558,19 @@ class  _State_order extends State<State_order> {
           ),],),);
   }
   Future<void> _dialogCall() {
+    print(widget.phoneworker);
+    print(widget.workername);
+    print('phoneeeeeeeeeeeeeeeeeeeeeeeeeeee');
+    print('phoneeeeeeeeeeeeeeeeeeeeeeeeeeee');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:eaccept_order(image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
+            child:eaccept_order(phoneworker:widget.phoneworker,workername:widget.workername,name:widget.name,ChooseDate:widget.chooseDate,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
         });
   }
   Future<void> _dialogCall2() {
     print(widget.phoneworker);
-    print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -595,7 +596,10 @@ class eaccept_order extends StatefulWidget {
   final timesend;
   final timestart;
   final timeend;
-  eaccept_order({this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
+  final ChooseDate;
+  final name;
+  final workername;
+  eaccept_order({this.workername,this.name,this.ChooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
   _eaccept_order createState() => new _eaccept_order();
 
 }
@@ -632,11 +636,14 @@ class _eaccept_order extends State<eaccept_order> {
                     children: [
                       GestureDetector(
                         onTap: (){
-                          accept_Order();
+                          print(widget.phoneworker);
+                          print(widget.workername);
+                          print('phoneeeeeeeeeeeeeeeeeeeeeeeeeeee');
                           DateTime date=DateTime.now();
                           var formattedDate = DateFormat('yyyy-MM-dd').format(date);
                           var formattedTime = DateFormat('HH:mm:ss').format(date);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(timesend:widget.timesend,timeaccept:formattedTime,dateaccept:formattedDate,datesend:widget.datesend,date:widget.date,time:widget.time,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
+                          accept_Order(formattedDate,formattedTime);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(workername:widget.workername,name:widget.name,timesend:widget.timesend,timeaccept:formattedTime,dateaccept:formattedDate,datesend:widget.datesend,date:widget.date,time:widget.time,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,ChooseDate:widget.ChooseDate,),),);
                          // Navigator.pop(context);
                           // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time: widget.time,phone: widget.phone,)),);
                         },
@@ -679,10 +686,12 @@ class _eaccept_order extends State<eaccept_order> {
     );
   }
 
-  Future accept_Order() async {
+  Future accept_Order(String formattedDate,String formattedTime) async {
     var url = 'https://' + IP4 + '/testlocalhost/acceptorder.php';
     var ressponse = await http.post(url, body: {
       "id": widget.id,
+      "timeaccept":formattedTime,
+      "dateaccept":formattedDate,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
@@ -750,7 +759,7 @@ class _delete_order extends State<delete_order> {
                         print(widget.phoneworker);
                         print('=========================================================================');
 
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time:widget.chooseDate,phone:widget.phoneworker,),),);
+                       // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time:widget.chooseDate,phone:widget.phoneworker,),),);
                         // Navigator.pop(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time: widget.time,phone: widget.phone,)),);
                       },

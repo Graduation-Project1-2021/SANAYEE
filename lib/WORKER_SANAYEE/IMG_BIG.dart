@@ -33,25 +33,27 @@ class  _Get_Images extends State<IMG> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.fromLTRB(10, 50, 360, 10),
+              margin: EdgeInsets.fromLTRB(5, 50, 370, 10),
               child: IconButton(
                 alignment: Alignment.topRight,
                 onPressed: () { Navigator.pop(context);},
                 icon: Icon(
                   Icons.close,
                   color: Colors.white,
-                  size: 35.0,
+                  size: 30.0,
                 ),
               ),
             ),
             Expanded(
               child: Hero(
                 tag: 'logo$widget.index',
-                child: Container(margin:EdgeInsets.symmetric(vertical:100),
-                  height: 100,
-                  decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.imageName),
+                child: GestureDetector(
+                  child:Container(margin:EdgeInsets.symmetric(vertical:100),
+                    height: 100,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.imageName),
                         fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -59,7 +61,7 @@ class  _Get_Images extends State<IMG> {
             ),
 
             Container(
-              margin: EdgeInsets.fromLTRB(310, 0, 10, 20),
+              margin: EdgeInsets.fromLTRB(360, 0, 10, 5),
               child: IconButton(
                 alignment: Alignment.topRight,
                 onPressed: () {
@@ -69,9 +71,9 @@ class  _Get_Images extends State<IMG> {
                   //Delete();
                    },
                 icon: Icon(
-                  Icons.delete_forever_rounded,
+                  Icons.delete,
                   color: Colors.white,
-                  size: 50.0,
+                  size: 37.0,
                 ),
               ),
             ),

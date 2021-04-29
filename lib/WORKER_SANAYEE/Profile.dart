@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutterphone/Inside_the_app/Comment.dart';
 import 'package:flutterphone/WORKER_SANAYEE/Worker_conferm_order.dart';
 import 'package:flutterphone/WORKER_SANAYEE/GET_IMGS.dart';
 import 'Setting.dart';
@@ -15,8 +18,11 @@ import 'dart:convert';
 import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import '../database.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/Chatworker/chatListworker.dart';
 
+import 'all_post.dart';
+import 'homepage.dart';
+import 'menue_Page.dart';
 import 'orders_workers.dart';
 
 String  name="";
@@ -26,12 +32,17 @@ String  Work="";
 String  Experiance="";
 String  Information="";
 String  token="";
+String namefirst="";
+String namelast="";
 String IP4="192.168.1.8";
 
 class PROFILE extends StatefulWidget {
   final name;
-  int profile;
-  PROFILE({this.name,this.profile});
+  final phone;
+  final lat;
+  final lng;
+
+  PROFILE({this.lat,this.lng,this.name,this.phone});
   _PROFILE createState() =>  _PROFILE();
 }
 class  _PROFILE extends State< PROFILE> {
@@ -53,34 +64,8 @@ class  _PROFILE extends State< PROFILE> {
   int counter = 0;
   final picker = ImagePicker();
   var mytoken ;
-  Future getdata1()async{
-    var url='https://'+IP4+'/testlocalhost/count.php';
-    var ressponse=await http.post(url,body: {
-      "phone": phone,
-    });
-    var responsepody= json.decode(ressponse.body);
-    for(int i=0;i<responsepody.length;i++){
-      //L.add(responsepody[i]['count']);
-      List1.add(responsepody[i]['id']);
-      ListDate1.add(responsepody[i]['date']);
-    }
-    // print(List1);
-    // print(ListDate1);
-  }
-  Future getdata2()async{
-    var url='https://'+IP4+'/testlocalhost/count2.php';
-    var ressponse=await http.post(url,body: {
-      "phone": phone,
-    });
-    var responsepody= json.decode(ressponse.body);
-    for(int i=0;i<responsepody.length;i++){
-      //L.add(responsepody[i]['count']);
-      List2.add(responsepody[i]['id']);
-      ListDate2.add(responsepody[i]['date']);
-    }
-    // print(List2);
-    // print(ListDate2);
-  }
+  var commentnumber;
+  var postnumber;
   getChat(){
     print(widget.name);
     databaseMethods.getChatsMe(widget.name).then((val){
@@ -92,8 +77,6 @@ class  _PROFILE extends State< PROFILE> {
   }
   void initState() {
     super.initState();
-    getdata1();
-    getdata2();
     getChat();
 
   }
@@ -103,9 +86,33 @@ class  _PROFILE extends State< PROFILE> {
       "name": widget.name,
     });
     // ignore: deprecated_member_use
+      return json.decode(ressponse.body);
+    }
+  Future getComment() async {
+    var url = 'https://' + IP4 + '/testlocalhost/getcomment.php';
+    var ressponse = await http.post(url, body: {
+      "phone": widget.phone,
+    });
+    // ignore: deprecated_member_use
+    // var responsebody = json.decode(ressponse.body);
+    // print(responsebody);
+
     return json.decode(ressponse.body);
   }
-  int _selectedIndex = 1;
+  double roundDouble(double value, int places){
+    double mod = pow(10.0, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
+  Future getpost()async{
+    var url='https://'+IP4+'/testlocalhost/getpost.php';
+    var ressponse=await http.post(url,body: {
+      "phone": widget.phone,
+    });
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
+  var List_Post=[];
+  int _selectedIndex = 3;
   @override
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatsRoom;
@@ -122,7 +129,7 @@ class  _PROFILE extends State< PROFILE> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
               child: GNav(
-                  rippleColor: Colors.grey[300],
+                  rippleColor: Colors.grey[100],
                   hoverColor: Colors.grey[100],
                   gap: 8,
                   activeColor: Colors.black,
@@ -134,16 +141,6 @@ class  _PROFILE extends State< PROFILE> {
                     GButton(
                       icon: Icons.home,
                       text: 'الرئيسية',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
-                      icon: Icons.person,
-                      text: 'حسابي',
                       textStyle:TextStyle(
                         fontFamily: 'Changa',
                         color: Colors.black,
@@ -177,8 +174,18 @@ class  _PROFILE extends State< PROFILE> {
                       ),
                     ),
                     GButton(
-                      icon: Icons.settings,
-                      text: 'الإعدادت',
+                      icon: Icons.person,
+                      text: 'حسابي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.menu,
+                      text: 'القائمة',
                       textStyle:TextStyle(
                         fontFamily: 'Changa',
                         color: Colors.black,
@@ -191,16 +198,18 @@ class  _PROFILE extends State< PROFILE> {
                   onTabChange: (index) {
                     setState(() {
                       _selectedIndex = index;
-                      if(index==2){
-                       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(name: widget.name,phone: phone,)));
+                      if(index==0){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home_Page(name: widget.name)));
                       }
-                      // if(index==3){
-                      //   DateTime date=DateTime.now();
-                      //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(phone: phone,time:date,)));
-                      // }
+                      if(index==1){
+                       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(Information:Information,Experiance:Experiance,Work:Work,namelast:namelast,name:widget.name,phone:phone,image:image,token:token,namefirst:namefirst,)));
+                      }
+                      if(index==2){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,Information:Information,Experiance:Experiance,Work:Work,namelast:namelast,phone:phone,image:image,token:token,namefirst:namefirst)));
+                      }
                       if(index==4){
                         DateTime date=DateTime.now();
-                       Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SettingPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MenuePage(Information:Information,Experiance:Experiance,Work:Work,namelast:namelast,name:widget.name,phone:phone,image:image,token:token,namefirst:namefirst,)));
                       }
 
 
@@ -209,7 +218,7 @@ class  _PROFILE extends State< PROFILE> {
               ),
             ),
           ),),
-        backgroundColor: Colors.white60,
+        backgroundColor:Colors.grey[50],
         // appBar: PreferredSize(
         //     preferredSize: Size.fromHeight(40.0), // here the desired height
         //     child: AppBar(
@@ -224,11 +233,52 @@ class  _PROFILE extends State< PROFILE> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(child:Container(
-                height: 700,
-                // color:  Color(0xFFF3D657),
+              Container(
+                height: 0,
+                child:FutureBuilder(
+                  future: getpost(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if(snapshot.hasData){
+                      return ListView.builder(
+                          itemCount:1,
+                          itemBuilder: (context, index) {
+                            List_Post=snapshot.data;
+                            postnumber=snapshot.data.length;
+                            return Container(height:0.0,);
+                          }
+                      );
+                    }
+                    return Center(child: Text(''));
+                  },
+                ),
+              ),
+              Container(
+                height: 0,
+                margin: EdgeInsets.only(top: 0),
+                color: Colors.white,
+                child:FutureBuilder(
+                  future: getComment(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if(snapshot.hasData){
+                      return ListView.builder(
+                          itemCount: 1,
+                          itemBuilder: (context, index) {
+                            commentnumber=snapshot.data[index]['count'];
+                            return Container();
+                          }
+                      );
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ),
+
+
+              Container(
+                height:730,
                 margin: EdgeInsets.only(top:0),
                 decoration: BoxDecoration(
+                  color:Colors.grey[50],
                 ),
                 child:FutureBuilder(
                   future: getWorker(),
@@ -236,21 +286,19 @@ class  _PROFILE extends State< PROFILE> {
                     if(snapshot.hasData){
                       return ListView.builder(
                         itemCount: 1,
-                        itemBuilder: (context, index) {
+                          itemBuilder: (context, index) {
                           name=snapshot.data[index]['name'];
+                          namefirst=snapshot.data[index]['namefirst'];
+                          namelast=snapshot.data[index]['namelast'];
                           phone=snapshot.data[index]['phone'];
                           image=snapshot.data[index]['image'];
                           Work=snapshot.data[index]['Work'];
                           Information=snapshot.data[index]['Information'];
                           Experiance=snapshot.data[index]['Experiance'];
                           token=snapshot.data[index]['token'];
-
-                          if(_page==0){return Profile_worker(name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);}
-                          if(_page==1){return SettingPage(name:snapshot.data[index]['name'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);}
-                          if(_page==2){ //return accept_order(phone: phone,List1:List2,ListDate: ListDate2,);
-                          }
-                          if(_page==3){return work_order(phone: phone,List1:List1,ListDate: ListDate1,);}
-
+                          double Rate=0.0;
+                          if(snapshot.data[index]['AVG']!=null){Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
+                         return Profile_worker(List_Post:List_Post,postnumber:List_Post.length,commentnumber:commentnumber,client_num:snapshot.data[index]['Client'],Rate:Rate,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
 
                           return Container();
                         },
@@ -259,7 +307,7 @@ class  _PROFILE extends State< PROFILE> {
                     return Center(child: CircularProgressIndicator());
                   },
                 ),
-              ),),],),),),);
+              ),],),),),);
 
 
 
@@ -276,9 +324,13 @@ class Profile_worker  extends StatefulWidget {
   final  Experiance;
   final  Information;
   final  token;
-  final page;
+  final Rate;
+  final client_num;
+  final commentnumber;
+  final postnumber;
+  List<dynamic>List_Post;
 
-  Profile_worker({this.name,this.namelast,this.namefirst, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token,this.page});
+  Profile_worker({this.List_Post,this.postnumber,this.commentnumber,this.client_num,this.Rate,this.name,this.namelast,this.namefirst, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token,});
 
   @override
   _Profile_woeker createState() => _Profile_woeker();
@@ -293,9 +345,10 @@ class _Profile_woeker extends State<Profile_worker> {
 
   bool uploading = false;
   double val = 0;
+  int Post_num=0;
   bool image_post = false;
   File uploadimage;
-
+  var ListPost=[];
   // File _file;
   List<File> _image = []; //هاي هي
   int counter = 0;
@@ -303,12 +356,17 @@ class _Profile_woeker extends State<Profile_worker> {
   final picker = ImagePicker();
   PickedFile image_file;
   final ImagePicker image_picker = ImagePicker();
-
+  int Length_Post;
+  var List_Postanother=[];
   @override
   void initState() {
     super.initState();
   }
-
+   bool zeropost=false;
+   bool zeroimage=false;
+  bool Show_anatherPost=false;
+  bool Show_firstPost=true;
+  var List_Another_Post=[];
   Future getImages() async {
     var url = 'https://' + IP4 + '/testlocalhost/Show_EXP.php';
     var ressponse = await http.post(url, body: {
@@ -317,6 +375,17 @@ class _Profile_woeker extends State<Profile_worker> {
     // ignore: deprecated_member_use
     // var responsebody = json.decode(ressponse.body);
     // print(responsebody);
+    return json.decode(ressponse.body);
+  }
+  Future getComment() async {
+    var url = 'https://' + IP4 + '/testlocalhost/getcomment.php';
+    var ressponse = await http.post(url, body: {
+      "phone": widget.phone,
+    });
+    // ignore: deprecated_member_use
+    // var responsebody = json.decode(ressponse.body);
+    // print(responsebody);
+
     return json.decode(ressponse.body);
   }
   Future getpost()async{
@@ -330,204 +399,349 @@ class _Profile_woeker extends State<Profile_worker> {
   @override
   Widget build(BuildContext context) {
     // getChat();
-    return Column(
-      children: <Widget>[
-        // Container(
-        //   margin: EdgeInsets.only(top:10),
-        //   child:IconButton(
-        //      onPressed: (){
-        //        //print(chatsRoom.toString());
-        //        //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name,chatsRoomList: chatsRoom,user:false,)));},
-        //     icon: Icon(Icons.chat_bubble),
-        //   ),),
+    List_Postanother=widget.List_Post;
+    print(widget.List_Post.toString());
+    return SingleChildScrollView(
+      child:Container(
+      height: 1400,
+      
+      color: Colors.white,
+      child:Column(
+      children:<Widget>[
         Container(
-          margin: EdgeInsets.only(top: 37),
-          //transform: Matrix4.translationValues(0, 5.0, 0),
-          child: Center(
-            child: CircleAvatar(backgroundImage: NetworkImage(
-                'https://' + IP4 + '/testlocalhost/upload/' + widget.image),
-              radius: 35.0,),),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Center(
-            child: Text(widget.namefirst + " " + widget.namelast,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontFamily: 'Changa',
-                fontWeight: FontWeight.bold,),),
-          ),),
-
-        Row(children: [
-          GestureDetector(
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 40,
-                    margin: EdgeInsets.only(right: 50, top: 30),
-                    child: IconButton(
-                      icon: Icon(Icons.person,
-                        color:info?Colors.white:Colors.black.withOpacity(0.5),),
-                    ),
-                  ),
-                  Container(
-                    height: 20,
-                    width: 25,
-                    margin: EdgeInsets.only(right: 50, top: 10),
-                    child: Text('حول',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.3,
-                        fontFamily: 'Changa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          margin: EdgeInsets.only(top:0),
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            // gradient: LinearGradient(
+            //     begin: Alignment.topCenter,
+            //     end: Alignment.bottomCenter,
+            //     // colors: [B,A,G]
+            //     colors: [Y1,Y4]
+            // ),
           ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                post = true;
-                image=false;
-              });
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
-            },
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 40,
-                    margin: EdgeInsets.only(right: 50, top: 30),
-                    child: IconButton(
-                      icon: Icon(Icons.my_library_books_sharp,
-                        color:post?Colors.white:Colors.black.withOpacity(0.5),),
-                    ),
-                  ),
-                  Container(
-                    height: 20,
-                    width: 60,
-                    margin: EdgeInsets.only(right: 50, top: 10),
-                    child: Text('منشورات',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.3,
-                        fontFamily: 'Changa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                image = true;
-                post = false;
-              });
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
-            },
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 40,
-                    margin: EdgeInsets.only(right: 50, top: 30),
-                    child: IconButton(
-                      icon: Icon(Icons.image,
-                        color:image?Colors.white:Colors.black.withOpacity(0.5),),),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 40,
-                    margin: EdgeInsets.only(right: 50, top: 10),
-                    child: Text('ألبومي',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.3,
-                        fontFamily: 'Changa',
-                        fontWeight: FontWeight.bold,
-                      ),),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            child: Container(
-              child: Column(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 40,
-                    margin: EdgeInsets.only(right: 50, top: 30),
-                    child: IconButton(
-                      icon: Icon(Icons.comment,
-                        color:comment?Colors.white:Colors.black.withOpacity(0.5),),
-                    ),
-                  ),
-                  Container(
-                    height: 20,
-                    width: 50,
-                    margin: EdgeInsets.only(right: 50, top: 10),
-                    child: Text('تعليقات',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.3,
-                        fontFamily: 'Changa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],),
+         ),
+        // Row(children: [
+        //   GestureDetector(
+        //     child: Container(
+        //       child: Column(
+        //         children: [
+        //           Container(
+        //             height: 20,
+        //             width: 40,
+        //             margin: EdgeInsets.only(right: 50, top: 30),
+        //             child: IconButton(
+        //               icon: Icon(Icons.person,
+        //                 color:info?Colors.white:Colors.black.withOpacity(0.5),),
+        //             ),
+        //           ),
+        //           Container(
+        //             height: 20,
+        //             width: 25,
+        //             margin: EdgeInsets.only(right: 50, top: 10),
+        //             child: Text('حول',
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 13.3,
+        //                 fontFamily: 'Changa',
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        //   GestureDetector(
+        //     onTap: () {
+        //       setState(() {
+        //         post = true;
+        //         image=false;
+        //       });
+        //       // Navigator.push(context,
+        //       //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
+        //     },
+        //     child: Container(
+        //       child: Column(
+        //         children: [
+        //           Container(
+        //             height: 20,
+        //             width: 40,
+        //             margin: EdgeInsets.only(right: 50, top: 30),
+        //             child: IconButton(
+        //               icon: Icon(Icons.my_library_books_sharp,
+        //                 color:post?Colors.white:Colors.black.withOpacity(0.5),),
+        //             ),
+        //           ),
+        //           Container(
+        //             height: 20,
+        //             width: 60,
+        //             margin: EdgeInsets.only(right: 50, top: 10),
+        //             child: Text('منشورات',
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 13.3,
+        //                 fontFamily: 'Changa',
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        //
+        //   GestureDetector(
+        //     onTap: () {
+        //       setState(() {
+        //         image = true;
+        //         post = false;
+        //       });
+        //       // Navigator.push(context,
+        //       //     MaterialPageRoute(builder: (context) => PROFILE(name: widget.name,profile:1,)),);
+        //     },
+        //     child: Container(
+        //       child: Column(
+        //         children: [
+        //           Container(
+        //             height: 20,
+        //             width: 40,
+        //             margin: EdgeInsets.only(right: 50, top: 30),
+        //             child: IconButton(
+        //               icon: Icon(Icons.image,
+        //                 color:image?Colors.white:Colors.black.withOpacity(0.5),),),
+        //           ),
+        //           Container(
+        //             height: 30,
+        //             width: 40,
+        //             margin: EdgeInsets.only(right: 50, top: 10),
+        //             child: Text('ألبومي',
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 13.3,
+        //                 fontFamily: 'Changa',
+        //                 fontWeight: FontWeight.bold,
+        //               ),),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        //   GestureDetector(
+        //     child: Container(
+        //       child: Column(
+        //         children: [
+        //           Container(
+        //             height: 20,
+        //             width: 40,
+        //             margin: EdgeInsets.only(right: 50, top: 30),
+        //             child: IconButton(
+        //               icon: Icon(Icons.comment,
+        //                 color:comment?Colors.white:Colors.black.withOpacity(0.5),),
+        //             ),
+        //           ),
+        //           Container(
+        //             height: 20,
+        //             width: 50,
+        //             margin: EdgeInsets.only(right: 50, top: 10),
+        //             child: Text('تعليقات',
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 13.3,
+        //                 fontFamily: 'Changa',
+        //                 fontWeight: FontWeight.bold,
+        //               ),
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ],),
         //bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 
         SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(top:30),
-            height: 500,
-            width: 500,
+            margin: EdgeInsets.only(top:20),
+            height: 1200,
+            width: 410,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-              ),
             ),
             child:Column(
               children: [
-                image==true?GestureDetector(
+                Container(
+                  transform: Matrix4.translationValues(0, -60.0, 0),
+                  //transform: Matrix4.translationValues(0, -40.0, 0),
+                  child: Center(
+                    child: CircleAvatar(backgroundImage: NetworkImage(
+                        'https://' + IP4 + '/testlocalhost/upload/' + widget.image),
+                      radius: 45.0,),),
+                ),
+                Container(
+                  transform: Matrix4.translationValues(0, -55.0, 0),
+                  margin: EdgeInsets.only(top: 0),
+                  child: Center(
+                    child: Text(widget.namefirst + " " + widget.namelast,
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 18.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,),),
+                  ),),
+                Container(
+                  transform: Matrix4.translationValues(0, -60.0, 0),
+                  alignment: Alignment.topRight,
+                  child:Center(
+                    child:Text(widget.Work,style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontFamily: 'Changa',
+                      fontWeight: FontWeight.bold,),),
+                  ),
+                ),
+                Center(
                   child:Container(
-                    child:Column(
+                    height: 60,
+                    width: 380,
+                    transform: Matrix4.translationValues(0, -30.0, 0),
+                    padding: EdgeInsets.only(top: 5,right:5),
+                    decoration: BoxDecoration(
+                      //color: Colors.white,
+                      // border: Border.all(
+                      //   color: Colors.white,
+                      // ),
+                    ),
+                    child: Row (
                       children: [
+                        SizedBox(width: 20,),
                         GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    Get_Images(
-                                        phone: widget.phone, name: widget.name)));
-                          },
-                          child:Container(
+                          child:Column(
+                            children: [
+                              // Container(
+                              //   height: 0,
+                              //   margin: EdgeInsets.only(top: 0),
+                              //   color: Colors.white,
+                              //   child:FutureBuilder(
+                              //     future: getComment(),
+                              //     builder: (BuildContext context, AsyncSnapshot snapshot) {
+                              //       if(snapshot.hasData){
+                              //         return ListView.builder(
+                              //             itemCount: 1,
+                              //             itemBuilder: (context, index) {
+                              //               commentnumber=snapshot.data.length;
+                              //               return Container();
+                              //             }
+                              //         );
+                              //       }
+                              //       return Center(child: CircularProgressIndicator());
+                              //     },
+                              //   ),
+                              // ),
+                              Text('عملاء',style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+                              Text(widget.client_num,style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.0,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 50,),
+                        GestureDetector(
+                          child:Column(
+                            children: [
+                              Text('تعليقات',style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+                              Text(widget.commentnumber.toString(),style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.0,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 50,),
+                        GestureDetector(
+                          child:Column(
+                            children: [
+                              Text('منشورات',style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+                              Text(widget.postnumber.toString(),style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14.0,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 50,),
+                        GestureDetector(
+                          child:Column(
+                            children: [
+                              Text('الريت',style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                                fontFamily: 'Changa',
+                                fontWeight: FontWeight.bold,),),
+                              Container(
+                                //margin: EdgeInsets.only(top:320,left: 290),
+                                child:Row(
+                                  children: [
+                                    Text(widget.Rate.toString(),
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,),),
+                                    Icon(Icons.star,color: Colors.yellow,size: 25.0,),
+                                  ],
+                                ),),
+
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),),
+                Container(
+                  width: 370,
+                  transform: Matrix4.translationValues(0, -0.0, 0),
+                  margin: EdgeInsets.only(right:20,),
+                  child:Text(widget.Information + ', ' + widget.Experiance +'.',style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontFamily: 'Changa',
+                    fontWeight: FontWeight.bold,),),
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                            onTap: (){
+                      Navigator.push(context, MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                      Get_Images(
+                      phone: widget.phone, name: widget.name)));
+                      },
+                        child:Container(
                           height: 30,
-                          width: 200,
-                          margin: EdgeInsets.only(right: 200, top: 60),
-                          child: Text('معرض الصور / إضافة صورة',
+                          width: 75,
+                          margin: EdgeInsets.only(right: 190, top: 40),
+                          child: Text('إضافة صورة',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -535,106 +749,151 @@ class _Profile_woeker extends State<Profile_worker> {
                               fontWeight: FontWeight.bold,
                             ),),
                         ),),
-                        Container(
-                          height: 400,
-                          margin: EdgeInsets.only(top:0),
-                          child:FutureBuilder(
-                            future: getImages(),
-                            builder: (BuildContext context, AsyncSnapshot snapshot) {
-                              if(snapshot.hasData){
-                                return ListView.builder(
-                                    itemCount: 1,
-                                    itemBuilder: (context, index) {
-                                      int num =snapshot.data.length-4;
-                                      if(image==true){
-                                        if(snapshot.data.length==0){
-                                          return myAlbum0();
-                                        }
-                                        if(snapshot.data.length==1){
-                                          return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
-                                        }
-                                        if(snapshot.data.length==2){
-                                          return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
-                                        }
-                                        if(snapshot.data.length==3){
-                                          return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
-                                        }
-                                        if(snapshot.data.length==4){
-                                          return myAlbum4('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
-                                        }
-                                        return myAlbummore('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
-                                      }
-                                      return Container();
+                    GestureDetector(
+                              onTap: (){
+                                _dialogCall(context);
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 110,
+                                margin: EdgeInsets.only(left:20,right: 0, top: 40),
+                                child: Column(
+                                  children: [
+                                    Text('/  إضافة منشور',
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 15.0,
+                                        fontFamily: 'Changa',
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                  ],
+                                ),
+                              ),
+                            )
+                  ],
+                ),
+                      Container(
+                        height: 270,
+                        child:FutureBuilder(
+                          future: getImages(),
+                          builder: (BuildContext context, AsyncSnapshot snapshot) {
+                            if(snapshot.hasData){
+                              return ListView.builder(
+                                  itemCount: 1,
+                                  itemBuilder: (context, index) {
+                                    int num =snapshot.data.length-4;
+                                    if(snapshot.data.length==1){
+                                      return myAlbum1('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']);
                                     }
-                                );
-                              }
-                              return Center(child: CircularProgressIndicator());
-                            },
-                          ),
-                        )
+                                    if(snapshot.data.length==2){
+                                      return myAlbum2('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images']);
+                                    }
+                                    if(snapshot.data.length==3){
+                                      return myAlbum3('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images']);
+                                    }
+                                    if(snapshot.data.length==4){
+                                      return myAlbum4('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images']);
+                                    }
+                                    return myAlbummore('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+1]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+2]['images'],'https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index+3]['images'],num.toString()+"+");
+                                  }
+
+                              );
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          },
+                        ),
+                      ),
+
+                        // GestureDetector(
+                        //   onTap: ()async{
+                        //     await _dialogCall(context, phone);
+                        //   },
+                        //   child:Row(
+                        //     children: [
+                        //       Container(
+                        //         margin: EdgeInsets.only(right: 250,left: 10,top:0),
+                        //         child:Text("إضافة منشور",
+                        //           style: TextStyle(
+                        //             color: MY_YELLOW,
+                        //             fontSize: 16.0,
+                        //             fontFamily: 'Changa',
+                        //             fontWeight: FontWeight.bold,
+                        //           ),
+                        //
+                        //         ),),
+                        //
+                        //       Container(
+                        //         margin: EdgeInsets.only(left: 10,top:0),
+                        //         child:Icon(Icons.add,size: 25,color: MY_YELLOW,),
+                        //       ),
+                        //     ],
+
+                widget.List_Post.length==0?Container(height:0.0,):Container(height:0.0,),
+                widget.List_Post.length==1 && widget.List_Post[0]['image']=='null'? myPosttext(widget.List_Post[0]['text'],widget.List_Post[0]['date']):Container(height:0.0,),
+                widget.List_Post.length==1 && widget.List_Post[0]['image']!='null'? myPost(widget.List_Post[0]['text'],widget.List_Post[0]['image'],widget.List_Post[0]['date']):Container(height:0.0,),
+                widget.List_Post.length >=2?myPost2():Container(height:0.0,),
+                Show_anatherPost?
+                Container(
+                  // margin: EdgeInsets.only(top: 200),
+                  // color: Colors.yellowAccent,
+                  child:myPost2another(),
+                ):Container(height:0.0,),
+                Post_num<=widget.List_Post.length-1?
+                GestureDetector(
+                  onTap: (){
+                    Show_anatherPost=true;
+                    Show_firstPost=true;
+                    Post_num=0;
+                    setState(() {});
+                  },
+                  child: Container(
+                    child: Row(
+                      children: [
+                        SizedBox(width: 170,),
+                        Text('عرض المزيد',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.7),
+                            fontSize: 13,
+                            fontFamily: 'Changa',
+                            fontWeight: FontWeight.bold,),),
+                        SizedBox(width: 10,),
+                        Icon(Icons.refresh,color:Colors.black.withOpacity(0.7),),
                       ],
                     ),
                   ),
                 ):Container(),
-                post==true?GestureDetector(
-                  child:Container(
-                    child:Column(
-                      children: [
-                        GestureDetector(
-                          onTap: ()async{
-                            await _dialogCall(context, phone);
-                          },
-                          child:Row(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 250,left: 10,top:50),
-                                child:Text("إضافة منشور",
-                                  style: TextStyle(
-                                    color: MY_YELLOW,
-                                    fontSize: 16.0,
-                                    fontFamily: 'Changa',
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                //             Container(
+                //            margin:EdgeInsets.only(left: 5,right: 200),
+                //            decoration: BoxDecoration(
+                //             color: Colors.white,),
+                //            child:Column(
+                //               children: [
+                //           GestureDetector(
+                //             onTap: (){
+                //               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Post(namelast:widget.namelast,image:widget.image,namefirst:widget.namefirst,phone: widget.phone, name: widget.name)));
+                //             },
+                //           child: Container(
+                //             child: Column(
+                //               children: [
+                //                 Text('عرض المزيد',
+                //                   style: TextStyle(
+                //                     color: Colors.black87,
+                //                     fontSize: 15.0,
+                //                     fontFamily: 'Changa',
+                //                     fontWeight: FontWeight.bold,
+                //                   ),),
+                //               ],
+                //             ),
+                //           ),
+                //         )
+                //       ],
+                //     )
+                // ),
 
-                                ),),
-
-                              Container(
-                                margin: EdgeInsets.only(left: 10,top:50),
-                                child:Icon(Icons.add,size: 25,color: MY_YELLOW,),
-                              ),
-
-
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                            child:Container(
-                              height: 350,
-                              margin: EdgeInsets.only(top:15,bottom: 0),
-                              child:FutureBuilder(
-                                future: getpost(),
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                  if(snapshot.hasData){
-                                    return ListView.builder(
-                                        itemCount: snapshot.data.length,
-                                        itemBuilder: (context, index) {
-                                          return myPost(snapshot.data[index]['text'],snapshot.data[index]['image']);
-                                        }
-                                    );
-                                  }
-                                  return Center(child: CircularProgressIndicator());
-                                },
-                              ),
-                            )
-                        ),],
+              ],),
+                         ),),],
                     ),
-                  ),
-                ):Container(),
-              ],
-            ),
-          ),),
-
-      ],);
+                  ),);
   }
 
   Widget image_profile() {
@@ -770,42 +1029,6 @@ class _Profile_woeker extends State<Profile_worker> {
     String massage = json.decode(response.body);
     print(massage);
   }
-
-  myPost(String text,String image){
-    return Container(
-      // height: 285,
-      margin: EdgeInsets.symmetric(horizontal: 40,vertical: 15),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(color: MY_BLACK, width: 1.2)
-      ),
-      child: Column(
-        children: [
-          text!=null?Container(
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(top: 30,right: 20,left:20),
-            child:Text(text,
-              style: TextStyle(
-                color: MY_YELLOW,
-                fontSize: 16.0,
-                fontFamily: 'Changa',
-                fontWeight: FontWeight.bold,
-              ),),
-          ):Container(),
-          image!="null"?Container(
-            margin: EdgeInsets.only(left: 20,right: 20,bottom: 10,top: 10),
-            alignment: Alignment.centerRight,
-            // margin:  EdgeInsets.only(left:10,),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Image.network('https://'+IP4+'/testlocalhost/upload/'+ image, height: 200, width: 300, fit: BoxFit.cover,),
-            ),):Container(),
-        ],
-      ),
-    );
-  }
-
   myAlbummore(String asset1, String asset2, String asset3, String asset4,
       String more) {
     return Container(
@@ -900,12 +1123,11 @@ class _Profile_woeker extends State<Profile_worker> {
           ),
         ],),);
   }
-  myAlbum4(String asset1, String asset2, String asset3, String asset4,
-      String more) {
+  myAlbum4(String asset1, String asset2, String asset3, String asset4) {
     return Container(
       margin: EdgeInsets.fromLTRB(30,0, 30, 20),
       // padding:EdgeInsets.fromLTRB(5, 0, 5, 0),
-      height: 290,
+      height: 250,
       width: 370,
       decoration: BoxDecoration(
           color: Colors.white,
@@ -949,7 +1171,7 @@ class _Profile_woeker extends State<Profile_worker> {
                         child:ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            asset4, height: 110,
+                            asset3, height: 110,
                             width: 110,
                             fit: BoxFit.cover,),
                         ),),
@@ -988,7 +1210,7 @@ class _Profile_woeker extends State<Profile_worker> {
             child: Row(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(right: 10, bottom: 10, top: 10),
+                  margin: EdgeInsets.only(right: 10, bottom: 10, top:10),
                   // margin:  EdgeInsets.only(left:15,right: 15),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
@@ -1113,7 +1335,7 @@ class _Profile_woeker extends State<Profile_worker> {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 10, 15, 0),
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-      height: 250,
+      height: 100,
       width: 400,
       child: Center(child: Text("لا يوجد لديك صور لعرضها",
         style: TextStyle(
@@ -1188,6 +1410,225 @@ class _Profile_woeker extends State<Profile_worker> {
             //  child:Text("ألبومي "),
             // ),
           ],),),);
+  }
+  myPosttext(String text,String date){
+    return Container(
+      width: 360, height: 150,
+      margin:EdgeInsets.only(left: 30,right: 30,bottom: 20,top: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+          bottomLeft: Radius.circular(10),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(1,1), // shadow direction: bottom right
+          )
+        ],
+
+      ),
+      child:Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top:10,left:10,right: 20),
+                //transform: Matrix4.translationValues(0, -40.0, 0),
+                child: Center(
+                  child: CircleAvatar(backgroundImage: NetworkImage(
+                      'https://' + IP4 + '/testlocalhost/upload/' + widget.image),
+                    radius: 18.0,),),
+              ),
+              Column(
+                children: [
+                  Container(
+                    height: 22,
+                    margin: EdgeInsets.only(top:10,left: 150),
+                    child: Center(
+                      child: Text(widget.namefirst + " " + widget.namelast,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14.0,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,),),
+                    ),),
+                  Container(
+                    height: 20,
+                    margin: EdgeInsets.only(top:0,left: 165),
+                    child: Center(
+                      child: Text(date,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 11.5,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,),),
+                    ),),
+                ],
+              ),
+            ],
+          ),
+          text!=null?Container(
+            height: 50,
+            width: 320,
+            margin: EdgeInsets.only(top: 5,right: 20,left:0),
+            child:Text(text,
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 13.0,
+                fontFamily: 'Changa',
+                fontWeight: FontWeight.bold,
+              ),),
+          ):Container(height: 0,),
+        ],
+      ),
+    );
+  }
+
+  myPost(String text,String image,String date) {
+    return Container(
+      width: 380, height: 321,
+      margin:EdgeInsets.only(left: 30,right: 30,bottom: 20,top: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+            offset: Offset(1,1), // shadow direction: bottom right
+          )
+        ],
+
+      ),
+      child:Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top:10,left:10,right: 20),
+                //transform: Matrix4.translationValues(0, -40.0, 0),
+                child: Center(
+                  child: CircleAvatar(backgroundImage: NetworkImage(
+                      'https://' + IP4 + '/testlocalhost/upload/' + widget.image),
+                    radius: 18.0,),),
+              ),
+              Column(
+                children: [
+                  Container(
+                    height: 22,
+                    margin: EdgeInsets.only(top:10,left: 150),
+                    child: Center(
+                      child: Text(widget.namefirst + " " + widget.namelast,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 14.0,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,),),
+                    ),),
+                  Container(
+                    height: 20,
+                    margin: EdgeInsets.only(top:0,left: 165),
+                    child: Center(
+                      child: Text(date,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 11.5,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,),),
+                    ),),
+                ],
+              ),
+            ],
+          ),
+          text!=null?Container(
+            height: 50,
+            width: 320,
+            margin: EdgeInsets.only(top: 5,right: 20,left:0),
+            child:Text(text,
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 13.0,
+                fontFamily: 'Changa',
+                fontWeight: FontWeight.bold,
+              ),),
+          ):Container(height: 0,),
+          image!='null'?Container(
+            width: 380,
+            margin: EdgeInsets.only(top: 10),
+            alignment: Alignment.centerRight,
+            // margin:  EdgeInsets.only(left:10,),
+            child: ClipRRect(
+              child: Image.network('https://'+IP4+'/testlocalhost/upload/'+  image, height: 204, width: 380, fit: BoxFit.cover,),
+            ),):Container(height:0,),
+        ],
+      ),
+    );
+  }
+
+  myPost2() {
+    Length_Post= widget.List_Post.length;
+    print( widget.List_Post.toString());
+    return Column(
+      children: [
+        Post_num<Length_Post?Container(
+          child: Column(
+            children: [
+              widget.List_Post[Post_num]['image']=='null'? myPosttext( widget.List_Post[Post_num]['text'], widget.List_Post[Post_num++]['date']):myPost( widget.List_Post[Post_num]['text'], widget.List_Post[Post_num]['image'], widget.List_Post[Post_num++]['date']),
+
+            ],
+          ),
+        ):Container(height:10.0,color: Colors.yellowAccent,),
+        Post_num<Length_Post?Container(
+          child: Column(
+            children: [
+              widget.List_Post[Post_num]['image']=='null'? myPosttext( widget.List_Post[Post_num]['text'], widget.List_Post[Post_num++]['date']):myPost( widget.List_Post[Post_num]['text'], widget.List_Post[Post_num]['image'], widget.List_Post[Post_num++]['date']),
+
+            ],
+          ),
+        ):Container(height:0.0,),
+      ],
+    );
+  }
+
+  myPost2another() {
+    List_Postanother=widget.List_Post;
+    return Column(
+      children: [
+        Post_num<Length_Post?Container(
+          child: Column(
+            children: [
+              List_Postanother[Post_num]['image']=='null'? myPosttext(List_Postanother[Post_num]['text'],List_Postanother[Post_num++]['date']):myPost(List_Postanother[Post_num]['text'],List_Postanother[Post_num]['image'],List_Postanother[Post_num++]['date']),
+
+            ],
+          ),
+        ):Container(height:0.0,),
+        Post_num<Length_Post?Container(
+          child: Column(
+            children: [
+              List_Postanother[Post_num]['image']=='null'? myPosttext(List_Postanother[Post_num]['text'],List_Postanother[Post_num++]['date']):myPost(List_Postanother[Post_num]['text'],List_Postanother[Post_num]['image'],List_Postanother[Post_num++]['date']),
+
+            ],
+          ),
+        ):Container(height:0.0,),
+        // widget.List_Post[Post_num]['image']=='null'? myPosttext(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num++]['date']):Container(height: 0.0,),
+        // Post_num<Length_Post && widget.List_Post[Post_num]['image']!='null'?myPost(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num]['image'],widget.List_Post[Post_num++]['date']):Container(height: 0.0,),
+        // Post_num<Length_Post && widget.List_Post[Post_num]['image']=='null'? myPosttext(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num++]['date']):Container(height: 0.0,),
+        // Post_num<Length_Post && widget.List_Post[Post_num]['image']!='null'?myPost(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num]['image'],widget.List_Post[Post_num++]['date']):Container(height: 0.0,),
+
+        // widget.List_Post[Post_num]['image']=='null'? myPosttext(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num++]['date']):myPost(widget.List_Post[Post_num]['text'],widget.List_Post[Post_num]['image'],widget.List_Post[Post_num++]['date']),
+
+      ],
+    );
   }
 
   myAlbum2f(String asset1, String asset2) {
@@ -1358,89 +1799,11 @@ class _Profile_woeker extends State<Profile_worker> {
   //         ],),),);
   // }
 
-  Future<void> showMyDialogPost() async {
-    return showDialog<void>(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: StatefulBuilder( // You need this, notice the parameters below:
-              builder: (BuildContext context, StateSetter setState) {
-                return Column(children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(left: 5, right: 265),
-                      child: IconButton(icon: Icon(
-                          Icons.close,
-                          color: Colors.grey.withOpacity(0.5)),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          })
-                  ),
-
-                  Container(
-                    height: 200,
-                    margin: EdgeInsets.only(left: 5,),
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: TextFormField(
-                      textAlign: TextAlign.right,
-                      maxLines: 20,
-                      style: TextStyle(
-                        color: Colors.grey.withOpacity(0.5),
-                        fontSize: 16.0,
-                        fontFamily: 'Changa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'أضف إعلاناتك هنا ',
-                        hintStyle: TextStyle(
-                          fontSize: 16.0,
-                          fontFamily: 'Changa',
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                  ),
-                  _image.isNotEmpty ? Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      image: DecorationImage(image: FileImage(
-                          File(_image[0].path)),
-                      ),),) : Container(
-                    child: Text(",mkmnnnnnnnnnnn"),
-                  ),
-                  // Container(
-                  //   color: Colors.red,
-                  // height: 100,
-                  //   child:image_profile(),
-                  // ),
-                  Container(
-                    child: IconButton(
-                      icon: Icon(Icons.image),
-                      onPressed: () {
-                        setState(() {
-                          print("fhf");
-                          chooseImage();
-                        });
-                      },
-                    ),
-                  ),
-                ],);
-
-                // image_post?CircleAvatar(
-                //  backgroundImage:FileImage(File(pickedFile.path)),
-                //  ):Container(),);
-              },),);
-        });
-  }
-
-  Future<void> _dialogCall(BuildContext context,String phone) {
+  Future<void> _dialogCall(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return MyDialog(phone: phone,);
+          return MyDialog(phone:phone,);
         });
   }
 }
@@ -1461,20 +1824,23 @@ class _MyDialogState extends State<MyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: MY_BLACK,
+      backgroundColor: Colors.white,
       actionsPadding: EdgeInsets.zero,
       content: new SingleChildScrollView(
         child: new ListBody(
           children: <Widget>[
-            Container(
-                margin: EdgeInsets.only(left: 0, right: 259),
-                child: IconButton(icon: Icon(
-                    Icons.close,
-                    color: Colors.grey.withOpacity(0.5)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    })
-            ),
+            GestureDetector(
+              onTap: (){
+                Navigator.pop(context);
+              },
+              child: Container(
+                  width: 70,
+                  color: Colors.white,
+                  alignment: Alignment.topLeft,
+                  margin: EdgeInsets.only(left: 0, right: 170),
+                  child:Icon(Icons.close, color: Colors.black.withOpacity(0.5)),
+                      ),
+              ),
             Container(
               width:500,
               height: 100,
@@ -1491,19 +1857,19 @@ class _MyDialogState extends State<MyDialog> {
                 decoration: InputDecoration(
                   enabledBorder: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(30.0),
-                    borderSide:  BorderSide(color:MY_BLACK),
+                    borderSide:  BorderSide(color:Colors.white),
 
                   ),
                   focusedBorder: new OutlineInputBorder(
                     borderRadius: new BorderRadius.circular(30.0),
-                    borderSide:  BorderSide(color:MY_BLACK),
+                    borderSide:  BorderSide(color:Colors.white),
 
                   ),
                   hintText: 'أضف إعلاناتك هنا ',
                   hintStyle: TextStyle(
                     fontSize: 16.0,
                     fontFamily: 'Changa',
-                    color: Colors.grey.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
@@ -1521,8 +1887,15 @@ class _MyDialogState extends State<MyDialog> {
             GestureDetector(
                 child: Row(
                   children: <Widget>[
-                    Icon(Icons.image),
-                    SizedBox(width: 5),
+                    SizedBox(width: 180),
+                    Text('إضافة صورة',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.5),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    Icon(Icons.add_a_photo,color: Colors.black.withOpacity(0.5),),
                   ],
                 ),
                 onTap: () async {
@@ -1535,13 +1908,13 @@ class _MyDialogState extends State<MyDialog> {
             Padding(
               padding: EdgeInsets.all(8.0),
             ),
+            SizedBox(height:15),
             Container(
-              color: Colors.grey.withOpacity(0.5),
+              color: Y,
               child:GestureDetector(
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 60),
-                      Icon(Icons.create),
                       SizedBox(width: 30),
                       Text('إنشاء منشور',
                         style:  TextStyle(

@@ -2,13 +2,10 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
-import 'package:flutterphone/Inside_the_app/Comment.dart';
-import 'package:flutterphone/Inside_the_app/List_worker_group.dart';
-import 'package:flutterphone/Inside_the_app/WORKER_PROFILE.dart';
-import 'package:flutterphone/USER/user_Profile.dart';
+import 'package:flutterphone/Chatworker/chatListworker.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/components/timepicker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
@@ -22,6 +19,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../buttom_bar.dart';
 import '../constants.dart';
 import '../database.dart';
+import 'orders_workers.dart';
 DateTime _selectedDay = DateTime.now();
 String  name_Me="";
 String  name="";
@@ -34,14 +32,17 @@ String  token="";
 String IP4="192.168.1.8";
 
 class Worker_SLot extends StatefulWidget {
-  final name_Me;
-  final country;
+  final  name;
+  final  phone;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
   final namefirst;
   final namelast;
-  final image;
-  final phone;
   final DateTime time;
-  Worker_SLot({this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
+  Worker_SLot({this.name,this.phone,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   _Worker_SLot createState() =>  _Worker_SLot();
 }
 class  _Worker_SLot extends State<Worker_SLot> {
@@ -58,11 +59,14 @@ class  _Worker_SLot extends State<Worker_SLot> {
   var Listsearch=[];
 
   Future getMYslot()async{
-    var dateParse = DateTime.parse(widget.time.toString());
+    print(widget.name);
+    print(widget.phone);
+    print(widget.time);
     var formattedDate = DateFormat('yyyy-MM-dd').format(widget.time);
+    print(formattedDate);
     var url='https://'+IP4+'/testlocalhost/show_slot_of_worker.php';
     var ressponse=await http.post(url,body: {
-      "phoneworker": '+970595320479',
+      "phoneworker": widget.phone,
       "date":formattedDate,
     });
     // ignore: deprecated_member_use
@@ -86,57 +90,22 @@ class  _Worker_SLot extends State<Worker_SLot> {
       child:Stack(
         children: [
           Scaffold(
-            backgroundColor: D,
+            backgroundColor: Colors.grey[50],
             key: _scaffoldKey,
-
-            bottomNavigationBar: Container(
-              decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
-              ]),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                  child: GNav(
-                      rippleColor: Colors.grey[300],
-                      hoverColor: Colors.grey[100],
-                      gap: 8,
-                      activeColor: Colors.black,
-                      iconSize: 24,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      duration: Duration(milliseconds: 400),
-                      tabBackgroundColor: Colors.grey[100],
-                      tabs: [
-                        GButton(
-                          icon: Icons.home,
-                          text: 'Home',
-                        ),
-                        GButton(
-                          icon: Icons.hail,
-                          text: 'Likes',
-                        ),
-                        GButton(
-                          icon: Icons.search,
-                          text: 'Search',
-                        ),
-                        GButton(
-                          icon: Icons.umbrella,
-                          text: 'Profile',
-                        ),
-                      ],
-                      selectedIndex: _selectedIndex,
-                      onTabChange: (index) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                      }),
-                ),
-              ),),
             body: Form(
               // child:SingleChildScrollView(
-              child: Stack(
+              child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => order_worker(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst)));},
+                    child:Container(
+                      margin: EdgeInsets.only(top:70,left: 370),
+                      child:Icon(Icons.arrow_back,color: Colors.black,),
+                    ),
+                  ),
                   // Image.asset(
                   //   "assets/icons/ho.jpg",
                   //   height:250,
@@ -155,24 +124,10 @@ class  _Worker_SLot extends State<Worker_SLot> {
                   //   ),
                   // ),
                   Container(
-                    margin: EdgeInsets.only(top: 50),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                      //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                    }),
-                  ),
-                  Container(
                     height: 700,
                     width: 500,
-                    // color:  Color(0xFFF3D657),
-                    margin: EdgeInsets.only(top:50),
-                    //padding:EdgeInsets.only(right:25,left: 25),
                     decoration: BoxDecoration(
                       // color:Color(0xFF1C1C1C),
-                      // borderRadius: BorderRadius.only(
-                      //   topLeft: Radius.circular(50),
-                      //   topRight: Radius.circular(50),
-                      // ),
                     ),
                     child:FutureBuilder(
                       future: getMYslot(),
@@ -182,9 +137,12 @@ class  _Worker_SLot extends State<Worker_SLot> {
                             itemCount: 1,
                             itemBuilder: (context, index) {
                               var Listslot=snapshot.data;
-                              //if(Listslot=='NO Date'){return Container();}
-                              //return Container(child: Text('SARAH'),);
-                              return slot(List1:Listslot,time: widget.time,);
+
+                              if(Listslot.length==0){
+                                return Empty(name:widget.name,time: widget.time,phone: widget.phone,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst);}
+                              else{
+                                print(Listslot.length);
+                                return slot(List1:Listslot,name:widget.name,time: widget.time,phone: widget.phone,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst);}
                             },
                           );
                         }
@@ -197,9 +155,17 @@ class  _Worker_SLot extends State<Worker_SLot> {
 }
 class slot extends StatefulWidget {
   final phone;
+  final name;
   List<dynamic> List1;
   final DateTime time;
-  slot({this.phone,this.List1,this.time});
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  slot({this.List1,this.name,this.phone,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   @override
   _slot createState() => _slot();
 }
@@ -262,20 +228,6 @@ class _slot extends State<slot> {
     }
   }
   void _fetchEvents() {
-    //
-    // ListDate11=widget.ListDate;
-    // int i=0;
-    // print(widget.List1);
-    // Map<DateTime, List<dynamic>> _events={};
-    // DateTime date;
-    // widget.List1.forEach(
-    //       (element) {
-    //     date = DateTime.tryParse(widget.ListDate[i]);i++;
-    //     if (_events[date] == null) _events[date] = [];
-    //     _events[date].add(element);
-    //   },
-    // );
-    // _streamController.add(_events);
   }
   void _onDaySelected(DateTime day, List events,List r) {
     _selectedDay = day;
@@ -285,7 +237,7 @@ class _slot extends State<slot> {
     if(ListBlock.isEmpty){
       print("Nulllll");
       // print(_selectedDay);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: _selectedDay,),),);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst,time: _selectedDay,),),);
 
     }
   }
@@ -327,13 +279,10 @@ class _slot extends State<slot> {
   bool image=false;
   GlobalKey _bottomNavigationKey = GlobalKey();
   Widget build(BuildContext context) {
-    seprate();
-    print(List_Am.toString());
-    print(List_Pm.toString());
     DateTime selected;
     return Container(
       height: 700,
-      color: D,
+      transform: Matrix4.translationValues(0.0, -42.0, 0.0),
       child:Column(
           children:<Widget>[
             //StreamBuilder<Map<DateTime, List>>(
@@ -360,31 +309,31 @@ class _slot extends State<slot> {
                 centerHeaderTitle: true,
                 formatButtonVisible: false,
                 titleTextStyle: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 16
                 ),
-                leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 15,),
-                rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 15,),
+                leftChevronIcon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 15,),
+                rightChevronIcon: Icon(Icons.arrow_forward_ios, color: Colors.black, size: 15,),
                 leftChevronMargin: EdgeInsets.only(left: 70),
                 rightChevronMargin: EdgeInsets.only(right: 70),
               ),
               calendarStyle: CalendarStyle(
 
-                  todayColor: Color(0xFF1C1C1C),
-                  selectedColor: A,
+                  todayColor: Colors.grey[200],
+                  selectedColor:Y,
                   weekendStyle: TextStyle(
-                      color: Colors.white
+                      color: Colors.black
                   ),
                   weekdayStyle: TextStyle(
-                      color: Colors.white
+                      color: Colors.black
                   )
               ),
               daysOfWeekStyle: DaysOfWeekStyle(
                   weekendStyle: TextStyle(
-                      color: Colors.white
+                      color: Colors.black
                   ),
                   weekdayStyle: TextStyle(
-                      color: Colors.white
+                      color: Colors.black
                   )
 
               ),),
@@ -416,15 +365,13 @@ class _slot extends State<slot> {
             //     ],
             //   ),
             // ),
-            SizedBox(height: 5,),
-            SizedBox(height: 5,),
+
             Expanded(
               child: Container(
                 width: 500,
                 height: 500,
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
                   color: Colors.white,
                 ),
                 child: Container(
@@ -435,15 +382,18 @@ class _slot extends State<slot> {
                       children: [
                         GestureDetector(
                           onTap: (){
-                            _dialogCall("bb");
+                            // _showSnackBar(context, 'لقد تمت الإضافة  بنجاح');
+                            _dialogCall();
                           },
                           child: Container(
-                            width: 110,
-                            margin: EdgeInsets.only(left: 10,top:20,right: 250),
+                            width: 112,
+                            color:Colors.white,
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.only(left: 0,top:10,right: 275),
                             child: Row(
                               children: [
-                                Text('إضافة سلوت',style: TextStyle(
-                                  color: Colors.black,
+                                Text('  إضافة سلوت',style: TextStyle(
+                                  color: Colors.black87,
                                   fontSize: 15.0,
                                   fontFamily: 'Changa',
                                   fontWeight: FontWeight.bold,
@@ -453,50 +403,23 @@ class _slot extends State<slot> {
                             ),
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(top: 20,left: 290),
-                          child:Icon(Icons.wb_sunny,size: 40,color: Colors.yellow,),
-                        ),
-                        //IconData(Icons.wb_sunny),),
                         SizedBox(height: 20,),
                         Container(
                             height: 150,
                             child:GridView.builder(
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 2.2,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 5,
+                                childAspectRatio: 3.02,
                               ),
-                              itemCount: List_Am.length,
+                              itemCount: widget.List1.length,
                               itemBuilder: (context,index){
-                                return time1(List_Am[index]['timestart']+"-"+List_Am[index]['timeend'],"am",List_Am[index]['timestart'],List_Am[index]['timeend']);
-                              },
-                            )
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10,left: 290),
-                          child:Icon(Icons.wb_cloudy,size: 40,color:Color(0xFF1C1C1C)),
-                        ),
-                        SizedBox(height: 20,),
-                        Container(
-
-                            height: 200,
-                            child:GridView.builder(
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 20,
-                                childAspectRatio: 2.2,
-                              ),
-                              itemCount: List_Pm.length,
-                              itemBuilder: (context,index){
-                                return time1(List_Pm[index]['timestart']+"-"+List_Pm[index]['timeend'],"pm",List_Pm[index]['timestart'],List_Pm[index]['timeend']);
+                                return time(widget.List1[index]['timestart']+" - "+widget.List1[index]['timeend'],widget.List1[index]['Am_Pm'],widget.List1[index]['timestart'],widget.List1[index]['timeend']);
                               },
                             )
                         ),
                         //IconButton(icon: Icon(Icons.date_range), onPressed: (){cv(initialDate:selected);})
-
                       ],
                     ),
                   ),
@@ -508,54 +431,88 @@ class _slot extends State<slot> {
       ),
     );
   }
-  Future<void> _dialogCall(String phone) {
+  Future<void> _dialogCall() {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:MyDialog(phone: phone,time: widget.time,),);
+            child:MyDialog(name:widget.name,phone: widget.phone,time: widget.time,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst),);
         });
   }
-  Future<void> _dialogCall2(String phone,String init1,String init2,String initPeriode) {
+  Future<void> _dialogCall2(String init1,String init2,String initPeriode) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:edit_delete(phone: phone,time: widget.time,init1:init1 ,init2:init2,initPeriode: initPeriode,),);
+            child:edit_delete(name:widget.name,phone: widget.phone,time: widget.time,init1:init1 ,init2:init2,initPeriode: initPeriode,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst),);
         });
   }
 
-  Container time1(String time,String d,String from,String to)
+  void _showSnackBar(BuildContext context, String text) {
+    Scaffold.of(context).showSnackBar(SnackBar(content:
+    Text(text,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Changa',
+      ),)));
+  }
+
+  Container time(String time,String d,String from,String to)
   {
     return Container(
+      width: 200,
       child:GestureDetector(
         onTap: (){
-          _dialogCall2("vffb",from,to,d);
+          _dialogCall2(from,to,d);
+          // _dialogCall(phone,phoneworker,token,workertoken,username);
         },
         child: Container(
-          margin: EdgeInsets.only(right: 4,),
+          // margin: EdgeInsets.only(right: 4,),
           //padding: EdgeInsets.symmetric(horizontal: 5),
           // height: 54,
           // width: 119,
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Color(0xFF1C1C1C), width: 1.7),
-            borderRadius: BorderRadius.circular(20),),
+            border: Border.all(color: Y, width: 1),
+            borderRadius: BorderRadius.circular(10),),
           child:Center(
             child:Container(
               color: Colors.white,
               // margin: EdgeInsets.only(right: 20),
-              child:Text(time,
-                style: TextStyle(
-                  fontFamily: 'Changa',
-                  color: Color(0xFF1C1C1C),
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),),
+              child:d=='am'?Row(
+                children: [
+                  SizedBox(width: 2,),
+                  Text(time,
+                    style: TextStyle(
+                      fontFamily: 'Changa',
+                      color: Color(0xFF1C1C1C),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  SizedBox(width: 5,),
+                  Icon(Icons.wb_sunny,size: 25,color: Colors.yellow,),
+                ],
+              ):Row(
+                children: [
+                  SizedBox(width: 2,),
+                  Text(time,
+                    style: TextStyle(
+                      fontFamily: 'Changa',
+                      color: Color(0xFF1C1C1C),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                  SizedBox(width: 5,),
+                  Icon(Icons.cloud,size: 25,color: Colors.black,),
+                ],
+              ),
             ),
           ),),
       ),
     );}
+
   List<int> _availableHours = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
   List<int> _availableMinutes = [0,30];
  String hour;
@@ -581,11 +538,195 @@ class _slot extends State<slot> {
   }
 }
 
+
+class Empty extends StatefulWidget {
+  @override
+  final phone;
+  final name;
+  List<dynamic> List1;
+  final DateTime time;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  Empty({this.List1,this.name,this.phone,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
+
+  _Empty createState() => _Empty();
+}
+
+class _Empty extends State<Empty> {
+  CalendarController _calendarController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _calendarController = CalendarController();
+    // _streamController = StreamController();
+  }
+
+  @override
+  void _onDaySelected(DateTime day, List events, List r) {
+    _selectedDay = day;
+    var dateParse = DateTime.parse(_selectedDay.toString());
+    formattedDate = DateFormat('yyyy-MM-dd').format(day);
+    print(formattedDate);
+    if (ListBlock.isEmpty) {
+      print("Nulllll");
+      // print(_selectedDay);
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:_selectedDay,phoneworker: widget.phoneworker,),),);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst,time: _selectedDay),),);
+    }
+  }
+
+  @override
+  int _page = 0;
+  bool image = false;
+  GlobalKey _bottomNavigationKey = GlobalKey();
+
+  Widget build(BuildContext context) {
+    return Container(
+      height: 700,
+      transform: Matrix4.translationValues(0.0, -42.0, 0.0),
+      color: Colors.white,
+      child: Column(
+          children: <Widget>[
+            // final events = snapshot.data;
+            Container(
+              color:Colors.grey[50],
+              child: TableCalendar(
+                onDaySelected: _onDaySelected,
+                calendarController: _calendarController,
+                //events: events,
+                initialSelectedDay: widget.time,
+                initialCalendarFormat: CalendarFormat.week,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                formatAnimation: FormatAnimation.slide,
+                headerStyle: HeaderStyle(
+                  centerHeaderTitle: true,
+                  formatButtonVisible: false,
+                  titleTextStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16
+                  ),
+                  leftChevronIcon: Icon(
+                    Icons.arrow_back_ios, color: Colors.black, size: 15,),
+                  rightChevronIcon: Icon(
+                    Icons.arrow_forward_ios, color: Colors.black, size: 15,),
+                  leftChevronMargin: EdgeInsets.only(left: 70),
+                  rightChevronMargin: EdgeInsets.only(right: 70),
+                ),
+                calendarStyle: CalendarStyle(
+
+                    todayColor: Colors.grey[200],
+                    selectedColor:Y,
+                    weekendStyle: TextStyle(
+                        color: Colors.black
+                    ),
+                    weekdayStyle: TextStyle(
+                        color: Colors.black
+                    )
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                    weekendStyle: TextStyle(
+                        color: Colors.black
+                    ),
+                    weekdayStyle: TextStyle(
+                        color: Colors.black
+                    )
+
+                ),),
+            ),
+            Expanded(
+              child: Container(
+                width: 500,
+                height: 500,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                         _dialogCall();
+                      },
+                      child: Container(
+                        width: 112,
+                        color:Colors.white,
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(left: 0,top:10,right: 275),
+                        child: Row(
+                          children: [
+                            Text('  إضافة سلوت',style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15.0,
+                              fontFamily: 'Changa',
+                              fontWeight: FontWeight.bold,
+                            ),),
+                            Icon(Icons.add,size: 20,),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 150,),
+                    Center(
+                      child: Text('لا توجد لديك سلوتات  لعرضها في هذا اليوم',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15.0,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,
+                        ),),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          ]
+      ),
+    );
+  }
+  void _showSnackBar(BuildContext context, String text) {
+    Scaffold.of(context).showSnackBar(SnackBar(content:
+    Text(text,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Changa',
+      ),)));
+  }
+  Future<void> _dialogCall() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Directionality(textDirection: ui.TextDirection.rtl,
+            child:MyDialog(phone: widget.phone,time: widget.time,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst),);
+        });
+  }
+}
+
+
+
 class MyDialog extends StatefulWidget {
   @override
   final phone;
+  final name;
   final DateTime time;
-  MyDialog({this.phone,this.time});
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  MyDialog({this.phone,this.time,this.name,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   _MyDialogState createState() => new _MyDialogState();
 }
 class _MyDialogState extends State<MyDialog> {
@@ -705,7 +846,7 @@ class _MyDialogState extends State<MyDialog> {
                        ),),
                        SizedBox(width: 10,),
                        Container(
-                         color: Colors.grey[200],
+                         color: Colors.grey[100],
                          height: 35,
                          width: 100,
                          padding: EdgeInsets.only(top: 5,bottom: 5,right:5,left: 5),
@@ -763,7 +904,7 @@ class _MyDialogState extends State<MyDialog> {
                        ),),
                        SizedBox(width: 10,),
                        Container(
-                         color: Colors.grey[200],
+                         color: Colors.grey[100],
                          height: 35,
                          width: 100,
                          padding: EdgeInsets.only(top: 5,bottom: 5,right:5,left: 5),
@@ -832,21 +973,21 @@ class _MyDialogState extends State<MyDialog> {
             ),
             Container(
               margin: EdgeInsets.only(top:30),
-              color: Colors.grey.withOpacity(0.5),
+              color: Y,
               width: 200,
               child:GestureDetector(
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 60),
-                      Icon(Icons.create),
-                      SizedBox(width: 30),
+                      SizedBox(width: 50),
                       Text('إضافة',
                         style:  TextStyle(
                           fontSize: 20.0,
                           fontFamily: 'Changa',
-                          color: MY_BLACK,
+                          color: Colors.black87,
                         ),),
-                      SizedBox(width: 5),
+                      SizedBox(width: 10),
+                      SizedBox(width: 20),
                     ],
                   ),
                   onTap: () async {
@@ -855,7 +996,12 @@ class _MyDialogState extends State<MyDialog> {
                     print(reject);
                     if(reject==false){
                       Navigator.pop(context);
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: widget.time,),),);
+                      print(widget.time); print(widget.phone); print(widget.namelast); print(widget.namefirst); print(widget.Information); print(widget.Experiance);print(widget.image);
+                      print(widget.name); print(widget.token); print(widget.Work);
+                      Fluttertoast.showToast(msg: " تمت الإضافة  بنجاح ",fontSize: 16,textColor:Colors.black87,backgroundColor: Colors.white);
+                      // _showSnackBar(context, 'لقد تمت الإضافة  بنجاح');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: widget.time,phone:widget.phone,name:widget.name,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,),),);
+
                     }
                     //reject=false;
                   }),),
@@ -863,6 +1009,16 @@ class _MyDialogState extends State<MyDialog> {
         ),
       ),
     );
+  }
+  void _showSnackBar(BuildContext context, String text) {
+    Scaffold.of(context).showSnackBar(SnackBar(content:
+    Text(text,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Changa',
+      ),)));
   }
   Future check_Slot()async{
     var dateParse = DateTime.parse(widget.time.toString());
@@ -900,10 +1056,18 @@ class edit_delete extends StatefulWidget {
   @override
   final phone;
   final DateTime time;
+  final name;
   var init1;
   var init2;
   var initPeriode;
-  edit_delete({this.phone,this.time,this.init1,this.init2,this.initPeriode});
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  edit_delete({this.name,this.phone,this.time,this.init1,this.init2,this.initPeriode,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   _edit_delete createState() => new _edit_delete();
 }
 class _edit_delete extends State<edit_delete> {
@@ -1014,7 +1178,7 @@ class _edit_delete extends State<edit_delete> {
                   },
                 ),
                 Container(
-                  margin: EdgeInsets.only(right:10),
+                  margin: EdgeInsets.only(right:10,top:20),
                   child:Row(
                     children: [
                       Text('من',style: TextStyle(
@@ -1025,7 +1189,7 @@ class _edit_delete extends State<edit_delete> {
                       ),),
                       SizedBox(width: 10,),
                       Container(
-                        color: Colors.grey[200],
+                        color: Colors.grey[100],
                         height: 35,
                         width: 100,
                         padding: EdgeInsets.only(top: 5,bottom: 5,right:5,left: 5),
@@ -1083,7 +1247,7 @@ class _edit_delete extends State<edit_delete> {
                       ),),
                       SizedBox(width: 10,),
                       Container(
-                        color: Colors.grey[200],
+                        color: Colors.grey[100],
                         height: 35,
                         width: 100,
                         padding: EdgeInsets.only(top: 5,bottom: 5,right:5,left: 5),
@@ -1091,7 +1255,7 @@ class _edit_delete extends State<edit_delete> {
                           children: [
                             Container(
                               width: 50,
-                              child:choose2?Text(widget.init1,
+                              child:choose2?Text(widget.init2,
                                 style: TextStyle(
                                   fontFamily: 'Changa',
                                   color: Color(0xFF1C1C1C),
@@ -1151,54 +1315,55 @@ class _edit_delete extends State<edit_delete> {
                 ),),
             ),
             Container(
-              margin: EdgeInsets.only(top:30),
-              color: Colors.grey.withOpacity(0.5),
+              margin: EdgeInsets.only(top:25),
+              color: Y,
               width: 200,
               child:GestureDetector(
                   child: Row(
                     children: <Widget>[
-                      SizedBox(width: 60),
-                      Icon(Icons.create),
-                      SizedBox(width: 30),
+                      SizedBox(width: 100),
                       Text('تعديل',
                         style:  TextStyle(
                           fontSize: 20.0,
                           fontFamily: 'Changa',
                           color: MY_BLACK,
                         ),),
-                      SizedBox(width: 5),
+                      Icon(Icons.edit),
+                      SizedBox(width: 10),
                     ],
                   ),
                   onTap: () async {
                     // senddata();
                     await check_Slot();
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: widget.time,),),);
+                    Fluttertoast.showToast(msg: " تم التعديل بنجاح ",fontSize: 16,textColor:Colors.black87,backgroundColor: Colors.white);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: widget.time,phone:widget.phone,name:widget.name,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst),),);
                   }),),
             Container(
-              margin: EdgeInsets.only(top:30),
-              color: Colors.grey.withOpacity(0.5),
+              margin: EdgeInsets.only(top:10),
+              color: Y,
               width: 200,
               child:GestureDetector(
                   child: Row(
                     children: <Widget>[
-                      SizedBox(width: 60),
-                      Icon(Icons.delete),
-                      SizedBox(width: 30),
+                      SizedBox(width: 100),
                       Text('حذف',
                         style:  TextStyle(
                           fontSize: 20.0,
                           fontFamily: 'Changa',
                           color: MY_BLACK,
                         ),),
-                      SizedBox(width: 5),
+                      SizedBox(width:10),
+                      Icon(Icons.delete),
+
                     ],
                   ),
                   onTap: () async {
                     // senddata();
                     await delete_Slot();
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time: widget.time,),),);
+                    Fluttertoast.showToast(msg: " تم الحذف بنجاح   ",fontSize: 16,textColor:Colors.black87,backgroundColor: Colors.white);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Worker_SLot(time:_selectedDay,phone:widget.phone,name:widget.name,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst),),);
                     setState(() {
                     });
                     if(description.text.isEmpty){
@@ -1217,7 +1382,7 @@ class _edit_delete extends State<edit_delete> {
     var formattedDate = DateFormat('yyyy-MM-dd').format(widget.time);
     var url='https://'+IP4+'/testlocalhost/delete_slot.php';
     var ressponse=await http.post(url,body: {
-      "phoneworker": '+970595320479',
+      "phoneworker": widget.phone,
       "date":formattedDate,
       "timestart":widget.init1,
       "timeend":widget.init2,
@@ -1232,7 +1397,7 @@ class _edit_delete extends State<edit_delete> {
     var formattedDate = DateFormat('yyyy-MM-dd').format(widget.time);
     var url='https://'+IP4+'/testlocalhost/update_slot.php';
     var ressponse=await http.post(url,body: {
-      "phoneworker": '+970595320479',
+      "phoneworker": widget.phone,
       "date":formattedDate,
       "timestart":widget.init1,
       "timeend":widget.init2,

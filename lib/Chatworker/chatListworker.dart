@@ -4,13 +4,10 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/Inside_the_app/WORKER_PROFILE.dart';
-import 'package:flutterphone/USER/user_Profile.dart';
-import 'package:flutterphone/USER/favarate.dart';
-import 'package:flutterphone/USER/user_reserve_order.dart';
-import 'package:flutterphone/Worker/PROFILE_PAGE_WORKER.dart';
-import 'package:flutterphone/screens/login_screen.dart';
-import 'package:flutterphone/screens/welcome.dart';
+import 'package:flutterphone/WORKER_SANAYEE/homepage.dart';
+import 'package:flutterphone/WORKER_SANAYEE/menue_Page.dart';
+import 'package:flutterphone/WORKER_SANAYEE/orders_workers.dart';
+import 'package:flutterphone/WORKER_SANAYEE/Profile.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../constants.dart';
 import '../database.dart';
@@ -24,9 +21,17 @@ class Chat extends StatefulWidget{
   final name_Me;
   final phone;
   Stream chatsRoomList;
-  final bool user;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  final lat;
+  final lng;
   @override
-  Chat({this.phone,this.name_Me,this.chatsRoomList,this.user});
+  Chat({this.lat,this.lng,this.phone,this.name_Me,this.chatsRoomList,this.namefirst,this.namelast,this.image, this.Work, this.Experiance, this.Information, this.token});
   _Chat createState() =>  _Chat();
 }
 class  _Chat extends State<Chat> {
@@ -44,21 +49,33 @@ class  _Chat extends State<Chat> {
   }
 
   Widget ChatsRoomList(){
-    return Container(
+    return Column(
+    children:[
+      Container(
+        // transform: Matrix4.translationValues(0, -100.0, 0),
+        margin:EdgeInsets.only(top:0),
+        width: double.infinity,
+        height: 170,
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+        ),
+        child: Image.asset('assets/work/intro3.jpg',width:500,fit: BoxFit.fitWidth,),
+      ),
+     Container(
       height: 500,
-      color: Colors.white,
       margin: EdgeInsets.only(top: 0),
+      transform: Matrix4.translationValues(0.0, -60, 0.0),
       child:StreamBuilder(stream: widget.chatsRoomList,
           builder: (context,snapshot){
             return snapshot.hasData?ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context,index){
                   print("ddd");
-                  return ChatRooTile(name: widget.user?snapshot.data.docs[index].data()["users"][1]:snapshot.data.docs[index].data()["users"][0],name_Me:widget.name_Me,user:widget.user);
+                  return ChatRooTile(name: snapshot.data.docs[index].data()["users"][0],name_Me:widget.name_Me);
                 }
             ):Container();
           }
-      ),);
+      ),),],);
   }
   getChat(){
     databaseMethods.getChatsMe(widget.name_Me).then((val){
@@ -73,7 +90,7 @@ class  _Chat extends State<Chat> {
     getChat();
     super.initState();
   }
-  int _selectedIndex=4;
+  int _selectedIndex=2;
   GlobalKey _bottomNavigationKey = GlobalKey();
   Stream chatsRoom;
   Widget build(BuildContext context) {
@@ -110,26 +127,6 @@ class  _Chat extends State<Chat> {
                       ),
                     ),
                     GButton(
-                      icon: Icons.person,
-                      text: 'حسابي',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
-                      icon: Icons.favorite_border,
-                      text: 'المفضلة',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
                       onPressed: (){
                       },
                       icon: Icons.calendar_today,
@@ -154,23 +151,44 @@ class  _Chat extends State<Chat> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    GButton(
+                      icon: Icons.person,
+                      text: 'حسابي',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.menu,
+                      text: 'القائمة',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                   selectedIndex: _selectedIndex,
                   onTabChange: (index) {
                     setState(() {
                       _selectedIndex = index;
                       if(index==0){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home_Page(name: widget.name_Me)));
                       }
-                      if(index==2){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.name_Me,phoneuser: widget.phone,)));
+                      if(index==1){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name_Me,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst,)));
                       }
                       if(index==3){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.name_Me,phoneuser: widget.phone,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PROFILE(lat:widget.lat,lng:widget.lng,name:widget.name_Me,phone:widget.phone,)));
                       }
-                      // if(index==4){
-                      //   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));
-                      // }
+                      if(index==4){
+                        DateTime date=DateTime.now();
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MenuePage(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name_Me,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst,)));
+                      }
 
 
                     });
@@ -196,23 +214,15 @@ class  _Chat extends State<Chat> {
       // ),
       body: Stack(
        children:[
-      GestureDetector(
-        onTap: (){widget.user?Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,))):Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => PROFILE(name: widget.name_Me,)));},
-        child:  Container(
-          margin: EdgeInsets.only(top: 70,right: 10),
-          child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
-          ),
-      ),
       Container(
-        height: 650,
+        height: 850,
         width: 500,
         //transform: Matrix4.translationValues(0.0, -30.0, 0.0),
-        margin: EdgeInsets.only(top: 90,bottom: 0),
+        margin: EdgeInsets.only(top: 0,bottom: 0),
         child:SingleChildScrollView(
           // child: Column(
           //   children: <Widget>[
           child:Container(
-           // transform: Matrix4.translationValues(0.0, -20.0, 0.0),
             child: ChatsRoomList(),),
           ),
         ),
@@ -226,8 +236,7 @@ class  _Chat extends State<Chat> {
 class ChatRooTile extends StatefulWidget {
   final name;
   final name_Me;
-  final bool user;
-  ChatRooTile({this.name,this.name_Me,this.user});
+  ChatRooTile({this.name,this.name_Me,});
   _ChatRooTile createState() =>  _ChatRooTile();
 }
 class  _ChatRooTile extends State<ChatRooTile> {
@@ -254,19 +263,21 @@ class  _ChatRooTile extends State<ChatRooTile> {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Container(
                height: 80,
-                // color:  Color(0xFFF3D657),
-                margin: EdgeInsets.only(top:0),
                 decoration: BoxDecoration(
-                  color: Colors.white
+                  color:  Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
                 ),
                 child:FutureBuilder(
-                  future: widget.user?getWorker():getUser(),
+                  future: getUser(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if(snapshot.hasData){
                       return ListView.builder(
                         itemCount: 1,
                         itemBuilder: (context, index) {
-                         return ChatBlock(user:widget.user,image:snapshot.data[index]['image'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],name:widget.name,name_Me:widget.name_Me);
+                         return ChatBlock(image:snapshot.data[index]['image'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],name:widget.name,name_Me:widget.name_Me);
                         },
                       );
                     }
@@ -284,8 +295,7 @@ class ChatBlock extends StatefulWidget {
   final image;
   final namefirst;
   final namelast;
-  final bool user;
-  ChatBlock({this.name,this.name_Me,this.namefirst,this.namelast,this.image,this.user});
+  ChatBlock({this.name,this.name_Me,this.namefirst,this.namelast,this.image,});
   _ChatBlock createState() =>  _ChatBlock();
 }
 class  _ChatBlock extends State<ChatBlock> {
@@ -294,8 +304,8 @@ class  _ChatBlock extends State<ChatBlock> {
   CreatChatRoom (){
     print(widget.name_Me);
     print(widget.name);
-    String chatRoomId= widget.user?getChatRoomId(widget.name,widget.name_Me):getChatRoomId(widget.name_Me,widget.name);
-    List<String>Users= widget.user?[widget.name_Me,widget.name]:[widget.name,widget.name_Me];
+    String chatRoomId= getChatRoomId(widget.name_Me,widget.name);
+    List<String>Users=[widget.name,widget.name_Me];
     Map<String,dynamic>ChatRoom={
       "users":Users,
       "chatroomid":chatRoomId

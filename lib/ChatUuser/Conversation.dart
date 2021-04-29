@@ -56,8 +56,8 @@ class  _Conversation extends State<Conversation> {
   Widget chatMassegeList(){
     print("dfgdg");
     return Container(
-       height: 500,
-        margin: EdgeInsets.only(top:0),
+      height: 600,
+      transform: Matrix4.translationValues(0.0,-10.0, 0.0),
         child:StreamBuilder(
         stream: chatMaasegesstream,
         builder: (context,snapshot){
@@ -122,18 +122,18 @@ class  _Conversation extends State<Conversation> {
                         GestureDetector(
                           onTap: (){
                             //Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true,phone:phone,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,phone:phone,)));
                           },
                           child:  Container(
-                             margin: EdgeInsets.only(right: 10,left:10),
-                            child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
+                            margin: EdgeInsets.only(right: 10,left:0),
+                            child:Icon(Icons.arrow_back_ios,color: Colors.black54,size:18,),
                           ),
                         ),
                         Container(
                           // margin: EdgeInsets.only(right:50,top: 75),
                           child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 25.0,),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width:10,),
                         Container(
                           // margin: EdgeInsets.only(top:85,right:115),
                           child: Text(widget.namefirst+ " "+widget.namelast,
@@ -155,19 +155,19 @@ class  _Conversation extends State<Conversation> {
                    ),
                  ),
                 Container(
-                  height:655,
+                  height:662,
                   child: SingleChildScrollView(
                     child:Column(
                       children: [
                         Container(
-                          height: 606,
+                          height: 600,
                           child:chatMassegeList(),
                         ),
                         Container(
                           margin: EdgeInsets.only(top:0),
                           //alignment: Alignment.bottomCenter,
                           width: 520,
-                          height: 55,
+                          height: 60,
                           decoration: BoxDecoration(
                             color: Colors.white,
                           ),
@@ -189,7 +189,7 @@ class  _Conversation extends State<Conversation> {
                                       // size: 26.0,
                                     ),
                                     shape: new CircleBorder(),
-                                    color: D,
+                                    color: Y,
                                   ),),),
                               Container(
                                 width: 275,
@@ -286,7 +286,7 @@ class MessageTile extends StatelessWidget {
               // width: MediaQuery.of(context).size.width*0.5,
               padding: EdgeInsets.symmetric(horizontal: 24,vertical: 11),
               decoration: BoxDecoration(
-                  color:isSendByMe?D.withOpacity(0.7):Colors.grey.withOpacity(0.5),
+                  color:isSendByMe?Y.withOpacity(0.8):Colors.grey.withOpacity(0.5),
                   borderRadius: isSendByMe?BorderRadius.only(
                   topRight:Radius.circular(19),
                   topLeft: Radius.circular(19),

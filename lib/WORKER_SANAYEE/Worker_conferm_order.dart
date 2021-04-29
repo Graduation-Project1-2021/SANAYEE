@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
+import 'package:flutterphone/USER/user_search_map.dart';
 import 'package:flutterphone/WORKER_SANAYEE/State_order_accept.dart';
 import 'package:flutterphone/constants.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -21,7 +22,16 @@ class accept_order extends StatefulWidget {
   final phone;
   final DateTime time;
   final name;
-  accept_order({this.phone,this.time,this.name});
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  final lat;
+  final lng;
+  accept_order({this.lat,this.lng,this.phone,this.time,this.name,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   @override
   _accept_order createState() => _accept_order();
 }
@@ -86,36 +96,29 @@ class _accept_order extends State<accept_order> {
       child:Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey[50],
             key: _scaffoldKey,
             body: Form(
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 50,left:365),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => order_worker(phone: widget.phone,name:widget.name,)));
-                      //  Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                      //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-                    }),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => order_worker(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,name:widget.name,phone:widget.phone,image:widget.image,token:widget.token,namefirst:widget.namefirst)));},
+                    child:Container(
+                      margin: EdgeInsets.only(top:70,left:370),
+                      child:Icon(Icons.arrow_back,color: Colors.black,),),
                   ),
-                  // Image.asset(
-                  //   "assets/icons/ho.jpg",
-                  //   height:250,
-                  //   width:450,
-                  //   fit: BoxFit.fill,
-                  // ),
                   SingleChildScrollView(
                     child:  Container(
-                      height: 694.5,
+                      height: 702,
                       width: 500,
-                      margin: EdgeInsets.only(top: 5),
+                      margin: EdgeInsets.only(top: 0),
                       // color:  Color(0xFFF3D657),
                       //padding:EdgeInsets.only(right:25,left: 25),
                       decoration: BoxDecoration(
-                        color:Colors.white,
+                        color:Colors.grey[50],
                         // borderRadius: BorderRadius.only(
                         //   topLeft: Radius.circular(50),
                         //   topRight: Radius.circular(50),
@@ -130,7 +133,7 @@ class _accept_order extends State<accept_order> {
                               itemBuilder: (context, index) {
                                 var Listorder=snapshot.data;
                                 //if(Listslot=='NO Date'){return Container();}
-                                return order(List1:Listorder,phone: widget.phone,time: widget.time,);
+                                return order(lat:widget.lat,lng:widget.lng,List1:Listorder,phone: widget.phone,time: widget.time,workername:widget.name,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,);
                                 // return slot(List1:Listslot,time: widget.time,);
                               },
                             );
@@ -147,9 +150,19 @@ class _accept_order extends State<accept_order> {
 
 class order extends StatefulWidget {
   final phone;
+  final workername;
   final DateTime time;
   List<dynamic> List1;
-  order({this.phone,this.List1,this.time});
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  final lat;
+  final lng;
+  order({this.lat,this.lng,this.workername,this.phone,this.List1,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   @override
   _order createState() => _order();
 }
@@ -206,7 +219,7 @@ class _order extends State<order> {
     print(formattedDate);
       print("Nulllll");
       // print(_selectedDay);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => accept_order(phone:widget.phone,time: _selectedDay,),),);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => accept_order(lat:widget.lat,lng:widget.lng,name:widget.workername,phone:widget.phone,time: _selectedDay,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,),),);
 
   }
   Future getallorders() async {
@@ -224,12 +237,13 @@ class _order extends State<order> {
     _fetchEvents();
     print(widget.List1);
     return Container(
-      height: 690,
+      height: 700,
+      transform: Matrix4.translationValues(0.0, -42.0, 0.0),
       color: Colors.white,
-      transform: Matrix4.translationValues(0.0, -40.0, 0.0),
       child:Column(
         children:<Widget>[
-          StreamBuilder<Map<DateTime, List>>(
+          Container(color: Colors.grey[50],
+          child:StreamBuilder<Map<DateTime, List>>(
             stream: _streamController.stream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -263,8 +277,8 @@ class _order extends State<order> {
                   rightChevronMargin: EdgeInsets.only(right: 70),
                 ),
                 calendarStyle: CalendarStyle(
-                    todayColor: Colors.blue.withOpacity(0.2),
-                    selectedColor: Colors.blue,
+                    todayColor: Colors.grey[200],
+                    selectedColor: Y,
                     weekendStyle: TextStyle(
                         color: Colors.black
                     ),
@@ -274,33 +288,40 @@ class _order extends State<order> {
                 ),
                 daysOfWeekStyle: DaysOfWeekStyle(
                     weekendStyle: TextStyle(
-                        color: Colors.black,
+                      color: Colors.black,
                     ),
                     weekdayStyle: TextStyle(
                         color: Colors.black
                     )
 
-                ),);},),
+                ),);},) ,),
               Container(
-                height: 500,
-                margin: EdgeInsets.only(top: 20),
+                height: 532,
+                color: Colors.white,
+                margin: EdgeInsets.only(top: 35),
                 child: Container(
                   child:FutureBuilder(
                     future: getallorders(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if(snapshot.hasData){
+                        if(snapshot.data.length==0) {
+                          return Empty();
+                        }
                         return ListView.builder(
                           itemCount:snapshot.data.length,
                           itemBuilder: (context, index) {
                             print(snapshot.data[index]['id']);
                             print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
-                            return order_accept(timesend:snapshot.data[index]['timesend'],timeaccept:snapshot.data[index]['timeaccept'],datesend:snapshot.data[index]['datesend'],dateaccept:snapshot.data[index]['dateaccept'],image:snapshot.data[index]['image'],phoneworker:widget.phone,description:snapshot.data[index]['description'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phoneworker'],name:snapshot.data[index]['username'],date:snapshot.data[index]['date'],timestart:snapshot.data[index]['timestart'],timeend:snapshot.data[index]['timeend'],Am_Pm:snapshot.data[index]['Am_Pm'],id:snapshot.data[index]['id']);
+                            DateTime date=DateTime.parse("2020-05-12 "+snapshot.data[index]['timesend'].toString());
+                            DateTime acc=DateTime.parse("2020-05-12 "+snapshot.data[index]['timeaccept'].toString());
+                            return order_accept(namefirstworker:widget.namefirst,namelastworker:widget.namelast,tokenworker:widget.token,imageworker:widget.image,work:widget.Work,Information:widget.Information,Experiance:widget.Experiance,lnguser:snapshot.data[index]['lng'],latuser:snapshot.data[index]['lat'],lat:widget.lat,lng:widget.lng,city:snapshot.data[index]['city'],country:snapshot.data[index]['country'],orderimage:snapshot.data[index]['orderimage'],workername:widget.workername,ChooseDate:_selectedDay,timesend:date.hour.toString()+":"+date.minute.toString(),timeaccept:acc.hour.toString()+":"+acc.minute.toString(),datesend:snapshot.data[index]['datesend'],dateaccept:snapshot.data[index]['dateaccept'],image:snapshot.data[index]['image'],phoneworker:widget.phone,description:snapshot.data[index]['description'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phoneuser'],name:snapshot.data[index]['username'],date:snapshot.data[index]['date'],timestart:snapshot.data[index]['timestart'],timeend:snapshot.data[index]['timeend'],Am_Pm:snapshot.data[index]['Am_Pm'],id:snapshot.data[index]['id']);
                             },
                         );
                       }
                       return Center(child: Container());
                       },
-                  ),),
+                  ),
+                ),
                 // Column(
                 //   children: [
                                   //     dayTask("10 am", "Michael Hamilton"),
@@ -313,6 +334,92 @@ class _order extends State<order> {
   }
 }
 
+class Empty extends StatefulWidget {
+  @override
+  final phone;
+  final DateTime time;
+  final name;
+  final  image;
+  final  Work;
+  final  Experiance;
+  final  Information;
+  final  token;
+  final namefirst;
+  final namelast;
+  final lat;
+  final lng;
+  Empty({this.lat,this.lng,this.phone,this.time,this.name,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
+  _Empty createState() => _Empty();
+}
+
+class _Empty extends State<Empty> {
+  CalendarController _calendarController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _calendarController = CalendarController();
+    // _streamController = StreamController();
+  }
+
+  @override
+  void _onDaySelected(DateTime day, List events,List r) {
+    _selectedDay = day;
+    var dateParse = DateTime.parse(_selectedDay.toString());
+    var formattedDate = DateFormat('yyyy-MM-dd').format(day);
+    print(formattedDate);
+    print("Nulllll");
+    // print(_selectedDay);
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,time:_selectedDay,)));
+
+  }
+  @override
+  int _page = 0;
+  bool image = false;
+  GlobalKey _bottomNavigationKey = GlobalKey();
+
+  Widget build(BuildContext context) {
+    return Container(
+      height: 650,
+      // transform: Matrix4.translationValues(0.0, -100.0, 0.0),
+      color: Colors.white,
+      child: Column(
+          children: <Widget>[
+            // final events = snapshot.data;
+            Expanded(
+              child: Container(
+                width: 500,
+                height: 400,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 150,),
+                    Center(
+                      child: Text('لا توجد لديك مواعيد في هذا اليوم',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 15.0,
+                          fontFamily: 'Changa',
+                          fontWeight: FontWeight.bold,
+                        ),),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          ]
+      ),
+    );
+  }
+}
+
+
+
 
 class order_accept  extends StatefulWidget {
   final  date;
@@ -321,6 +428,8 @@ class order_accept  extends StatefulWidget {
   final  Am_Pm;
   final AVG;
   final id;
+  final Information;
+  final Experiance;
   final name;
   final phone;
   final namefirst;
@@ -340,8 +449,20 @@ class order_accept  extends StatefulWidget {
   final  token;
   final workertoken;
   final index;
+  final ChooseDate;
+  final workername;
+  final orderimage;
+  final city;
+  final lat;
+  final lng;
+  final latuser;
+  final lnguser;
+  final namefirstworker;
+  final namelastworker;
+  final imageworker;
+  final tokenworker;
   //
-  order_accept({this.datecancel,this.timecancel,this.index,this.AVG,this.token,this.workertoken,this.timeaccept,this.dateaccept,this.datesend,this.timesend,this.description,this.id,this.country,this.phoneworker,this.work,this.image,this.namefirst,this.namelast,this.name,this.date, this.timeend, this.timestart, this.Am_Pm,this.phone, this.time});
+  order_accept({this.namefirstworker,this.namelastworker,this.imageworker,this.tokenworker,this.Experiance,this.Information,this.work,this.latuser,this.lnguser,this.lng,this.lat,this.city,this.orderimage,this.workername,this.ChooseDate,this.datecancel,this.timecancel,this.index,this.AVG,this.token,this.workertoken,this.timeaccept,this.dateaccept,this.datesend,this.timesend,this.description,this.id,this.country,this.phoneworker,this.image,this.namefirst,this.namelast,this.name,this.date, this.timeend, this.timestart, this.Am_Pm,this.phone, this.time});
 
   @override
   _order_accept createState() => _order_accept();
@@ -354,7 +475,7 @@ class _order_accept extends State<order_accept> {
 
     return Column(
       children:[
-        card(widget.date,widget.namefirst+" "+widget.namelast,widget.timestart,'8:00','am',widget.image,widget.work),
+        card(widget.date,widget.namefirst+" "+widget.namelast,widget.timestart,widget.timeend,widget.Am_Pm,widget.image,widget.work),
       ],
     );
 
@@ -363,18 +484,19 @@ class _order_accept extends State<order_accept> {
   {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(name:widget.name,id:widget.id,timesend:widget.timesend,timeaccept:widget.timeaccept,dateaccept:widget.dateaccept,datesend:widget.datesend,date:widget.date,time:widget.timestart+"-"+widget.timeend,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
+        print("SDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"+widget.workername);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(tokenworker:widget.tokenworker,imageworker:widget.imageworker,namelastworker:widget.namelastworker,namefirstworker:widget.namefirstworker,Experiance:widget.Experiance,Information:widget.Information,work:widget.work,country:widget.country,city:widget.city,latuser:widget.latuser,lnguser:widget.lnguser,lat:widget.lat,lng:widget.lng,Am_Pm:widget.Am_Pm,orderimage:widget.orderimage,workername:widget.workername,ChooseDate:widget.ChooseDate,name:widget.name,id:widget.id,timesend:widget.timesend,timeaccept:widget.timeaccept,dateaccept:widget.dateaccept,datesend:widget.datesend,date:widget.date,time:widget.timestart+" - "+widget.timeend,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
       },
       child:Container(
-        width: 350,
-        height: 160,
+        width: 380,
+        height: 165,
         alignment: Alignment.topRight,
         decoration: BoxDecoration(
-          color:Colors.blue.withOpacity(0.2),
+          color:Colors.grey[50],
           borderRadius: BorderRadius.circular(5),
         ),
         margin: EdgeInsets.only(bottom: 20,),
-        padding: EdgeInsets.only(right: 10,top: 10,bottom: 10),
+        padding: EdgeInsets.only(right: 20,top: 20,bottom: 10),
         child:Column(
           children: [
             // Container(
@@ -384,70 +506,48 @@ class _order_accept extends State<order_accept> {
             //     radius: 25.0,),),
             Container(
               alignment: Alignment.topRight,
-              child: Text(widget.namefirst+" "+widget.namelast, style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-                fontFamily: 'Changa',
-              ),
-              ),
-            ),
-            // Container(
-            //   alignment: Alignment.topRight,
-            //   child:  Text(work, style: TextStyle(
-            //     fontSize: 15,
-            //     fontWeight: FontWeight.w700,
-            //     color: Colors.black54,
-            //     fontFamily: 'Changa',
-            //   ),
-            //   ),
-            // ),
-            SizedBox(height:10,),
-            Row(
-              children: [
-                Container(
-                  width:110,
-                  child:Text('التاريخ', style: TextStyle(
-                    fontSize: 17,
+              child:Row(
+                children: [
+                  Text('اسم العميل    ', style: TextStyle(
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black,
+                    color: Colors.black87,
                     fontFamily: 'Changa',
                   ),
                   ),
-                ),
-                Container(
-                  width:170,
-                  child:Text('الوقت', style: TextStyle(
-                    fontSize: 17,
+                  Text(widget.namefirst+" "+widget.namelast, style: TextStyle(
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Colors.black,
+                    color: Colors.black54,
                     fontFamily: 'Changa',
                   ),
                   ),
-                ),
-              ],
+                ],
+              ),
+
             ),
             Container(
-              width: 350,
+              width: 370,
+              margin: EdgeInsets.only(top:3),
               child:  Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Directionality(textDirection: ui.TextDirection.ltr,
-                    child:Container(
-                      width: 110,
-                      alignment: Alignment.topRight,
-                      child:Text(date, style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black54,
-                        fontFamily: 'Changa',
-                      ),),),
+                  Container(
+                    width:83,
+                    child:Text('الوقت', style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                      fontFamily: 'Changa',
+                    ),
+                    ),
                   ),
+                  // Icon(Icons.access_time_rounded,size:20,color:Colors.black87,),
+                  // SizedBox(width: 30,),
                   Container(child:Row(
                     children: [
-                      SizedBox(width: 5,),
-                      Text(timestart +"-" +timeend, style: TextStyle(
-                        fontSize: 15,
+                      Text(timestart +" - " +timeend, style: TextStyle(
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: Colors.black54,
                         fontFamily: 'Changa',
@@ -461,6 +561,116 @@ class _order_accept extends State<order_accept> {
                       ),),
                     ],
                   ),),
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.topRight,
+              margin: EdgeInsets.only(top:3),
+              child:Row(
+                children: [
+                  Text('الموقع  ', style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                    fontFamily: 'Changa',
+                  ),
+                  ),
+                  SizedBox(width: 30,),
+                  Text(""+widget.country+" ("+widget.city+") ", style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black54,
+                    fontFamily: 'Changa',
+                  ),
+                  ),
+                  Icon(Icons.location_on,size:20,color:Colors.black87,),
+                ],
+              ),
+
+            ),
+
+            SizedBox(height:10,),
+            // Row(
+            //   children: [
+            //     Container(
+            //       width:110,
+            //       child:Text('التاريخ', style: TextStyle(
+            //         fontSize: 14,
+            //         fontWeight: FontWeight.w700,
+            //         color: Colors.black87,
+            //         fontFamily: 'Changa',
+            //       ),
+            //       ),
+            //     ),
+            //     Container(
+            //       width:170,
+            //       child:Text('الوقت', style: TextStyle(
+            //         fontSize: 14,
+            //         fontWeight: FontWeight.w700,
+            //         color: Colors.black87,
+            //         fontFamily: 'Changa',
+            //       ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // Container(
+            //   width: 370,
+            //   child:  Row(
+            //     crossAxisAlignment: CrossAxisAlignment.center,
+            //     children: [
+            //       Directionality(textDirection: ui.TextDirection.ltr,
+            //         child:Container(
+            //           width: 110,
+            //           alignment: Alignment.topRight,
+            //           child:Text(date, style: TextStyle(
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.w700,
+            //             color: Colors.black54,
+            //             fontFamily: 'Changa',
+            //           ),),),
+            //       ),
+            //       Container(child:Row(
+            //         children: [
+            //           Text(timeend +" - " +timestart, style: TextStyle(
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.w700,
+            //             color: Colors.black54,
+            //             fontFamily: 'Changa',
+            //           ),),
+            //           Text(" "),
+            //           Text(Am_Pm=="am"?"صباحا":"مساء", style: TextStyle(
+            //             fontSize: 15,
+            //             fontWeight: FontWeight.w700,
+            //             color: Colors.black54,
+            //             fontFamily: 'Changa',
+            //           ),),
+            //         ],
+            //       ),),
+            //     ],
+            //   ),
+            // ),
+            Container(
+              margin:EdgeInsets.only(top: 10.0,right:280),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Text('عرض المزيد',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Y,
+                              fontFamily: 'Changa',
+                            ),),
+                          // Icon(Icons.keyboard_arrow_down,size: 20,),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -479,125 +689,6 @@ class _order_accept extends State<order_accept> {
       //   ), textAlign: TextAlign.right,),
       // ),
     );
-  }
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      //this means the user must tap a button to exit the Alert Dialog
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.only(right: 50,left:10,top: 30),
-          titlePadding: EdgeInsets.only(right: 50,left:50,top: 30),
-          content: Text('هل تريد حذف هذا الطلب ',
-            style: TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
-              fontFamily: 'Changa',
-            ),),
-          actions: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10,bottom: 20,top: 30),
-              child:FlatButton(
-                child: Text('نعم',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600],
-                    fontFamily: 'Changa',
-                  ),),
-                onPressed: () {
-                  //h(context,MaterialPageRoute(builder: (BuildContext context) =>work_order(phone: widget.phone,List1: List,ListDate:DateList,)));
-                },
-              ),),
-            Container(
-              margin: EdgeInsets.only(left: 10,bottom: 20,top: 30),
-              child:FlatButton(
-                child: Text('لا',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600],
-                    fontFamily: 'Changa',
-                  ),),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),),
-          ],
-        );
-      },
-    );
-  }
-  Future<void> _showMyAccept() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      //this means the user must tap a button to exit the Alert Dialog
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.only(right: 50,left:10,top: 30),
-          titlePadding: EdgeInsets.only(right: 50,left:50,top: 30),
-          content: Text('هل تريد قبول هذا الطلب ',
-            style: TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
-              fontFamily: 'Changa',
-            ),),
-          actions: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10,bottom: 20,top: 30),
-              child:FlatButton(
-                child: Text('نعم',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600],
-                    fontFamily: 'Changa',
-                  ),),
-                onPressed: () {
-                  //sh(context,MaterialPageRoute(builder: (BuildContext context) =>work_order(phone: widget.phone,List1: List,ListDate:DateList,)));
-                },
-              ),),
-            Container(
-              margin: EdgeInsets.only(left: 10,bottom: 20,top: 30),
-              child:FlatButton(
-                child: Text('لا',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600],
-                    fontFamily: 'Changa',
-                  ),),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),),
-          ],
-        );
-      },
-    );
-  }
-  Future delete (final id)async{
-    var url = 'https://'+IP4+'/testlocalhost/deleteorder.php';
-    var response = await http.post(url, body: {
-      "id":id,
-    });
-    String massage = json.decode(response.body);
-    print(massage);
-    setState(() {
-
-    });
-  }
-  Future accept (final id)async{
-    var url = 'https://'+IP4+'/testlocalhost/acceptorder.php';
-    var response = await http.post(url, body: {
-      "id":id,
-    });
-    // String massage = json.decode(response.body);
-    // print(massage);
   }
 
 }

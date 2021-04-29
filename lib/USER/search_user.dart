@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutterphone/USER/user_Profile.dart';
+import 'package:flutterphone/USER/userLocation.dart';
+import 'package:flutterphone/USER/userlocation_avalibel.dart';
+import 'package:flutterphone/USER/userlocation_avalibel_rate.dart';
+import 'package:flutterphone/USER/userlocation_rate.dart';
 import 'package:flutterphone/components/Drop_Down_country.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 
+import '../constants.dart';
 import 'Comment.dart';
 import 'WORKER_PROFILE.dart';
 String IP4="192.168.1.8";
@@ -55,7 +61,10 @@ class _HomeState extends State<Search_user> {
         top: 180,
         //right: 40,
         height: 500,
-        child: Drop_country(
+
+        child: Container(
+          //color: Colors.red,
+          child: Drop_country(),
         ),
       );
     });
@@ -165,16 +174,37 @@ class _HomeState extends State<Search_user> {
   bool button2=false;
   bool button3=false;
   bool button4=true;
-
-
+  bool button5=false;
 //Build our Home widget
   @override
   Widget build(BuildContext context) {
+    print(widget.name_Me);
+    print(widget.nameLast_Me);
+    print(widget.namefirst_Me);
+    print(widget.phone_Me);
+    print(widget.token_Me);
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child:Scaffold(
+        backgroundColor: Colors.grey[50],
         appBar: new AppBar(
-          title: new Text("SearchView ListView"),
+          backgroundColor: Y,
+          leading:GestureDetector(
+            onTap:(){
+              Navigator.pop(context,);
+             // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+            },
+            child:Icon(Icons.arrow_back,color: Colors.white,),
+          ),
+          title: new Text(widget.work,
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Changa',
+              color: Colors.white,
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -218,7 +248,7 @@ class _HomeState extends State<Search_user> {
                         width:50,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color:button1==true?Colors.red:Colors.white,
+                          color:button1==true?Y:Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text('الكل',
@@ -226,12 +256,12 @@ class _HomeState extends State<Search_user> {
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Changa',
-                            color: Colors.black54,
+                            color: Colors.black87,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 30,),
+                    SizedBox(width:20,),
                     GestureDetector(
                       onTap: (){
                         button1=false;
@@ -241,10 +271,10 @@ class _HomeState extends State<Search_user> {
                         });
                       },
                       child: Container(
-                        width:50,
+                        width:70,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color:button2==true?Colors.red:Colors.white,
+                          color:button2==true?Y:Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text('المتاحين',
@@ -252,13 +282,13 @@ class _HomeState extends State<Search_user> {
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Changa',
-                            color: Colors.black54,
+                            color: Colors.black87,
                           ),
                         ),
 
                       ),
                     ),
-                    SizedBox(width: 30,),
+                    SizedBox(width:20,),
                     GestureDetector(
                       onTap: (){
                         button3=!button3;
@@ -267,8 +297,10 @@ class _HomeState extends State<Search_user> {
                         });
                       },
                       child: Container(
+                        width: 40,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color:button3==true?Colors.red:Colors.white,
+                          color:button3==true?Y:Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text('الريت',
@@ -276,33 +308,36 @@ class _HomeState extends State<Search_user> {
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Changa',
-                            color: Colors.black54,
+                            color: Colors.black87,
                           ),
                         ),
 
                       ),
                     ),
-                    SizedBox(width: 30,),
+                    SizedBox(width: 20,),
                     GestureDetector(
                       onTap: (){
                         button4=!button4;
+                        button5=false;
                         setState(() {
 
                         });
                       },
                       child: Container(
                         width: 120,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color:button4==true?Colors.red:Colors.white,
+                          color:button4==true?Y:Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: <Widget>[
+                            SizedBox(width: 10,),
                             Text(country_id,
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontFamily: 'Changa',
-                                color: Colors.black,
+                                color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -328,26 +363,42 @@ class _HomeState extends State<Search_user> {
                           ],
                         ),
                       ),),
-                    SizedBox(width: 30,),
-                    SizedBox(width: 30,),
+                    SizedBox(width: 20,),
                     GestureDetector(
+                      onTap: (){
+                        button5=!button5;
+                        button4=false;
+                        setState(() {
+
+                        });
+                      },
                       child: Container(
+                        width: 110,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color:button5==true?Y:Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Text('الأقرب لمنطقتك',
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Changa',
-                            color: Colors.black54,
+                            color: Colors.black87,
                           ),
                         ),
 
                       ),
                     ),
+                    SizedBox(width: 20,),
                   ],
                 ),
               ),
             ),
-
+            Container(
+              margin: EdgeInsets.only(top: 105,right: 375),
+              child:Icon(Icons.arrow_forward_ios,size: 18,color: Colors.black87,),
+            ),
             button1==true && button3==false && button2==false && button4==false?  Container(
               height: 500,
               width: 500,
@@ -365,6 +416,7 @@ class _HomeState extends State<Search_user> {
                 future: getSearchall(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if(snapshot.hasData){
+                    print("SARAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
                     return ListView.builder(
                       itemCount:snapshot.data.length,
                       itemBuilder: (context, index) {
@@ -372,9 +424,18 @@ class _HomeState extends State<Search_user> {
                         double Rate;
                         if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
                         {return Container();}
-                        if(snapshot.data[index]['AVG']==null){Rate=0.0;}
+                        if(snapshot.data[index]['AVG']==null){Rate=0.0;
+                        }
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        print(snapshot.data.length);
+                        print(snapshot.data[index]['name']);print(snapshot.data[index]['namefirst']);
+                        print(snapshot.data.length);
+                        print(snapshot.data.length);
+                        print(snapshot.data.length);
+
+
+
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -409,7 +470,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -444,7 +505,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -479,7 +540,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -514,7 +575,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -546,11 +607,9 @@ class _HomeState extends State<Search_user> {
                         print(snapshot.data.length);print('bbbbbbbbbbbbbbbbbbbbb');
                         var Listslot=snapshot.data;print(country_id.toString());
                         double Rate;
-                        if(snapshot.data[index]['name']==null && snapshot.data[index]['namefirst']==null && snapshot.data[index]['namelast']==null && snapshot.data[index]['phone']==null && snapshot.data[index]['image']==null && snapshot.data[index]['Work']==null && snapshot.data[index]['Experiance']==null && snapshot.data[index]['Information']==null && snapshot.data[index]['token']==null)
-                        {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -586,7 +645,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -622,7 +681,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:widget.country,token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -658,7 +717,7 @@ class _HomeState extends State<Search_user> {
                         {return Container();}
                         if(snapshot.data[index]['AVG']==null){Rate=0.0;}
                         else{ Rate =roundDouble(double.parse(snapshot.data[index]['AVG']),1);}
-                        return Group(token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
+                        return Group(client_num:snapshot.data[index]['Client'],country:snapshot.data[index]['country'],token_Me:widget.token_Me,namefirst_Me:widget.namefirst_Me,nameLast_Me:widget.nameLast_Me,phone_Me:widget.phone_Me,image_Me:widget.image_Me,Rate:Rate,name_Me:widget.name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
                         return Container(child: Text('bggngn'),);
                       },
                     );
@@ -667,7 +726,18 @@ class _HomeState extends State<Search_user> {
                 },
               ),
             ):Container(),
-
+            button5==true && button3==false && button2==false? Container(
+                margin: EdgeInsets.only(top:150),
+                child:Search_map(work: widget.work,),) :Container(),
+            button5==true && button3==true && button2==false? Container(
+              margin: EdgeInsets.only(top:150),
+              child:Search_map_rate(work: widget.work,),) :Container(),
+            button5==true && button3==false && button2==true? Container(
+              margin: EdgeInsets.only(top:150),
+              child:Search_map_avalibel(work: widget.work,),) :Container(),
+            button5==true && button3==true && button2==true? Container(
+              margin: EdgeInsets.only(top:150),
+              child:Search_map_avalibel_rate(work: widget.work,),) :Container(),
             new Container(
               margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 0.0),
               child: new Column(
@@ -683,13 +753,20 @@ class _HomeState extends State<Search_user> {
       ),);
   }
   Widget Drop_country(){
-    return Column(
+    return Container(
+        child:Column(
       children: <Widget>[
-        SizedBox(
-          height: 5,
+        Container(
+          margin: EdgeInsets.only(top: 40,right: 50),
+          decoration: BoxDecoration(
+
+          ),
+          child:Icon(Icons.arrow_drop_up,size: 50,color: Colors.white,),
+
         ),
         Container(
-          margin: EdgeInsets.only(left: 50,top: 50),
+          transform: Matrix4.translationValues(0.0, -18.0, 0.0),
+          margin: EdgeInsets.only(left: 40,top: 0),
           child:Material(
             elevation: 5,
             //shape: ArrowShape(),
@@ -698,10 +775,15 @@ class _HomeState extends State<Search_user> {
               width: 120,
               //margin: EdgeInsets.only(right: 50),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(20),
               ),
               child:SingleChildScrollView(
-                child: Column(
+                child:Container(
+                  decoration: BoxDecoration(
+                    color:button4==true?Y2:Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Column(
                   children: <Widget>[
                     DropDownItem_country("جنين"),
                     DropDownItem_country("نابلس"),
@@ -719,8 +801,8 @@ class _HomeState extends State<Search_user> {
                 ),
               ),
             ),
-          ),),],
-    );
+          ),),),],
+        ),);
   }
   Widget DropDownItem_country(String text) {
 
@@ -836,7 +918,8 @@ class _HomeState extends State<Search_user> {
 
     return new Container(
       height: 55,
-      margin: EdgeInsets.only(top: 30),
+      width: 430,
+      margin: EdgeInsets.only(top: 30,right: 0,left: 10),
       padding: EdgeInsets.only(right: 10),
       // decoration: BoxDecoration(border: Border.all(width: 1.0)),
       child: new TextField(
@@ -925,9 +1008,10 @@ class _HomeState extends State<Search_user> {
         SingleChildScrollView(
           child:Directionality(textDirection: TextDirection.ltr,
             child:Container(
-              width: 370,
+              width: 390,
               height: 200,
-              alignment: Alignment.topRight,
+              margin:EdgeInsets.only(left: 10,right: 10),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -971,6 +1055,7 @@ class Group  extends StatefulWidget {
   final  namelast;
   final  phone;
   final  image;
+  final country;
   final  Work;
   final  Experiance;
   final  Information;
@@ -981,163 +1066,97 @@ class Group  extends StatefulWidget {
   final phone_Me;
   final image_Me;
   final token_Me;
+  final int post_numper;
+  final client_num;
+  final int comment_num;
 
-  Group({this.token_Me,this.phone_Me,this.nameLast_Me,this.namefirst_Me,this.image_Me,this.Rate,this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  Group({this.post_numper,this.client_num,this.comment_num,this.country,this.token_Me,this.phone_Me,this.nameLast_Me,this.namefirst_Me,this.image_Me,this.Rate,this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
 
   @override
   _Group createState() => _Group();
 }
 
 class _Group extends State<Group> {
+  var ma="";
   @override
-  void initState() {
+  void initState(){
+    getpost();
     super.initState();
   }
 
-  Future getImages() async {
-    var url = 'https://' + IP4 + '/testlocalhost/Show_EXP.php';
+  Future getComment() async {
+    var url = 'https://' + IP4 + '/testlocalhost/getcomment.php';
     var ressponse = await http.post(url, body: {
       "phone": widget.phone,
     });
     // ignore: deprecated_member_use
     // var responsebody = json.decode(ressponse.body);
     // print(responsebody);
+
     return json.decode(ressponse.body);
   }
-
+  var List_Post=[];
+  Future getpost()async{
+    var url='https://'+IP4+'/testlocalhost/getpost.php';
+    var ressponse=await http.post(url,body: {
+      "phone": widget.phone,
+    });
+    List_Post=await json.decode(ressponse.body);
+    // ignore: deprecated_member_use
+    return json.decode(ressponse.body);
+  }
   @override
   Widget build(BuildContext context) {
+    print(List_Post.toString());
     return GestureDetector(
       onTap: (){
         print(widget.phone); print(widget.name_Me); print(widget.phone_Me);
         print(widget.token); print(widget.token_Me);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:widget.Work,image:widget.image,phone:widget.phone,name: widget.name,namelast:widget.namelast,name_Me: widget.name_Me,namefirst: widget.namefirst,token: widget.token,Information: widget.Information,Experiance:widget.Experiance,),));
+            MaterialPageRoute(builder: (context) => user_worker(List_Post:List_Post,client_num: widget.client_num,comment: ma,country:widget.country,phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:widget.Work,image:widget.image,phone:widget.phone,name: widget.name,namelast:widget.namelast,name_Me: widget.name_Me,namefirst: widget.namefirst,token: widget.token,Information: widget.Information,Experiance:widget.Experiance,),));
       },
       child: Container(
-        height: 150,
+
+        height: 135,
         width: 200,
         decoration: BoxDecoration(
           //color:Colors.white,
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          // boxShadow: [
-          //   BoxShadow(
-          //     offset: Offset(0, 1),
-          //     blurRadius: 20,
-          //     color: Color(0xFFECCB45),
-          //   ),
-          // ],
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 1),
+              blurRadius: 1,
+              color: Colors.grey,
+            ),
+          ],
         ),
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
 
         child: Column(
           children: <Widget>[
             Stack(children: [
-              Row(
-                children: [
-                  Container(
-                    // print(_image[index].id+"");
-                    width: 80,
-                    height: 80,
-                    margin: EdgeInsets.only(right: 10,top:0),
-                    decoration: BoxDecoration(
-                      color:Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child:Column(
-                      children: [
+              Container(
+                height: 135,
+                child: FutureBuilder(
+                    future: getComment(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        print("SARAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhhhhhhhhh");
+                        //_MyHomePageState c= new _MyHomePageState();
+                        return ListView.builder(
+                          itemCount: 1,
+                          itemBuilder: (context, index) {
+                            ma=snapshot.data[index]['count'];
+                            return row_worker();
+                          },);
+                      }
+                      return Container(
+                        child:Text(''),
+                      );
 
-                        Container(
-                          width: 200,
-                          height: 30,
-                          //color: Colors.red,
-                          margin: EdgeInsets.only(right: 10,top: 15),
-                          child: Text(widget.namefirst + " " + widget.namelast,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontFamily: 'Changa',
-                              color: Color(0xFF666360),
-                              fontWeight: FontWeight.bold,
-                            ),),),
-                        Container(
-                          width: 200,
-                          margin: EdgeInsets.only(right: 10,),
-                          child:  Row(
-                            children: [
-                              Text(widget.Rate.toString(),
-                                style: TextStyle(
-                                  color: Color(0xFF666360),
-                                ),),
-                              Icon(Icons.star, color: Colors.yellow,),
-                            ],
-                          ),
-                        ),
-                        // Container(
-                        //   width: 200,
-                        //   margin: EdgeInsets.only(top: 70, right: 120),
-                        //   child: Text(widget.Work,
-                        //     style: TextStyle(
-                        //       fontSize: 18.0,
-                        //       fontFamily: 'Changa',
-                        //       color: Color(0xFF666360),
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),),
-                        Container(
-                          width: 200,
-                          child: Row(
-                            children: [
-                              Directionality(textDirection: TextDirection.ltr,
-                                child:Container(
-                                  width: 110,
-                                  // margin: EdgeInsets.only(top: 80, right: 70),
-                                  child: Text(widget.phone,
-                                    style: TextStyle(
-                                      fontSize: 15.0,
-                                      fontFamily: 'Changa',
-                                      color: Color(0xFF666360),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),),),
-                              Container(
-                                //margin: EdgeInsets.only(top: 80, left: 10,),
-                                child: Icon(Icons.phone,
-                                  color: Color(0xFF666360),),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 40,
-                              //margin: EdgeInsets.only(right: 0, top: 87),
-                              child: IconButton(
-
-                                onPressed:() {
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => comments(image:widget.image_Me,namelast:widget.nameLast_Me,namefirst: widget.namefirst_Me,Phoneuser: widget.phone_Me,Phoneworker: widget.phone,)));
-                                  // Navigator.of(context).push(comments);
-                                },
-                                icon: Icon(Icons.comment),
-                              ),
-                            ),
-                            // Container(height: 20,
-                            //     width: 40,
-                            //     margin: EdgeInsets.only(right: 30, top: 100),
-                            //     //child:Text("تعليق")
-                            // ),
-                          ],),
-                      ],
-                    ),
-                  )
-                ],
+                    }
+                ),
               ),
               // Container(
               //   margin: EdgeInsets.only(top: 30, right: 10),
@@ -1168,15 +1187,189 @@ class _Group extends State<Group> {
               // ),
 
             ],),
-            Container(
-              height: 10,
-              margin: EdgeInsets.only(top: 5),
-              child:Divider(
-                color: Color(0xFF666360),
-                thickness: 1,
-              ),),
+            // Container(
+            //   height: 10,
+            //   margin: EdgeInsets.only(top: 5),
+            //   child:Divider(
+            //     color: Color(0xFF666360),
+            //     thickness: 1,
+            //   ),),
 
           ],),
       ),);
   }
+  Widget row_worker(){
+    return   Row(
+      children: [
+
+        Container(
+          // print(_image[index].id+"");
+          width: 110,
+          height: 110,
+          margin: EdgeInsets.only(right: 10,top:10),
+          decoration: BoxDecoration(
+            color:Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child:Column(
+            children: [
+
+              Container(
+                width: 230,
+                height: 22,
+                //color: Colors.red,
+                margin: EdgeInsets.only(right: 10,top: 0),
+                child: Text(widget.namefirst + " " + widget.namelast,
+                  style: TextStyle(
+                    fontSize: 15.5,
+                    fontFamily: 'Changa',
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                  ),),),
+              Container(
+                width: 230,
+                height: 22,
+                //color: Colors.red,
+                margin: EdgeInsets.only(right: 10,bottom:20),
+                child: Text(widget.Work,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontFamily: 'Changa',
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),),),
+              Container(
+                width: 230,
+                margin: EdgeInsets.only(right: 15,),
+                child:  Row(
+                  children: [
+                    Text('العملاء',
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+
+                      ),),
+                    SizedBox(width: 44.5,),
+                    Text('التعليقات',
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    SizedBox(width: 47.5,),
+                    Text('الريت',
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                  ],
+                ),
+              ),
+              Container(
+                width: 230,
+                margin: EdgeInsets.only(right: 10,),
+                child:  Row(
+                  children: [
+                    SizedBox(width: 15,),
+                    Text(widget.client_num.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    SizedBox(width: 85.5,),
+                    Text(ma.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    SizedBox(width: 70.5,),
+                    Text(widget.Rate.toString(),
+                      style: TextStyle(
+                        color: Color(0xFF666360),
+                        fontSize: 13.0,
+                        fontFamily: 'Changa',
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    Icon(Icons.star, color: Colors.yellow,),
+                  ],
+                ),
+              ),
+              // Container(
+              //   width: 200,
+              //   margin: EdgeInsets.only(top: 70, right: 120),
+              //   child: Text(widget.Work,
+              //     style: TextStyle(
+              //       fontSize: 18.0,
+              //       fontFamily: 'Changa',
+              //       color: Color(0xFF666360),
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),),
+              // Container(
+              //   width: 200,
+              //   child: Row(
+              //     children: [
+              //       Directionality(textDirection: TextDirection.ltr,
+              //         child:Container(
+              //           width: 110,
+              //           // margin: EdgeInsets.only(top: 80, right: 70),
+              //           child: Text(widget.phone,
+              //             style: TextStyle(
+              //               fontSize: 15.0,
+              //               fontFamily: 'Changa',
+              //               color: Color(0xFF666360),
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),),),
+              //       Container(
+              //         //margin: EdgeInsets.only(top: 80, left: 10,),
+              //         child: Icon(Icons.phone,
+              //           color: Color(0xFF666360),),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Row(
+              //   children: [
+              //     Container(
+              //       height: 20,
+              //       width: 40,
+              //       //margin: EdgeInsets.only(right: 0, top: 87),
+              //       child: IconButton(
+              //
+              //         onPressed:() {
+              //           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => comments(image:widget.image_Me,namelast:widget.nameLast_Me,namefirst: widget.namefirst_Me,Phoneuser: widget.phone_Me,Phoneworker: widget.phone,)));
+              //           // Navigator.of(context).push(comments);
+              //         },
+              //         icon: Icon(Icons.comment),
+              //       ),
+              //     ),
+              //     // Container(height: 20,
+              //     //     width: 40,
+              //     //     margin: EdgeInsets.only(right: 30, top: 100),
+              //     //     //child:Text("تعليق")
+              //     // ),
+              //   ],),
+            ],
+          ),
+        )
+      ],
+    );
+  }
 }
+

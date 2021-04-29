@@ -279,12 +279,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-import '../Inside_the_app/List_worker_group.dart';
-import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'dismissible_widget.dart';
+import '../constants.dart';
 
 String IP4="192.168.1.8";
 bool showmap=true;
@@ -338,8 +334,8 @@ class _mState extends State<order_map> {
   @override
   Widget build(BuildContext context) {
     return Container(
-            height: 800,
-            color: Colors.green,
+            height: 650,
+            color: Colors.grey[50],
             child: FutureBuilder(
                 future: today(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -397,7 +393,7 @@ class _MyHomePageState extends State<w> {
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    zoom: 11,
   );
 
   get url => null;
@@ -441,12 +437,71 @@ class _MyHomePageState extends State<w> {
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
-  Widget showgooglemap(List<Marker>mark) {
+  void _onButtonPressed(int index,String namefirst,String namelast,String image,String timestart,String timeend,String Am_Pm,String id) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Colors.white,
+            height: 135,
+            child: Container(
+              child: _buildBottomNavigationMenu(index,namefirst,namelast,image,timestart,timeend,Am_Pm,id),
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10),
+                  topRight: const Radius.circular(10),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+  Container _buildBottomNavigationMenu(int index,String namefirst,String namelast,String image,String timestart,String timeend,String Am_Pm,String id) {
     return Container(
-        height:650,
-        color:Colors.red,
-        child:Column(
+      height:100,
+      child:Column(
         children: <Widget>[
+          order_user(index,namefirst,namelast,image,timestart,timeend,Am_Pm,id),
+          //   ListTile(
+          //   leading: Icon(Icons.ac_unit),
+          //   title: Text('Flutter'),
+          //   onTap: () => _selectItem('Flutter'),
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.accessibility_new),
+          //   title: Text('Android'),
+          //   onTap: () => _selectItem('Android'),
+          // ),
+          // ListTile(
+          //   leading: Icon(Icons.assessment),
+          //   title: Text('Kotlin'),
+          //   onTap: () => _selectItem('Kotlin'),
+          // ),
+        ],
+      ),);
+  }
+
+  Widget showgooglemap(List<Marker>mark) {
+    return Stack(
+          children:[
+            Container(
+              margin: EdgeInsets.only(top: 0),
+              height: 650,
+              child:GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(target:
+                LatLng(double.parse(widget.lat),double.parse(widget.lng)),
+                    zoom: 11),
+                markers: mark.toSet(),
+                scrollGesturesEnabled: true,
+                zoomGesturesEnabled: true,
+                myLocationButtonEnabled: false,
+                gestureRecognizers: Set()
+                  ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
+              ),
+            ),
+          ],);
           // SizedBox(width: 5,),
           // IconButton(
           //   icon: showmap?Icon(Icons.person,color:Colors.black,):Icon(Icons.location_on,color: Colors.black87,),
@@ -458,41 +513,23 @@ class _MyHomePageState extends State<w> {
           //     });
           //   },
           // ),
-          showmap == false ? Container(
-            height: 700,
-            width: 500,
-            // color:  Color(0xFFF3D657),
-            margin: EdgeInsets.only(top: 50),
-            //padding:EdgeInsets.only(right:25,left: 25),
-            decoration: BoxDecoration(
-              color:  Color(0xFFF3D657),
-            ),
-           child: ListView.builder(
-                    itemCount: widget.Location.length,
-                    itemBuilder: (context, index) {
-                      return order_user(index,widget.Location[index]['namefirst'],widget.Location[index]['namelast'],widget.Location[index]['image'],widget.Location[index]['timestart'],widget.Location[index]['timeend'],widget.Location[index]['Am_Pm'],widget.Location[index]['id']);
-                      },
-                  ),)
-
-              :
-          Container(
-            height: 650,
-            // margin: EdgeInsets.only(top: 200),
-            child:GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(target:
-              LatLng(31.9474, 35.2272),
-                  zoom: 11),
-              markers: mark.toSet(),
-              scrollGesturesEnabled: true,
-              zoomGesturesEnabled: true,
-              myLocationButtonEnabled: false,
-              gestureRecognizers: Set()
-                ..add(Factory<PanGestureRecognizer>(() => PanGestureRecognizer())),
-            ),
-          ),
-        ],
-    ),);
+          // showmap == false ? Container(
+          //   height: 700,
+          //   width: 500,
+          //   // color:  Color(0xFFF3D657),
+          //   margin: EdgeInsets.only(top: 50),
+          //   //padding:EdgeInsets.only(right:25,left: 25),
+          //   decoration: BoxDecoration(
+          //     color:  Color(0xFFF3D657),
+          //   ),
+          //  child: ListView.builder(
+          //           itemCount: widget.Location.length,
+          //           itemBuilder: (context, index) {
+          //             return order_user(index,widget.Location[index]['namefirst'],widget.Location[index]['namelast'],widget.Location[index]['image'],widget.Location[index]['timestart'],widget.Location[index]['timeend'],widget.Location[index]['Am_Pm'],widget.Location[index]['id']);
+          //             },
+          //         ),)
+          //
+          //     :
   }
   finished_order(String id) async {
     print(id);
@@ -526,98 +563,146 @@ class _MyHomePageState extends State<w> {
 
   Container order_user(int index,String namefirst,String namelast,String image,String timestart,String timeend,String Am_Pm,String id){
     return Container(
-      height: 90,
+      height: 100,
+      margin: EdgeInsets.only(top:20),
       decoration: BoxDecoration(
-        color:Colors.grey[100],
+        color:Colors.grey[50],
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Column(
+      child: Directionality(
+        textDirection: ui.TextDirection.rtl,
+        child:Column(
         children: [
-        SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child:Row(
-          children: [
-          Container(
-            margin: EdgeInsets.only(top: 5,bottom: 5,right: 30),
-            child:CircleAvatar(backgroundImage: NetworkImage(
-                'https://' + IP4 + '/testlocalhost/upload/' + image),
-              radius: 25.0,),
-          ),
-          Column(
-            children: [
-              Container(
-                width: 250,
-                //color: Colors.green,
-                alignment: Alignment.centerRight,
-                margin: EdgeInsets.only(top: 10,bottom: 0,left: 50,right:10),
-                child: Text(namefirst + " " + namelast,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16.0,
-                    fontFamily: 'Changa',
-                    fontWeight: FontWeight.bold,),
-                ),),
-              Container(
-                width: 300,
-                //color: Colors.green,
-                alignment: Alignment.topRight,
-                child:Row(
-                children: [
-                  SizedBox(width: 5,),
-                  Text(timeend +"-" +timestart, style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black54,
-                    fontFamily: 'Changa',
-                  ),),
-                  Text(" "),
-                  Text(Am_Pm=="am"?"صباحا":"مساء", style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black54,
-                    fontFamily: 'Changa',
-                  ),),
-                  SizedBox(width: 5,),
-                  Icon(Icons.access_time),
-                ],
-              ),),
-            ],
-          ),
-          SizedBox(width:30,),
-          GestureDetector(
-            onTap: () async{
-              await finished_order(id);
-              widget.Location.removeAt(index);
-              setState(() {
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child:Row(
+              children: [
+                SizedBox(width: 10,),
+                Container(
+                  // print(_image[index].id+"");
+                  width: 70,
+                  height: 70,
+                  margin: EdgeInsets.only(right: 10,top:0),
+                  decoration: BoxDecoration(
+                    color:Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+image),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 240,
+                  height: 100,
+                  margin: EdgeInsets.only(right:0,top:0),
+                  child:  Column(
+                    children: [
+                      SizedBox(height:15,),
+                      Container(
+                        width: 200,
+                        height: 30,
+                        //color: Colors.green,
+                        alignment: Alignment.centerRight,
+                        margin: EdgeInsets.only(top: 0,bottom: 0,left: 50,right:10),
+                        child: Text(namefirst + " " + namelast,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16.0,
+                            fontFamily: 'Changa',
+                            fontWeight: FontWeight.bold,),
+                        ),),
+                      SizedBox(height:10,),
+                      Container(
+                        height:40,
+                        child:Row(
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(width:10,),
+                                    Text("الوقت ", style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black87,
+                                      fontFamily: 'Changa',
+                                    ),),
+                                    Text(timeend +" - " +timestart, style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black54,
+                                      fontFamily: 'Changa',
+                                    ),),
+                                    Text(" "),
+                                    Text(Am_Pm=="am"?"صباحا":"مساء", style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black54,
+                                      fontFamily: 'Changa',
+                                    ),),
+                                    SizedBox(width: 5,),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 55,
+                  // margin: EdgeInsets.only(top:10),
+                  child: FlatButton(
+                    onPressed: () {
+                      // UrlLauncher.launch("tel://0595320479");
+                    },
+                    child: new Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                      size: 23.0,
+                    ),
+                    shape: new CircleBorder(),
+                    color: Y,
+                  ),
+                ),
 
-              });
-            },
-           child:Container(
-             height: 90,
-             width: 90,
-             color: Colors.greenAccent[700],
-             child: Icon(Icons.check,color:Colors.white,size:30,),
-           ),
-          ),
-            GestureDetector(
-              onTap: () async{
-                await delete_order(id);
-                widget.Location.removeAt(index);
-                setState(() {
+                SizedBox(width:30,),
+                GestureDetector(
+                  onTap: () async{
+                    await finished_order(id);
+                    widget.Location.removeAt(index);
+                    setState(() {
 
-                });
-              },
-              child:Container(
-                height: 90,
-                width: 90,
-                color: Colors.red,
-                child: Icon(Icons.delete,color:Colors.white,size:30),
-              ),
-            ),
-        ],
-      ),),
+                    });
+                  },
+                  child:Container(
+                    height: 90,
+                    width: 90,
+                    color: Colors.greenAccent[700],
+                    child: Icon(Icons.check,color:Colors.white,size:30,),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async{
+                    await delete_order(id);
+                    widget.Location.removeAt(index);
+                    setState(() {
+
+                    });
+                  },
+                  child:Container(
+                    height: 90,
+                    width: 90,
+                    color: Colors.red,
+                    child: Icon(Icons.delete,color:Colors.white,size:30),
+                  ),
+                ),
+              ],
+            ),),
         ],),
-    );
+    ),);
   }
   @override
   Widget build(BuildContext context) {
@@ -644,15 +729,12 @@ class _MyHomePageState extends State<w> {
   // @override
   Future <double> add() async {
         final Uint8List markerIconuser= await getBytesFromAsset('assets/icons/worker.png',200);
-      int id = i;
-      Marker m = new Marker(markerId: MarkerId(id.toString()),
+      int index = i;
+      Marker m = new Marker(markerId: MarkerId(index.toString()),
         infoWindow: InfoWindow(title: widget.Location[i]['namefirst'] + " " +
             widget.Location[i]['namelast'],onTap: (){
-          print('vvvvvvvvvv');
-          print(List_button[id].toString());
-          double Rate;
-          if(List_button[id]['AVG']==null){Rate=0.0;}
-          else{ Rate =roundDouble(double.parse(List_button[id]['AVG']),1);}}),
+          _onButtonPressed(index,widget.Location[index]['namefirst'],widget.Location[index]['namelast'],widget.Location[index]['image'],widget.Location[index]['timestart'],widget.Location[index]['timeend'],widget.Location[index]['Am_Pm'],widget.Location[index]['id'],);
+        }),
         position: LatLng(double.parse(widget.Location[i]['lat'],),
             double.parse(widget.Location[i]['lng'])), icon:BitmapDescriptor.fromBytes(markerIconuser),
       );
@@ -660,6 +742,7 @@ class _MyHomePageState extends State<w> {
       print("marker=================================================");
 
     }
-  }
+
+}
 //}
 

@@ -10,7 +10,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'chatListUser.dart';
+import 'chatListworker.dart';
+
 String IP4="192.168.1.8";
 
 class Conversation extends StatefulWidget{
@@ -56,9 +57,10 @@ class  _Conversation extends State<Conversation> {
   Widget chatMassegeList(){
     print("dfgdg");
     return Container(
-       height: 500,
+       height: 600,
+      transform: Matrix4.translationValues(0.0,-10.0, 0.0),
         margin: EdgeInsets.only(top:0),
-        child:StreamBuilder(
+      child:StreamBuilder(
         stream: chatMaasegesstream,
         builder: (context,snapshot){
           return snapshot.hasData?ListView.builder(
@@ -101,9 +103,20 @@ class  _Conversation extends State<Conversation> {
   }
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl,
-    child:Scaffold(
-      backgroundColor: chat,
-      // appBar: AppBar(
+      child:Stack(
+          children: [
+      Container(
+      decoration: BoxDecoration(
+      color: Colors.grey.withOpacity(0.3),
+      image: new DecorationImage(
+        fit: BoxFit.cover,
+        image: new AssetImage(
+          'assets/icons/watsapp.jpg',
+        ),
+      ),
+    ),),
+    Scaffold(
+      backgroundColor: Colors.transparent,      // appBar: AppBar(
       //   elevation: 0.0,
       //   backgroundColor:L_ORANGE.withOpacity(0.75),
       //   leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
@@ -113,59 +126,35 @@ class  _Conversation extends State<Conversation> {
       body:SingleChildScrollView(
           child:Column(
                children: [
-              Positioned(
-                  top: 10,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 70),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            //Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true,phone:phone,)));
-                          },
-                          child:  Container(
-                             margin: EdgeInsets.only(right: 10,left:10),
-                            child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
-                          ),
-                        ),
-                        Container(
-                          // margin: EdgeInsets.only(right:50,top: 75),
-                          child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 25.0,),
-                        ),
-                        SizedBox(width: 10,),
-                        Container(
-                          // margin: EdgeInsets.only(top:85,right:115),
-                          child: Text(widget.namefirst+ " "+widget.namelast,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontFamily: 'Changa',
-                              fontWeight: FontWeight.bold,),),
-                        ),
-                      ],
-                    ),),
-              ),
-                 Container(
-                   width: 450,
-                   // margin: EdgeInsets.only(top: 135,),
-                   child: Divider(
-                     thickness: 1.0,
-                     color: Colors.black26.withOpacity(0.1),
-                   ),
-                 ),
                 Container(
-                  height:655,
+                  height:800,
                   child: SingleChildScrollView(
                     child:Column(
                       children: [
                         Container(
-                          height: 606,
+                          height: 20,
+                          margin: EdgeInsets.only(left:370,top:70),
+                          child:GestureDetector(
+                            onTap: (){
+                              print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                              Navigator.pop(context);
+                              // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,phone:phone,)));
+                            },
+                            child:Container(
+                              // margin: EdgeInsets.only(left:100,top:10),
+                              child:Icon(Icons.arrow_back_ios,color: Colors.white,size:18,),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 650,
+                          margin: EdgeInsets.only(top:0),
                           child:chatMassegeList(),
                         ),
                         Container(
-                          margin: EdgeInsets.only(top:0),
+                          // transform: Matrix4.translationValues(0.0, -40, 0.0),
                           //alignment: Alignment.bottomCenter,
+
                           width: 520,
                           height: 55,
                           decoration: BoxDecoration(
@@ -189,27 +178,40 @@ class  _Conversation extends State<Conversation> {
                                       // size: 26.0,
                                     ),
                                     shape: new CircleBorder(),
-                                    color: D,
+                                    color: Y,
                                   ),),),
                               Container(
                                 width: 275,
                                 height: 40,
-                                margin:EdgeInsets.only(left:0,right:0),
+                                margin:EdgeInsets.only(left:0,right:0,top:15),
                                 child: TextFormField(
                                   controller: massageControler,
+                                  cursorColor: Y,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.5),
+                                    fillColor: Colors.white,
                                     enabledBorder: new OutlineInputBorder(
                                       borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                      borderSide:  BorderSide(color:Colors.white),
 
                                     ),
                                     focusedBorder: new OutlineInputBorder(
                                       borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
+                                      borderSide:  BorderSide(color:Colors.white),
 
                                     ),
+                                    hintText: 'اكتب هنا',
+                                    hintStyle: TextStyle(
+                                      fontSize: 14.0,
+                                      fontFamily: 'Changa',
+                                      color: Color(0xFF666360),
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontFamily: 'Changa',
+                                    color: Color(0xFF1C1C1C),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),),
                               Container(
@@ -242,7 +244,7 @@ class  _Conversation extends State<Conversation> {
             //       child:image,)
             // ):Container(),
 
-     ),);
+     ),],),);
   }
   // PickedFile image_file;
   Future getImageGallory() async {
@@ -286,7 +288,7 @@ class MessageTile extends StatelessWidget {
               // width: MediaQuery.of(context).size.width*0.5,
               padding: EdgeInsets.symmetric(horizontal: 24,vertical: 11),
               decoration: BoxDecoration(
-                  color:isSendByMe?D.withOpacity(0.7):Colors.grey.withOpacity(0.5),
+                  color:isSendByMe?Y5:Colors.white,
                   borderRadius: isSendByMe?BorderRadius.only(
                   topRight:Radius.circular(19),
                   topLeft: Radius.circular(19),

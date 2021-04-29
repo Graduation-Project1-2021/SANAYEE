@@ -3,7 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fdottedline/fdottedline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/ChatUuser/chatListUser.dart';
 import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'dart:convert';

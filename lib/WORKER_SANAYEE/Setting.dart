@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/Chatworker/chatListworker.dart';
 import 'package:flutterphone/Worker/change_pass.dart';
 import 'package:flutterphone/Worker/edit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,8 +39,10 @@ class SettingPage extends StatefulWidget {
   final  Experiance;
   final  Information;
   final  token;
+  final lat;
+  final lng;
 
-  SettingPage({this.name, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
+  SettingPage({this.lat,this.lng,this.name, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
 
   get username => null;
 

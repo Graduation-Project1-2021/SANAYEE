@@ -4,7 +4,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fdottedline/fdottedline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/ChatUuser/chatListUser.dart';
 import 'package:flutterphone/Inside_the_app/Comment.dart';
 import 'package:flutterphone/Inside_the_app/List_worker_group.dart';
 import 'package:flutterphone/Inside_the_app/WORKER_PROFILE.dart';
@@ -23,6 +23,7 @@ import 'package:flutterphone/constants.dart';
 import '../buttom_bar.dart';
 import '../constants.dart';
 import '../database.dart';
+import 'menue_Page.dart';
 
 String  name_Me="";
 String  name="";
@@ -37,7 +38,11 @@ String IP4="192.168.1.8";
 class favarate extends StatefulWidget {
   final phoneuser;
   final username;
-  favarate({this.username,this.phoneuser,});
+  final namelast;
+  final namefirst;
+  final image;
+  final token;
+  favarate({this.username,this.phoneuser,this.namefirst,this.namelast,this.image,this.token});
   _favarate createState() =>  _favarate();
 }
 class  _favarate extends State<favarate> {
@@ -80,7 +85,7 @@ class  _favarate extends State<favarate> {
     super.initState();
      getChat();
   }
-  int _selectedIndex = 2;
+  int _selectedIndex = 3;
   PageController _pageController;
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatsRoom;
@@ -94,6 +99,23 @@ class  _favarate extends State<favarate> {
           Scaffold(
             backgroundColor: Colors.white,
             key: _scaffoldKey,
+            // appBar: new AppBar(
+            //   backgroundColor: Y2,
+            //   leading:GestureDetector(
+            //     onTap: (){
+            //       Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.username,)));
+            //     },
+            //     child:Icon(Icons.arrow_back,color: Colors.white,),
+            //   ),
+            //   title: new Text('المفضلة',
+            //     style: TextStyle(
+            //       fontSize: 16.0,
+            //       fontWeight: FontWeight.bold,
+            //       fontFamily: 'Changa',
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
             bottomNavigationBar:Container(
               decoration: BoxDecoration(color: Colors.white, boxShadow: [
                 BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
@@ -114,26 +136,6 @@ class  _favarate extends State<favarate> {
                         GButton(
                           icon: Icons.home,
                           text: 'الرئيسية',
-                          textStyle:TextStyle(
-                            fontFamily: 'Changa',
-                            color: Colors.black,
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        GButton(
-                          icon: Icons.person,
-                          text: 'حسابي',
-                          textStyle:TextStyle(
-                            fontFamily: 'Changa',
-                            color: Colors.black,
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        GButton(
-                          icon: Icons.favorite_border,
-                          text: 'المفضلة',
                           textStyle:TextStyle(
                             fontFamily: 'Changa',
                             color: Colors.black,
@@ -166,6 +168,26 @@ class  _favarate extends State<favarate> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        GButton(
+                          icon: Icons.favorite_border,
+                          text: 'المفضلة',
+                          textStyle:TextStyle(
+                            fontFamily: 'Changa',
+                            color: Colors.black,
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        GButton(
+                          icon: Icons.menu,
+                          text: 'القائمة',
+                          textStyle:TextStyle(
+                            fontFamily: 'Changa',
+                            color: Colors.black,
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                       selectedIndex: _selectedIndex,
                       onTabChange: (index) {
@@ -174,12 +196,19 @@ class  _favarate extends State<favarate> {
                           if(index==0){
                             Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.username,)));
                           }
+                          if(index==1){
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.username,phoneuser: widget.phoneuser,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
+                          }
+                          if(index==2){
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.username,chatsRoomList: chatsRoom,phone:widget.phoneuser,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
+                          }
                           if(index==3){
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.username,phoneuser: widget.phoneuser,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.username,phoneuser: widget.phoneuser,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
                           }
                           if(index==4){
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.username,chatsRoomList: chatsRoom,user: true,phone:phone,)));
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MenuePage(namelast:widget.namelast,name:widget.username,phone:widget.phoneuser,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
                           }
+
                         });
                       }
                   ),
@@ -191,19 +220,21 @@ class  _favarate extends State<favarate> {
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.username,)));},
-                    child:  Container(
-                      margin: EdgeInsets.only(top: 70,right: 10),
-                      child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
-                    ),
-                  ),
+                  Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          // colors: [B,A,G]
+                          colors: [Y1,Y4]
+                      ),
+                    ),),
                  Container(
                     height: 600,
                     width: 500,
                     // color:  Color(0xFFF3D657),
-                    margin: EdgeInsets.only(top:100),
+                    margin: EdgeInsets.only(top:130),
                     //padding:EdgeInsets.only(right:25,left: 25),
                     decoration: BoxDecoration(
                       // color:Color(0xFF1C1C1C),
@@ -219,12 +250,12 @@ class  _favarate extends State<favarate> {
                           return ListView.builder(
                             itemCount:snapshot.data.length,
                             itemBuilder: (context, index) {
-                              return f(phoneuser:widget.phoneuser,username:widget.username,phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],work:snapshot.data[index]['Work'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],name:snapshot.data[index]['name'],);
+                              return f(usertoken:widget.token,userimage:widget.image,usernamelast:widget.namelast,usernamefirst:widget.namefirst,index:index,phoneuser:widget.phoneuser,username:widget.username,phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],work:snapshot.data[index]['Work'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],name:snapshot.data[index]['name'],);
                               return Container(child: Text('bggngn'),);
                             },
                           );
                         }
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: Container(height: 0,));
                       },
                     ),
                   ),
@@ -250,8 +281,13 @@ class f  extends StatefulWidget {
   final country;
   final username;
   final phoneuser;
+  final index;
+  final usernamelast;
+  final usernamefirst;
+  final userimage;
+  final usertoken;
   //
-  f({this.phoneuser,this.username,this.country,this.work,this.image,this.namefirst,this.namelast,this.name,this.phone,});
+  f({this.username,this.usernamefirst,this.usernamelast,this.usertoken,this.index,this.phoneuser,this.country,this.work,this.image,this.namefirst,this.namelast,this.name,this.phone,this.userimage});
 
   @override
   _f createState() => _f();
@@ -259,6 +295,16 @@ class f  extends StatefulWidget {
 class _f extends State<f> {
   var List=[];
   var DateList=[];
+  void _showSnackBar(BuildContext context, String text) {
+    Scaffold.of(context).showSnackBar(SnackBar(content:
+     Text(text,
+      style: TextStyle(
+      fontFamily: 'Changa',
+      color: Colors.white,
+      fontSize: 14.0,
+      fontWeight: FontWeight.bold,
+    ),)));
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -272,7 +318,7 @@ class _f extends State<f> {
             height: 100,
             alignment: Alignment.topRight,
             decoration: BoxDecoration(
-              color:Colors.blue.withOpacity(0.2),
+              color:Colors.grey[100],
               borderRadius: BorderRadius.circular(5),
             ),
             margin: EdgeInsets.only(bottom: 20,),
@@ -315,16 +361,16 @@ class _f extends State<f> {
                     ],
                 ),),
                GestureDetector(
-                 onTap: (){
-                   _dialogCall();
+                 onTap: ()async{
+                   await delete_faverate();
+                   _showSnackBar(context, 'تمت الإزالة من قائمة المفضلة لديك');
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => favarate(phoneuser:widget.phoneuser,username:widget.username,namelast:widget.usernamelast,image:widget.userimage,token:widget.usertoken,namefirst:widget.usernamefirst),),);
                  },
                  child:Container(
                    child: Icon(Icons.favorite,size: 25,color: Colors.red,),
                  ),
                ),
-
-              ],
-            ),),
+            ],),
           // Container(
           //   padding: EdgeInsets.all(20),
           //   width: MediaQuery.of(context).size.width*0.2,
@@ -333,107 +379,9 @@ class _f extends State<f> {
           //     fontWeight: FontWeight.w700,
           //   ), textAlign: TextAlign.right,),
           // ),
-        ),
-      ],
+        ),),],
     );
 
-  }
-  Future<void> _dialogCall() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Directionality(textDirection: ui.TextDirection.rtl,
-            child:delete_faverate(phoneuser:widget.phoneuser,phoneworker: widget.phone,username: widget.username,),);
-        });
-  }
-}
-
-
-class delete_faverate extends StatefulWidget {
-  @override
-  final phoneuser;
-  final phoneworker;
-  final username;
-  delete_faverate({this.username,this.phoneworker,this.phoneuser,});
-  _delete_faverate createState() => new _delete_faverate();
-
-}
-class _delete_faverate extends State<delete_faverate> {
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      actionsPadding: EdgeInsets.zero,
-      content: new SingleChildScrollView(
-        child: new ListBody(
-          children: <Widget>[
-            Column(
-              children: [
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 265),
-                    child: Icon(Icons.close),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 10,top: 10),
-                  child: Text('هل تود إزالة العامل من قائمة المفضلة لديك ؟',
-                    style: TextStyle(
-                      fontFamily: 'Changa',
-                      color: Colors.black45,
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () async{
-                        await delete_faverate();
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => favarate(phoneuser:widget.phoneuser,username:widget.username,),),);
-                        // Navigator.pop(context);
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time: widget.time,phone: widget.phone,)),);
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(right: 170),
-                          child:Text('نعم',
-                            style: TextStyle(
-                              fontFamily: 'Changa',
-                              color: Colors.black45,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(right: 60),
-                          child:Text('لا',
-                            style: TextStyle(
-                              fontFamily: 'Changa',
-                              color: Colors.black45,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                // SizedBox(width: 10,),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Future delete_faverate() async {
@@ -443,12 +391,13 @@ class _delete_faverate extends State<delete_faverate> {
     var url = 'https://' + IP4 + '/testlocalhost/delete_faverate.php';
     var ressponse = await http.post(url, body: {
       "phoneuser":widget.phoneuser,
-      "phoneworker":widget.phoneworker,
+      "phoneworker":widget.phone,
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
 }
+
 
 
 

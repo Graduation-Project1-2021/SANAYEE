@@ -57,24 +57,6 @@ class  _Get_Images extends State<IMG> {
                 ),
               ),
             ),
-
-            Container(
-              margin: EdgeInsets.fromLTRB(310, 0, 10, 20),
-              child: IconButton(
-                alignment: Alignment.topRight,
-                onPressed: () {
-                  _showMyDialog();
-                  print(widget.id);
-                  print(widget.imageName);
-                  //Delete();
-                   },
-                icon: Icon(
-                  Icons.delete_forever_rounded,
-                  color: Colors.white,
-                  size: 50.0,
-                ),
-              ),
-            ),
                   //  Row(
                   //   children: <Widget>[
                   //

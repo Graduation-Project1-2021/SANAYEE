@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutterphone/constants.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import '../buttom_bar.dart';
 import '../constants.dart';
 import '../database.dart';
@@ -38,14 +39,12 @@ class current_user_statues extends StatefulWidget {
   final date;
   final time;
   final datesend;
-  final dateaccept;
   final timesend;
-  final timeaccept;
   final work;
   final AVG;
   final name_Me;
   final id;
-  current_user_statues({this.id,this.name_Me,this.AVG,this.work,this.timeaccept,this.timesend,this.dateaccept,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
+  current_user_statues({this.id,this.name_Me,this.AVG,this.work,this.timesend,this.datesend,this.time,this.date,this.country,this.namefirst,this.namelast,this.image,this.phoneuser,this.phoneworker,this.description});
   _current_user_statues createState() =>  _current_user_statues();
 }
 class  _current_user_statues extends State<current_user_statues> {
@@ -59,7 +58,7 @@ class  _current_user_statues extends State<current_user_statues> {
   var ListBlock=["8.00 - 9.00 ","9.00 - 10.00","","","",];
   var Listsearch=[];
   bool step1=true;
-  bool step2=true;
+  bool step2=false;
   bool step3=false;
   bool step4=false;
   @override
@@ -80,7 +79,7 @@ class  _current_user_statues extends State<current_user_statues> {
       child:Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey[50],
             key: _scaffoldKey,
             body: Form(
               // child:SingleChildScrollView(
@@ -88,30 +87,20 @@ class  _current_user_statues extends State<current_user_statues> {
                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: 100,
-                    decoration: BoxDecoration(
-                      // color:ca,
-                      gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.topRight,
-                          colors: [G,A,B]),
-                    ),
-                  ),
+
                   Container(
                     margin: EdgeInsets.only(top: 50),
-                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
+                    child:IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: (){
                       Navigator.pop(context);
                       //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
                     }),
                   ),
                   Container(
-                    height: 130,
+                    height: 110,
                     width: 400,
                     margin: EdgeInsets.only(top:120,right: 15,left: 15),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.2),
+                      color:Colors.white,
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
 
@@ -128,8 +117,8 @@ class  _current_user_statues extends State<current_user_statues> {
                       children: [
                         Container(
                           // print(_image[index].id+"");
-                          width: 100,
-                          height: 100,
+                          width: 90,
+                          height: 90,
                           margin: EdgeInsets.only(right: 10,top:0),
                           decoration: BoxDecoration(
                             color:Colors.white,
@@ -140,348 +129,371 @@ class  _current_user_statues extends State<current_user_statues> {
                           ),
                         ),
                         Column(
-                            children: [
-                              Container(
-                                width: 200,
-                                alignment: Alignment.topRight,
-                                margin: EdgeInsets.only(top:15,right:15),
-                                child: Text(widget.namefirst + " "+widget.namelast, style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                  fontFamily: 'Changa',
-                                ),
-                                ),
+                          children: [
+                            Container(
+                              width: 250,
+                              margin: EdgeInsets.only(top:9,right: 6),
+                              alignment: Alignment.topRight,
+                              child:Row(
+                                children: [
+                                  Text(widget.namefirst+" "+widget.namelast, style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black87,
+                                    fontFamily: 'Changa',
+                                  ),
+                                  ),
+                                ],
                               ),
-                              Container(
-                                width: 200,
-                                alignment: Alignment.topRight,
-                                margin: EdgeInsets.only(top:0,right:15),
-                                child: Text(widget.work, style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black54,
-                                  fontFamily: 'Changa',
-                                ),
-                                ),
+                            ),
+                            Container(
+                              width: 250,
+                              height: 20,
+                              margin: EdgeInsets.only(top:5,right: 6),
+                              alignment: Alignment.topRight,
+                              child: Text(widget.work, style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54,
+                                fontFamily: 'Changa',
                               ),
-                              Container(
-                                width: 200,
-                                alignment: Alignment.topRight,
-                                margin: EdgeInsets.only(top:0,right:0),
-                                child: Row(
-                                  children: [
-                                          Container(
-                                            width: 55,
-                                            //padding: EdgeInsets.symmetric(horizontal: 3),
-                                            child: FlatButton(
-                                              onPressed: () {
-                                                // UrlLauncher.launch("tel://0595320479");
-                                              },
-                                              child: new Icon(
-                                                Icons.phone,
-                                                color: Colors.white,
-                                                size: 23.0,
-                                              ),
-                                              shape: new CircleBorder(),
-                                              color: D,
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 55,
-                                            child: FlatButton(
-                                              onPressed: () {
-                                                //CreatChatRoom();
-                                              },
-                                              child: new Icon(
-                                                Icons.mark_chat_unread,
-                                                color: Colors.white,
-                                                size: 23.0,
-                                              ),
-                                              shape: new CircleBorder(),
-                                              color: D,
-                                            ),
-                                          ),
-                                        ],
+                              ),
+                            ),
+                            Container(
+                              width: 250,
+                              // color:Colors.green,
+                              alignment: Alignment.topLeft,
+                              margin: EdgeInsets.only(top:0,right:10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 120,
+                                    alignment: Alignment.topRight,
+                                    margin: EdgeInsets.only(top:7),
+                                    child:Row(
+                                      children: [
+                                        Text(""+widget.country, style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black54,
+                                          fontFamily: 'Changa',
+                                        ),
+                                        ),
+                                        Icon(Icons.location_on,size:20,color:Colors.black87,),
+                                      ],
+                                    ),
+
+                                  ),
+                                  SizedBox(width:60,),
+                                  ClipOval(
+                                    child: Material(
+                                      color: Y, // button color
+                                      child: InkWell(
+                                        // splashColor: Colors.black87, // inkwell color
+                                        child: SizedBox(width: 30, height: 30, child: Icon(Icons.phone,color: Colors.white,size: 20,)),
+                                        onTap: () {
+                                          String phone=widget.phoneworker.substring(3);
+                                          UrlLauncher.launch("tel://"+phone);
+                                        },
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(width:10,),
+                                  ClipOval(
+                                    child: Material(
+                                      color: Y, // button color
+                                      child: InkWell(
+                                        // splashColor: Colors.black87, // inkwell color
+                                        child: SizedBox(width: 30, height: 30, child: Icon(Icons.mark_chat_unread,color: Colors.white,size: 20,)),
+                                        onTap: () {},
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
 
                   Container(
-                    height: 600,
+                    height: 300,
                     width: 450,
-                    // color:  Color(0xFFF3D657),
-                    margin: EdgeInsets.only(top:300),
-                    padding:EdgeInsets.only(right:25,left: 25),
+                    margin: EdgeInsets.only(top:250,right: 15),
+                    padding:EdgeInsets.only(right:0,left: 0),
                     decoration: BoxDecoration(
+
                       // color:Color(0xFF1C1C1C),
                       // borderRadius: BorderRadius.only(
                       //   topLeft: Radius.circular(50),
                       //   topRight: Radius.circular(50),
                       // ),
                     ),
-                    child:SingleChildScrollView(
-                      child:Column(
-                        children: [
-                          GestureDetector(
-                            // onTap: (){
-                            //   print('fbfgbfbfb');
-                            // },
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 350,
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child:Row(
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top:5),
-                                              alignment: Alignment.topRight,
-                                              child:Icon(Icons.check_circle,size: 30,color: step1?Colors.green:Colors.grey,),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(top:10),
-                                              child:FDottedLine(
-                                                color: Colors.green,
-                                                height: 60.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
+                    child:Column(
+                      children: [
+                        GestureDetector(
+                          // onTap: (){
+                          //   print('fbfgbfbfb');
+                          // },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 80,
+                                width: 350,
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(right: 2),
+                                child:Row(
+                                  children: [
+                                    Container(
+                                      child: Column(
                                         children: [
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('إرسال الطلب',
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            margin: EdgeInsets.only(top:5),
+                                            alignment: Alignment.topRight,
+                                            child:Icon(Icons.check_circle,size: 25,color: step1?perp1:Colors.grey,),
                                           ),
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('تم بعت الطلب إليك في تاريخ ' + widget.datesend +'\n'+ "في الساعة "+ widget.timesend,
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black45,
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                                            margin: EdgeInsets.only(top:0),
+                                            height: 50,
+                                            child:VerticalDivider(
+                                              color: perp1,
+                                              thickness: 2,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            // onTap: (){
-                            //   print('fbfgbfbfb');
-                            // },
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 350,
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child:Row(
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top:5),
-                                              alignment: Alignment.topRight,
-                                              child:Icon(Icons.check_circle,size: 30,color: step2?Colors.green:Colors.grey,),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(top:10),
-                                              child:FDottedLine(
-                                                color: Colors.green,
-                                                height: 60.0,
-                                              ),
-                                            ),
-                                          ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 300,
+                                          margin: EdgeInsets.only(right: 10,top:6),
+                                          child: Text('إرسال الطلب',
+                                            style: TextStyle(
+                                              fontFamily: 'Changa',
+                                              color: Colors.black,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),),
                                         ),
-                                      ),
-                                      Column(
+                                        // Container(
+                                        //   width: 300,
+                                        //   margin: EdgeInsets.only(right: 10),
+                                        //   child: Text(' تاريخ ' + widget.datesend +' '+ "في الساعة "+ widget.timesend,
+                                        //     style: TextStyle(
+                                        //       fontFamily: 'Changa',
+                                        //       color: Colors.black45,
+                                        //       fontSize: 13.0,
+                                        //       fontWeight: FontWeight.bold,
+                                        //     ),),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          // onTap: (){
+                          //   print('fbfgbfbfb');
+                          // },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 80,
+                                width: 350,
+                                transform: Matrix4.translationValues(0.0, -13.0, 0.0),
+                                alignment: Alignment.topRight,
+                                margin: EdgeInsets.only(right: 2,top:0),
+                                child:Row(
+                                  children: [
+                                    Container(
+                                      child: Column(
                                         children: [
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('تثبيت الطلب',
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            margin: EdgeInsets.only(top:5),
+                                            alignment: Alignment.topRight,
+                                            child:Icon(Icons.check_circle,size: 25,color:perp1,),
                                           ),
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('تم بعت هذا الطلب إليك في تاريخ ' + widget.dateaccept +'\n'+ "في الساعة "+ widget.timeaccept,
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black45,
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                                            margin: EdgeInsets.only(top:0),
+                                            height: 50,
+                                            child:VerticalDivider(
+                                              color:Colors.grey,
+                                              thickness: 2,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          GestureDetector(
-                            // onTap: (){
-                            //   print('fbfgbfbfb');
-                            // },
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 350,
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child:Row(
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top:5),
-                                              alignment: Alignment.topRight,
-                                              child:Icon(Icons.check_circle,size: 30,color: step3?Colors.green:Colors.grey,),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.only(top:10),
-                                              child:FDottedLine(
-                                                color: Colors.green,
-                                                height: 60.0,
-                                              ),
-                                            ),
-                                          ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 300,
+                                          margin: EdgeInsets.only(right: 10,top:6),
+                                          child: Text('تثبيت الطلب',
+                                            style: TextStyle(
+                                              fontFamily: 'Changa',
+                                              color: Colors.black,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),),
                                         ),
-                                      ),
-                                      Column(
+                                        // Container(
+                                        //   width: 300,
+                                        //   margin: EdgeInsets.only(right: 10),
+                                        //   child: Text(' تاريخ ' + widget.dateaccept +' '+ "في الساعة "+ widget.timeaccept,
+                                        //     style: TextStyle(
+                                        //       fontFamily: 'Changa',
+                                        //       color: Colors.black45,
+                                        //       fontSize: 13.0,
+                                        //       fontWeight: FontWeight.bold,
+                                        //     ),),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        GestureDetector(
+                          // onTap: (){
+                          //   print('fbfgbfbfb');
+                          // },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 80,
+                                width: 350,
+                                alignment: Alignment.topRight,
+                                transform: Matrix4.translationValues(0.0, -20.0, 0.0),
+                                margin: EdgeInsets.only(right: 2),
+                                child:Row(
+                                  children: [
+                                    Container(
+                                      child: Column(
                                         children: [
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('البدء في العمل',
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            margin: EdgeInsets.only(top:0),
+                                            alignment: Alignment.topRight,
+                                            child:Icon(Icons.check_circle,size: 25,color: step3?perp1:Colors.grey,),
                                           ),
-                                          // Container(
-                                          //   width: 300,
-                                          //   margin: EdgeInsets.only(right: 10),
-                                          //   child: Text('تم بعت هذا الطلب إليك في تاريخ ' + widget.datesend +'\n'+ "في الساعة "+ widget.timesend,
-                                          //     style: TextStyle(
-                                          //       fontFamily: 'Changa',
-                                          //       color: Colors.black45,
-                                          //       fontSize: 14.0,
-                                          //       fontWeight: FontWeight.bold,
-                                          //     ),),
-                                          // ),
+                                          Container(
+                                            transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                                            margin: EdgeInsets.only(top:0),
+                                            height: 50,
+                                            child:VerticalDivider(
+                                              color: Colors.grey,
+                                              thickness: 2,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          GestureDetector(
-                            // onTap: (){
-                            //   print('fbfgbfbfb');
-                            // },
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 110,
-                                  width: 350,
-                                  alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child:Row(
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(top:5),
-                                              alignment: Alignment.topRight,
-                                              child:Icon(Icons.check_circle,size: 30,color: step4?Colors.green:Colors.grey,),
-                                            ),
-                                          ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 300,
+                                          margin: EdgeInsets.only(right: 10,),
+                                          child: Text('البدء في العمل',
+                                            style: TextStyle(
+                                              fontFamily: 'Changa',
+                                              color: Colors.black,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),),
                                         ),
-                                      ),
-                                      Column(
+                                        // Container(
+                                        //   width: 300,
+                                        //   margin: EdgeInsets.only(right: 10),
+                                        //   child: Text('تم بعت هذا الطلب إليك في تاريخ ' + widget.datesend +'\n'+ "في الساعة "+ widget.timesend,
+                                        //     style: TextStyle(
+                                        //       fontFamily: 'Changa',
+                                        //       color: Colors.black45,
+                                        //       fontSize: 14.0,
+                                        //       fontWeight: FontWeight.bold,
+                                        //     ),),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        GestureDetector(
+                          // onTap: (){
+                          //   print('fbfgbfbfb');
+                          // },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 53,
+                                width: 350,
+                                alignment: Alignment.topRight,
+                                transform: Matrix4.translationValues(0.0, -32.0, 0.0),
+                                margin: EdgeInsets.only(right: 2),
+                                child:Row(
+                                  children: [
+                                    Container(
+                                      child: Column(
                                         children: [
                                           Container(
-                                            width: 300,
-                                            margin: EdgeInsets.only(right: 10),
-                                            child: Text('الإنتهاء من العمل',
-                                              style: TextStyle(
-                                                fontFamily: 'Changa',
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),),
+                                            margin: EdgeInsets.only(top:0),
+                                            alignment: Alignment.topRight,
+                                            child:Icon(Icons.check_circle,size: 25,color: step4?Colors.green:Colors.grey,),
                                           ),
-                                          // Container(
-                                          //   width: 300,
-                                          //   margin: EdgeInsets.only(right: 10),
-                                          //   child: Text('تم بعت هذا الطلب إليك في تاريخ ' + widget.datesend +'\n'+ "في الساعة "+ widget.timesend,
-                                          //     style: TextStyle(
-                                          //       fontFamily: 'Changa',
-                                          //       color: Colors.black45,
-                                          //       fontSize: 14.0,
-                                          //       fontWeight: FontWeight.bold,
-                                          //     ),),
-                                          // ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 300,
+                                          margin: EdgeInsets.only(right: 10,),
+                                          child: Text('إنتهاء العمل',
+                                            style: TextStyle(
+                                              fontFamily: 'Changa',
+                                              color: Colors.black,
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),),
+                                        ),
+                                        // Container(
+                                        //   width: 300,
+                                        //   margin: EdgeInsets.only(right: 10),
+                                        //   child: Text('تم بعت هذا الطلب إليك في تاريخ ' + widget.datesend +'\n'+ "في الساعة "+ widget.timesend,
+                                        //     style: TextStyle(
+                                        //       fontFamily: 'Changa',
+                                        //       color: Colors.black45,
+                                        //       fontSize: 14.0,
+                                        //       fontWeight: FontWeight.bold,
+                                        //     ),),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+
+                              ),
+                            ],
                           ),
-
-
-                        ],),),
-                  ),
+                        ),
+                      ],),),
                   Container(
                     child: Column(
                       children:[
@@ -506,7 +518,7 @@ class  _current_user_statues extends State<current_user_statues> {
                                 side: BorderSide(color: Colors.transparent)
                             ),
                             // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
-                            color:A,
+                            color:Y,
                             child: Text(
                               "إلغاء الطلب",
                               style: TextStyle(
@@ -569,25 +581,17 @@ class _delete_order extends State<delete_order> {
           children: <Widget>[
             Column(
               children: [
-                GestureDetector(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 265),
-                    child: Icon(Icons.close),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
                 Container(
-                  margin: EdgeInsets.only(right: 10,top: 10),
+                  margin: EdgeInsets.only(right: 0,top: 10),
                   child: Text('هل أنت متأكد من أنك تريد حذف هذا الطلب ؟',
                     style: TextStyle(
                       fontFamily: 'Changa',
                       color: Colors.black45,
-                      fontSize: 17.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
                     ),),
                 ),
+                SizedBox(height:50,),
                 Row(
                   children: [
                     GestureDetector(
@@ -596,18 +600,15 @@ class _delete_order extends State<delete_order> {
                         DateTime date_d =DateTime.now();
                         print(widget.phoneuser); print(widget.name);
                         print('=========================================================================');
-
                         Navigator.push(context, MaterialPageRoute(builder: (context) => user_reserve_order(phoneuser:widget.phoneuser,username:widget.name,),),);
-                        // Navigator.pop(context);
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time: widget.time,phone: widget.phone,)),);
                       },
                       child: Container(
                           margin: EdgeInsets.only(right: 170),
-                          child:Text('نعم',
+                          child:Text('حسنا',
                             style: TextStyle(
                               fontFamily: 'Changa',
-                              color: Colors.black45,
-                              fontSize: 15.0,
+                              color: Y,
+                              fontSize: 13.0,
                               fontWeight: FontWeight.bold,
                             ),
                           )
@@ -618,12 +619,12 @@ class _delete_order extends State<delete_order> {
                         Navigator.pop(context);
                       },
                       child: Container(
-                          margin: EdgeInsets.only(right: 60),
-                          child:Text('لا',
+                          margin: EdgeInsets.only(right: 48),
+                          child:Text('إلغاء',
                             style: TextStyle(
                               fontFamily: 'Changa',
-                              color: Colors.black45,
-                              fontSize: 15.0,
+                              color: Y,
+                              fontSize: 13.0,
                               fontWeight: FontWeight.bold,
                             ),
                           )
@@ -641,11 +642,11 @@ class _delete_order extends State<delete_order> {
   }
 
   Future delete_Order() async {
-    print(widget.id);
+    print(widget.id);print('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
     DateTime date=DateTime.now();
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);
     var formattedTime = DateFormat('HH:mm:ss').format(date);
-    var url = 'https://' + IP4 + '/testlocalhost/delete_accept_order.php';
+    var url = 'https://' + IP4 + '/testlocalhost/delete_order.php';
     var ressponse = await http.post(url, body: {
       "id": widget.id,
       "datecancel":formattedDate,

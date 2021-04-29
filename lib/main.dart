@@ -10,6 +10,7 @@ import 'Localnotification.dart';
 import 'USER/Search.dart';
 import 'USER/xc.dart';
 import 'USER/Setting_user.dart';
+import 'new_map.dart';
 import 'notificationscreen.dart';
 
 class MyHttpOverrides extends HttpOverrides{

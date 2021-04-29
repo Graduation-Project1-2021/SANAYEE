@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/ChatUuser/chatListUser.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'package:flutterphone/Worker/setting_worker.dart';
 import 'package:flutterphone/Worker/worker_order.dart';
@@ -120,7 +120,7 @@ class  _U_PROFILE extends State<U_PROFILE> {
               getChat();
               _page = index;
               if (_page == 0) {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));}
-              if(_page==3){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true)));}
+              if(_page==3){Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,)));}
               if(_page==4){ Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>WelcomeScreen()));}
 
             });

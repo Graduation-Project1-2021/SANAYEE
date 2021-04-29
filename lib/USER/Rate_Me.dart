@@ -1,5 +1,6 @@
 import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
+import 'package:flutterphone/USER/user_reserve_order.dart';
 import 'package:flutterphone/components/review_face.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutterphone/constants.dart';
@@ -213,14 +214,14 @@ class _Body extends State<Rate> {
                ),
              ),),
             Container(
-            //  color: Colors.white,
+              //  color: Colors.white,
               // decoration: BoxDecoration(
               //   border: Border.all(
               //     color: Colors.black,
               //   ),
               // ),
-              child:  FlatButton(
-                onPressed: ()async{
+              child:  GestureDetector(
+                onTap: ()async{
                   print(widget.phoneuser);
                   print(widget.phoneworker);
                   print(widget.id);
@@ -231,11 +232,11 @@ class _Body extends State<Rate> {
                   _showMyDialog();
                 },
                 child: Text('تسليم',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 15.0,
-                      fontFamily: 'Changa',
-                      fontWeight: FontWeight.bold,),),
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 15.0,
+                    fontFamily: 'Changa',
+                    fontWeight: FontWeight.bold,),),
               ),
             ),
           ],),
@@ -451,18 +452,18 @@ class _Body extends State<Rate> {
               children: [
                 Container(
                   width: 70,
-                  margin: EdgeInsets.only(left: 10,right:120,bottom: 20,top: 10),
-                  child:FlatButton(
-                    child: Text('حسنا',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600],
-                        fontFamily: 'Changa',
-                      ),),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.username,)));
-                    },
+                  margin: EdgeInsets.only(left: 10,right:180,bottom:15,top: 30),
+                  child:GestureDetector(
+                   onTap: (){
+                     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.username,phoneuser:widget.phoneworker,)));
+                   },
+                   child:Text('حسنا',
+                   style: TextStyle(
+                   fontSize: 13,
+                   fontWeight: FontWeight.bold,
+                   color:Y,
+                   fontFamily: 'Changa',
+                  ),),
                   ),),
               ],
             ),

@@ -187,24 +187,42 @@ class _Body extends State<SignWorker> {
               children: <Widget>[
                 Stack(
                   children: [
+                    Container(
+                      color:Colors.white,
+                      child: ClipPath(
+                        clipper: ClippingClass(),
+                        child:Container(
+                            height: 230,
+                            width: 500,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.9),
+                              image: new DecorationImage(
+                                fit: BoxFit.cover,
+                                colorFilter:
+                                ColorFilter.mode(Colors.grey.withOpacity(0.8),
+                                    BlendMode.dstATop),
+                                image: new AssetImage('assets/work/cvtop.jpg',),
+                              ),
+                              // gradient: LinearGradient(
+                              //     begin: Alignment.topCenter,
+                              //     end: Alignment.bottomCenter,
+                              //     // colors: [B,A,G]
+                              //     colors: [Y1,Y4]
+                              // ),
+                            ),
+                            child:Column(
+                              children: [
+                                SizedBox(height:1,),
+                                // Image.asset('assets/work/cvtop.jpg',width:500,fit: BoxFit.fitWidth,),
 
-                    ClipPath(
-                      clipper: Clipper4(),
-                      child:  Container(
-                        height: 220,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [B,G]),),
-
-                        // child: Center(child: Text("MultiplePointedEdgeClipper()")),
-                      ),
+                              ],
+                            )
+                        ),),
                     ),
                     Column(
                       children: [
                         Center(
-                          child: Container(margin:EdgeInsets.only(top:90),child: image_profile(),),),
+                          child: Container(margin:EdgeInsets.only(top:140),child: image_profile(),),),
                       ],),
                   ],
                 ),
@@ -231,7 +249,7 @@ class _Body extends State<SignWorker> {
                                         child:Row(
                                           children: [
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(0,70,40,0),
+                                              margin: EdgeInsets.fromLTRB(0,50,40,0),
                                               width: size.width * 0.33,
                                               height: 60,
                                               child: TextFormField(
@@ -249,7 +267,7 @@ class _Body extends State<SignWorker> {
                                                 cursorColor: kPrimaryColor,
                                                 textAlign: TextAlign.right,
                                                 style: TextStyle(
-                                                  fontSize: 16.0,
+                                                  fontSize: 15.0,
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily: 'Changa',
                                                 ),
@@ -268,7 +286,7 @@ class _Body extends State<SignWorker> {
                                                   ),
                                                   hintText: 'الاسم الأول ',
                                                   hintStyle: TextStyle(
-                                                    fontSize: 16.0,
+                                                    fontSize: 15.0,
                                                     fontFamily: 'Changa',
                                                     color: Color(0xFF666360),
                                                   ),
@@ -277,7 +295,7 @@ class _Body extends State<SignWorker> {
                                               ),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(0,70,10,0),
+                                              margin: EdgeInsets.fromLTRB(0,50,10,0),
                                               //padding: EdgeInsets.fromLTRB(0,0,30,0),
                                               width: size.width * 0.44,
                                               height: 60,
@@ -296,7 +314,7 @@ class _Body extends State<SignWorker> {
                                                 cursorColor: kPrimaryColor,
                                                 textAlign: TextAlign.right,
                                                 style: TextStyle(
-                                                  fontSize: 16.0,
+                                                  fontSize: 15.0,
                                                   fontWeight: FontWeight.bold,
                                                   fontFamily: 'Changa',
                                                 ),
@@ -316,7 +334,7 @@ class _Body extends State<SignWorker> {
                                                   //contentPadding: EdgeInsets.only(),
                                                   hintText: ' اسم العائلة ',
                                                   hintStyle: TextStyle(
-                                                    fontSize: 16.0,
+                                                    fontSize: 15.0,
                                                     fontFamily: 'Changa',
                                                     color: Color(0xFF666360),
                                                   ),
@@ -367,14 +385,14 @@ class _Body extends State<SignWorker> {
                                         cursorColor: kPrimaryColor,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
-                                          fontSize: 16.0,
+                                          fontSize: 15.0,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Changa',
                                         ),
                                         decoration: InputDecoration(
                                           filled: true,
                                           fillColor: Colors.grey[100],
-                                          prefixIcon: Icon(Icons.person,color: Color(0xFF666360)),
+                                          prefixIcon: Icon(Icons.person,size:25,color: Color(0xFF666360)),
                                           enabledBorder: new OutlineInputBorder(
                                             borderRadius: new BorderRadius.circular(30.0),
                                             borderSide:  BorderSide(color:Colors.grey[100]),
@@ -387,7 +405,7 @@ class _Body extends State<SignWorker> {
                                           ),
                                           hintText: 'الاسم ',
                                           hintStyle: TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 15.0,
                                             fontFamily: 'Changa',
                                             color: Color(0xFF666360),
                                           ),
@@ -440,21 +458,21 @@ class _Body extends State<SignWorker> {
                                           cursorColor: kPrimaryColor,
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Changa',
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: Colors.grey[100],
-                                            prefixIcon: Icon(Icons.lock, color:Color(0xFF666360)),
+                                            prefixIcon: Icon(Icons.lock,size:25,color:Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
                                                 _togglevisibility1();
                                               },
                                               child: Icon(
                                                 _showPassword1 ? Icons.visibility : Icons
-                                                    .visibility_off, color: Color(0xFF666360),),
+                                                    .visibility_off,size:25,color: Color(0xFF666360),),
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
@@ -468,7 +486,7 @@ class _Body extends State<SignWorker> {
                                             ),
                                             hintText: ('كلمة السر'),
                                             hintStyle: TextStyle(
-                                              fontSize: 16.0,
+                                              fontSize: 15.0,
                                               fontFamily: 'Changa',
                                               color: Color(0xFF666360),
                                             ),
@@ -530,21 +548,21 @@ class _Body extends State<SignWorker> {
                                           textAlign: TextAlign.right,
                                           controller: passController2,
                                           style: TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Changa',
                                           ),
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: Colors.grey[100],
-                                            prefixIcon: Icon(Icons.lock, color: Color(0xFF666360)),
+                                            prefixIcon: Icon(Icons.lock, size:25,color: Color(0xFF666360)),
                                             suffixIcon: GestureDetector(
                                               onTap: () {
                                                 _togglevisibility2();
                                               },
                                               child: Icon(
                                                   _showPassword2 ? Icons.visibility : Icons
-                                                      .visibility_off, color: Color(0xFF666360)),
+                                                      .visibility_off, size:25,color: Color(0xFF666360)),
                                             ),
                                             enabledBorder: new OutlineInputBorder(
                                               borderRadius: new BorderRadius.circular(30.0),
@@ -558,7 +576,7 @@ class _Body extends State<SignWorker> {
                                             ),
                                             hintText: ('تأكيد كلمة السر'),
                                             hintStyle: TextStyle(
-                                              fontSize: 16.0,
+                                              fontSize: 15.0,
                                               fontFamily: 'Changa',
                                               color: Color(0xFF666360),
                                             ),
@@ -623,47 +641,47 @@ class _Body extends State<SignWorker> {
                                             color:Colors.yellow,
                                             size: 20.0,
                                           ),),),
-                                      // Container(
-                                      //   margin: EdgeInsets.fromLTRB(0,10,0,0),
-                                      //   width: size.width * 0.8,
-                                      //   height: 60,
-                                      //   child: TextFormField(
-                                      //     controller: Work,
-                                      //     validator: (value) {
-                                      //       if (value.isEmpty) {
-                                      //         Work_Null=false;
-                                      //         return null;
-                                      //       } else {
-                                      //         Work_Null=true;
-                                      //         return null;
-                                      //       }
-                                      //     },
-                                      //     cursorColor: Colors.grey[600],
-                                      //     textAlign: TextAlign.right,
-                                      //     style: TextStyle(
-                                      //       fontSize: 16.0,
-                                      //       fontWeight: FontWeight.bold,
-                                      //       fontFamily: 'Changa',
-                                      //     ),
-                                      //     decoration: InputDecoration(
-                                      //       filled: true,
-                                      //       fillColor: Colors.grey[100],
-                                      //       enabledBorder: new OutlineInputBorder(
-                                      //         borderRadius: new BorderRadius.circular(28.0),
-                                      //         borderSide:  BorderSide(color:Colors.grey[100]),
-                                      //
-                                      //       ),
-                                      //       focusedBorder: new OutlineInputBorder(
-                                      //         borderRadius: new BorderRadius.circular(28.0),
-                                      //         borderSide:  BorderSide(color:Colors.grey[100]),
-                                      //
-                                      //       ),
-                                      //       labelText: ('المهنة'),
-                                      //       floatingLabelBehavior: FloatingLabelBehavior.always,
-                                      //       labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
-                                      //     ),
-                                      //   ),
-                                      // ),
+                                      Container(
+                                        margin: EdgeInsets.fromLTRB(0,10,0,0),
+                                        width: size.width * 0.8,
+                                        height: 60,
+                                        child: TextFormField(
+                                          controller: Work,
+                                          validator: (value) {
+                                            if (value.isEmpty) {
+                                              Work_Null=false;
+                                              return null;
+                                            } else {
+                                              Work_Null=true;
+                                              return null;
+                                            }
+                                          },
+                                          cursorColor: Colors.grey[600],
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Changa',
+                                          ),
+                                          decoration: InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.grey[100],
+                                            enabledBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(28.0),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
+
+                                            ),
+                                            focusedBorder: new OutlineInputBorder(
+                                              borderRadius: new BorderRadius.circular(28.0),
+                                              borderSide:  BorderSide(color:Colors.grey[100]),
+
+                                            ),
+                                            labelText: ('المهنة'),
+                                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                                            labelStyle: TextStyle(fontSize: 22.0,fontFamily: 'Changa',color: myFocusNode.hasFocus ? Colors.grey[600] : Colors.grey[600],),
+                                          ),
+                                        ),
+                                      ),
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
@@ -690,7 +708,7 @@ class _Body extends State<SignWorker> {
                                               Text(
                                                 work_id,
                                                 style: TextStyle(
-                                                  fontSize: 16.0,
+                                                  fontSize: 15.0,
                                                   fontFamily: 'Changa',
                                                   color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
@@ -744,7 +762,7 @@ class _Body extends State<SignWorker> {
                                           cursorColor: Colors.grey[600],
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Changa',
                                           ),
@@ -807,7 +825,7 @@ class _Body extends State<SignWorker> {
                                           textAlign: TextAlign.right,
                                           controller: Experiance,
                                           style: TextStyle(
-                                            fontSize: 16.0,
+                                            fontSize: 15.0,
                                             fontWeight: FontWeight.bold,
                                             fontFamily: 'Changa',
                                           ),
@@ -950,7 +968,7 @@ class _Body extends State<SignWorker> {
                                               Text(
                                                 country_id,
                                                 style: TextStyle(
-                                                  fontSize: 16.0,
+                                                  fontSize: 15.0,
                                                   fontFamily: 'Changa',
                                                   color: Color(0xFF666360),
                                                   fontWeight: FontWeight.bold,
@@ -1007,7 +1025,7 @@ class _Body extends State<SignWorker> {
                                             decoration: InputDecoration(
                                               filled: true,
                                               fillColor: Colors.grey[100],
-                                              prefixIcon: Icon(Icons.phone,color: Color(0xFF666360),),
+                                              prefixIcon: Icon(Icons.phone,size:25,color: Color(0xFF666360),),
                                               enabledBorder: new OutlineInputBorder(
                                                 borderRadius: new BorderRadius.circular(30.0),
                                                 borderSide:  BorderSide(color:Colors.grey[100]),
@@ -1020,7 +1038,7 @@ class _Body extends State<SignWorker> {
                                               ),
                                               hintText: ('رقم الهاتف'),
                                               hintStyle: TextStyle(
-                                                fontSize: 16.0,
+                                                fontSize: 15.0,
                                                 fontFamily: 'Changa',
                                                 color: Color(0xFF666360),
                                                 fontWeight: FontWeight.bold,
@@ -1175,7 +1193,7 @@ class _Body extends State<SignWorker> {
                                         side: BorderSide(color: Colors.transparent)
                                     ),
                                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-                                    color: D,
+                                    color: Colors.black87,
                                     onPressed: () async {
                                       if (formKey.currentState.validate()) {print('validate');}
                                       else{print('not validate');}
@@ -1240,7 +1258,7 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,left: 0,right: 180),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card1 ? D :  Colors.grey.withOpacity(0.5),
+                                      color: card1 ? Colors.black87 :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -1249,7 +1267,7 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card2 ? D :  Colors.grey.withOpacity(0.5),
+                                      color: card2 ? Colors.black87 :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                   Container(
@@ -1258,7 +1276,7 @@ class _Body extends State<SignWorker> {
                                     margin: EdgeInsets.only(top: 30,left: 150,right: 10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: card3 ?  D :  Colors.grey.withOpacity(0.5),
+                                      color: card3 ?  Colors.black87 :  Colors.grey.withOpacity(0.5),
                                     ),
                                   ),
                                 ],),
@@ -1562,16 +1580,16 @@ class _Body extends State<SignWorker> {
       child:Stack (children: <Widget>[
         CircleAvatar(
           backgroundImage: image_file==null? AssetImage('assets/icons/signup.jpg'):FileImage(File(image_file.path)),
-          radius: 60.0,
+          radius: 45.0,
         ),
         Positioned(
-          bottom:10.0,
-          right:3.0,
+          bottom:3.0,
+          right:-1.0,
           child: InkWell(
             onTap:(){
               showModalBottomSheet(context: context, builder: (builder) => buttom_camera(),);
             },
-            child:Icon(Icons.camera_alt,color: Colors.grey,size: 35.0,),),),
+            child:Icon(Icons.camera_alt,color: Colors.black.withOpacity(0.5),size: 35.0,),),),
       ],
       ),);
   }

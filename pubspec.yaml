@@ -76,7 +76,9 @@ dependencies:
   percent_indicator: "^2.1.5"
   flutter_local_notifications: ^1.4.4+1
   rxdart: ^0.24.1
-  #google_maps_flutter:
+  clippy_flutter: ^1.1.1
+  flutter_slidable: ^0.5.7
+    #google_maps_flutter:
    #location: ^3.0.0
   #geolocator: ^2.1.0
   #flutter_plugin_android_lifecycle: ^1.0.0
@@ -114,6 +116,32 @@ flutter:
     - assets/icons/y.png
     - assets/work/house-reforms.png
     - assets/work/taqaat.png
+    - assets/work/ho.jpg
+    - assets/work/back.jpg
+    - assets/work/cv.jpg
+    - assets/icons/worker.png
+    - assets/icons/current.png
+    - assets/work/bal.png
+    - assets/work/sabak.png
+    - assets/work/najar.png
+    - assets/work/ele.png
+    - assets/work/dahan.png
+    - assets/work/intro1.jpg
+    - assets/work/intro2.jpg
+    - assets/work/intro3.jpg
+    - assets/work/intro4.jpg
+    - assets/work/choice.jpg
+    - assets/icons/watsapp.jpg
+    - assets/work/ch.jpg
+    - assets/work/ch.png
+    - assets/work/w1.jpg
+    - assets/work/w2.jpg
+    - assets/work/najar.png
+    - assets/work/w3.jpg
+    - assets/work/w4.jpg
+    - assets/work/dayoff.png
+    - assets/work/cvtop.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -146,6 +174,11 @@ flutter:
     - family: vibes
       fonts:
         - asset: fonts/Vibes-Regular.ttf
+
+    - family: moza
+      fonts:
+          - asset: fonts/Maoza-Regular.ttf
+
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700

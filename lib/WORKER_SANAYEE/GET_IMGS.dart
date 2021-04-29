@@ -66,21 +66,87 @@ class  _Get_Images extends State< Get_Images> {
   Widget build(BuildContext context) {
     return Directionality( textDirection: TextDirection.rtl,
     child:Scaffold(
-      // backgroundColor: Colors.lightBlueAccent,
+      backgroundColor:Y2,
+      // appBar: new AppBar(
+      //   backgroundColor:Y2,
+      //   elevation: 0.0,
+      //   leading:GestureDetector(
+      //     onTap: (){
+      //       Navigator.pop(context);
+      //       // Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => PROFILE(name: widget.name,)));
+      //     },
+      //     child:Icon(Icons.arrow_back,color: Colors.white,),
+      //   ),
+      //   title: new Text('ألبومي',
+      //     style: TextStyle(
+      //       fontSize: 16.0,
+      //       fontWeight: FontWeight.bold,
+      //       fontFamily: 'Changa',
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
       body: Form(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Stack(
                 children:[
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) =>PROFILE(name:widget.name)));},
-                    child:  Container(
-                      margin: EdgeInsets.only(top: 60,right: 10),
-                      child:Icon(Icons.keyboard_backspace_sharp,color: Colors.black54,size: 25,),
+                  Container(
+                    height:200,
+                    decoration: BoxDecoration(
+                      color:Colors.grey[50],
                     ),
+                    //child: Image.asset('assets/work/intro3.jpg',width:500,fit: BoxFit.fitWidth,),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top:70,right: 10),
+                   child: GestureDetector(
+                     onTap: (){
+                       Navigator.pop(context);
+                       // Navigator.push(context,MaterialPageRoute(builder: (BuildContext context) => PROFILE(name: widget.name,)));
+                     },
+                        child:Icon(Icons.arrow_back,color: Colors.grey[600],),
+                     )
+                   ),
+                  Container(
+                      margin: EdgeInsets.only(top:70,right: 10),
+                      alignment: Alignment.center,
+                      // transform: Matrix4.translationValues(0, -120.0, 0),
+                      child:Text('ألبوم الصور',
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                          fontFamily: 'vibes',
+                          //fontStyle: FontStyle.italic,
+                        ),)
+                  ),
+                  // GestureDetector(
+                  //   onTap: (){
+                  //     chooseImage();
+                  //   },
+                  //   child: Container(
+                  //      margin: EdgeInsets.only(top:100,right: 270,),
+                  //             height: 50,
+                  //             width: 140,
+                  //             child: Center(
+                  //               child: Row(
+                  //                 children: [
+                  //                   Text('  إضافة صورة',
+                  //                     style: TextStyle(
+                  //                       color:Colors.grey[600],
+                  //                       fontSize: 15.0,
+                  //                       fontFamily: 'Changa',
+                  //                       fontWeight: FontWeight.bold,
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(width:10,),
+                  //                   Icon(Icons.add_a_photo,size: 30,color:Colors.grey[600],),
+                  //                 ],
+                  //               ),),
+                  //   ),
+                  // ),
                   // Container(
                   //   margin: EdgeInsets.fromLTRB(100, 50, 1, 0),
                   //   child: IconButton(
@@ -112,14 +178,14 @@ class  _Get_Images extends State< Get_Images> {
                     child:Column(
                       children: <Widget>[
                       Container(
-                      height:657.5,
-                      margin: EdgeInsets.only(top:140),
+                      height:642,
+                      margin: EdgeInsets.only(top:155),
                       padding: EdgeInsets.only(top:30,right: 15,left: 15,),
                       decoration: BoxDecoration(
-                        color: chat,
+                        color: Colors.white,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50),
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
                         ),
                       ),
                       child:FutureBuilder(
@@ -137,75 +203,57 @@ class  _Get_Images extends State< Get_Images> {
                               itemBuilder: (context, index) {
                                 int count=0;
                                 if(index==snapshot.data.length){
-                                 return  Container(
-                                   // child: IconButton(icon: Icon(Icons.add),),
-                                   child:GestureDetector(
-                                     onTap: (){
-                                       chooseImage();
-                                     },
-                                     child: Container(
-                                       // margin: EdgeInsets.only(right: 10,bottom: 10),
-                                       child:Stack(
-                                         overflow: Overflow.visible,
-                                         children: <Widget>[
-                                           Positioned(
-
-                                             child: Container(
-                                               height: 150,
-                                               width: 150,
-                                               decoration: BoxDecoration(
-                                                   color: Colors.grey.withOpacity(0.3),
-                                                   borderRadius: BorderRadius.circular(10.0)
-                                               ),
-                                               child: Center(
-                                                 child: Text("+", style: TextStyle(
-                                                   color: Colors.white,
-                                                   fontSize: 40,
-                                                 ),),
-                                               ),
-                                             ),
-                                           )
-                                         ],
-                                       ),),),
-                                 );
-                                 False();
+                                  return  Container(
+                                    // child: IconButton(icon: Icon(Icons.add),),
+                                    child:GestureDetector(
+                                      onTap: (){
+                                        chooseImage();
+                                      },
+                                      child: Container(
+                                        // margin: EdgeInsets.only(right: 10,bottom: 10),
+                                        child:Stack(
+                                          overflow: Overflow.visible,
+                                          children: <Widget>[
+                                            Positioned(
+                                              child: Container(
+                                                height: 150,
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey[50],
+                                                    borderRadius: BorderRadius.circular(10.0)
+                                                ),
+                                                child: Center(
+                                                  child:Icon(Icons.add_a_photo,size: 35,color:Y,),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),),),
+                                  );
                                 }
                                 else{
-                                return RawMaterialButton(
-                                  onPressed: () {
-                                    Navigator.push(context,MaterialPageRoute(
-                                        builder: (BuildContext context) =>IMG(imageName:snapshot.data[index]['images'],index:index,phone:snapshot.data[index]['phone'],id:snapshot.data[index]['id'])));},
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => DetailsPage(
-                                  //       imagePath: _images[index].imagePath,
-                                  //       title: _images[index].title,
-                                  //       photographer: _images[index].photographer,
-                                  //       price: _images[index].price,
-                                  //       details: _images[index].details,
-                                  //       index: index,
-                                  //     ),
-                                  //   ),
-                                  // );
-
-                                  child: Hero(
-                                    tag: 'logo$index',
-                                    child: Container(
-                                      // print(_image[index].id+"");
-                                      //  child: Text(_image[inde),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']),
-                                          fit: BoxFit.cover,
+                                  return RawMaterialButton(
+                                    onPressed: () {
+                                      Navigator.push(context,MaterialPageRoute(
+                                          builder: (BuildContext context) =>IMG(imageName:snapshot.data[index]['images'],index:index,phone:snapshot.data[index]['phone'],id:snapshot.data[index]['id'])));},
+                                    child: Hero(
+                                      tag: 'logo$index',
+                                      child: Container(
+                                        // print(_image[index].id+"");
+                                        //  child: Text(_image[inde),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+snapshot.data[index]['images']),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                );}
-                              },
-
+                                  );
+                                  }
+                                }
                             );
+
                           }
                           return Center(child: CircularProgressIndicator());
                         },
@@ -259,6 +307,7 @@ class  _Get_Images extends State< Get_Images> {
     String imagename = _file.path.split('/').last;
     print("hiiii");
     print(imagename);
+    print(base64);
     var url = 'https://'+IP4+'/testlocalhost/EXP_Image.php';
     // final uri=Uri.parse("https://192.168.2.111/testlocalhost/signup.php");
     var response = await http.post(url, body: {

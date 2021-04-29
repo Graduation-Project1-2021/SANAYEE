@@ -21,7 +21,7 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
             login ? " ليس لديك حساب ؟ إنشاء حساب جديد                     " : "  لديك حساب بالفعل ؟ تسجيل الدخول                    ",
             textAlign: TextAlign.right,
             style: TextStyle(
-              color: login? Color(0xFF1C1C1C):Color(0xFF1C1C1C),
+              color: login? Colors.white:Color(0xFF1C1C1C),
               fontWeight: FontWeight.w700,
                 fontSize: 15.0,
                 fontFamily: 'Changa',

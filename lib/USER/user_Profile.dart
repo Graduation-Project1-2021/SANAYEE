@@ -2,7 +2,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/chatListUser.dart';
+import 'package:flutterphone/ChatUuser/chatListUser.dart';
 import 'package:flutterphone/USER/List_worker_group.dart';
 import 'package:flutterphone/USER/WORKER_PROFILE.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
@@ -22,6 +22,7 @@ import '../constants.dart';
 import '../database.dart';
 import 'ALL_SERVICE.dart';
 import 'favarate.dart';
+import 'menue_Page.dart';
 
 String  name_Me="";
 String  name="";
@@ -83,23 +84,23 @@ class  _U_PROFILE extends State<U_PROFILE> {
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);
   }
-  _U_PROFILE() {
-    //Register a closure to be called when the object changes.
-    _searchview.addListener(() {
-      if (_searchview.text.isEmpty) {
-        //Notify the framework that the internal state of this object has changed.
-        setState(() {
-          _firstSearch = true;
-          _query = "bvn";
-        });
-      } else {
-        setState(() {
-          _firstSearch = false;
-          _query = _searchview.text;
-        });
-      }
-    });
-  }
+  // _U_PROFILE() {
+  //   //Register a closure to be called when the object changes.
+  //   _searchview.addListener(() {
+  //     if (_searchview.text.isEmpty) {
+  //       //Notify the framework that the internal state of this object has changed.
+  //       setState(() {
+  //         _firstSearch = true;
+  //         _query = "bvn";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _firstSearch = false;
+  //         _query = _searchview.text;
+  //       });
+  //     }
+  //   });
+  // }
   DatabaseMethods databaseMethods=new DatabaseMethods();
   Stream chatsRoom;
   @override
@@ -110,7 +111,7 @@ class  _U_PROFILE extends State<U_PROFILE> {
       child:Stack(
         children: [
       Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         key: _scaffoldKey,
         bottomNavigationBar:Container(
           decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -132,26 +133,6 @@ class  _U_PROFILE extends State<U_PROFILE> {
                     GButton(
                       icon: Icons.home,
                       text: 'الرئيسية',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
-                      icon: Icons.person,
-                      text: 'حسابي',
-                      textStyle:TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GButton(
-                      icon: Icons.favorite_border,
-                      text: 'المفضلة',
                       textStyle:TextStyle(
                         fontFamily: 'Changa',
                         color: Colors.black,
@@ -184,20 +165,48 @@ class  _U_PROFILE extends State<U_PROFILE> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    GButton(
+                      icon: Icons.favorite_border,
+                      text: 'المفضلة',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GButton(
+                      icon: Icons.menu,
+                      text: 'القائمة',
+                      textStyle:TextStyle(
+                        fontFamily: 'Changa',
+                        color: Colors.black,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                   selectedIndex: _selectedIndex,
                   onTabChange: (index) {
                     setState(() {
                       _selectedIndex = index;
+                      if(index==0){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                      }
+                      if(index==1){
+                        print(phone+"PHONE");
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.name_Me,phoneuser: phone,namelast:namelast,image:image,token:token,namefirst:namefirst)));
+                      }
                       if(index==2){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.name_Me,phoneuser: phone,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,phone:phone,namelast:namelast,image:image,token:token,namefirst:namefirst)));
                       }
                       if(index==3){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => user_reserve_order(username: widget.name_Me,phoneuser: phone,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => favarate(username: widget.name_Me,phoneuser: phone,namelast:namelast,image:image,token:token,namefirst:namefirst)));
                       }
                       if(index==4){
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,user: true,phone:phone,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MenuePage(namelast:namelast,name:widget.name_Me,phone:phone,image:image,token:token,namefirst:namefirst)));
                       }
+
 
 
                     });
@@ -228,25 +237,20 @@ class  _U_PROFILE extends State<U_PROFILE> {
                   height: 210.0,
                   width: 450.0,
                   child: Carousel(
+                    boxFit: BoxFit.cover,
                     indicatorBgPadding: 10,
                     images: [
-                      NetworkImage('https://cdn-images-1.medium.com/max/2000/1*GqdzzfB_BHorv7V2NV7Jgg.jpeg',),
-                      NetworkImage('https://cdn-images-1.medium.com/max/2000/1*wnIEgP1gNMrK5gZU7QS0-A.jpeg'),
-                      ExactAssetImage("assets/icons/ho.jpg")
+                      ExactAssetImage("assets/work/intro4.jpg"),
+                      ExactAssetImage("assets/work/intro1.jpg"),
+                      ExactAssetImage("assets/work/intro3.jpg")
                     ],
                   )
               ),
-              Image.asset(
-                "assets/icons/ho.jpg",
-                height:250,
-                width:450,
-                fit: BoxFit.fill,
-              ),
              Container(
                 height: 500,
-                // color:  Color(0xFFF3D657),
-                margin: EdgeInsets.only(top: 260),
+                margin: EdgeInsets.only(top: 210),
                 decoration: BoxDecoration(
+                  color:  Colors.grey[50],
                   // color:Color(0xFF1C1C1C),
                   // borderRadius: BorderRadius.only(
                   //   topLeft: Radius.circular(50),
@@ -278,120 +282,6 @@ class  _U_PROFILE extends State<U_PROFILE> {
               ),
             ],),),),),],),);
   }
-  Widget _createSearchView() {
-
-    return new Container(
-      height: 55,
-      margin: EdgeInsets.only(top: 30),
-      padding: EdgeInsets.only(right: 10),
-      // decoration: BoxDecoration(border: Border.all(width: 1.0)),
-      child: new TextField(
-        controller: _searchview,
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Changa',
-        ),
-        textAlign: TextAlign.right,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          hintText: "البحث عن مقدم خدمة",
-          hintStyle: new TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Changa',
-          ),
-          enabledBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(15.0),
-            borderSide:  BorderSide(color:Colors.grey[100]),
-
-          ),
-          focusedBorder: new OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(15.0),
-            borderSide:  BorderSide(color:Colors.grey[100]),
-
-          ),
-          suffixIcon: GestureDetector(
-            onTap: () {
-            },
-            child:  Container(
-              // margin: EdgeInsets.only(top: 5),
-              child:RotatedBox(
-                quarterTurns: 1,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color:Colors.black54,
-                    size: 25.0,
-                  ),
-                  onPressed: null,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _performSearch() {
-    _filterList = new List<String>();
-    for (int i = 0; i < Search.length; i++) {
-      var item = Search[i]['namefirst']+" ";
-
-      if (item.toLowerCase().contains(_query.toLowerCase())) {
-        _filterList.add(item);
-      }
-    }
-    return _createFilteredListView();
-  }
-  //Create the Filtered ListView
-  Widget _createFilteredListView() {
-
-    return new Stack(
-      children:[
-        SingleChildScrollView(
-          child:Directionality(textDirection: TextDirection.ltr,
-            child:Container(
-              width: 370,
-              height: 200,
-              alignment: Alignment.topRight,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0,0.5),
-                    blurRadius: 0.01,
-                    color: Colors.black54,
-                  ),],
-              ),
-              child: new ListView.builder(
-                  itemCount: _filterList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return new GestureDetector(
-                      onTap: (){
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:Listsearch[index]['Work'],image:Listsearch[index]['image'],phone:Listsearch[index]['phone'],name: Listsearch[index]['name'],namelast:Listsearch[index]['namelast'],name_Me: widget.name_Me,namefirst:Listsearch[index]['namefirst'],token:Listsearch[index]['token'],Information:Listsearch[index]['Information'],Experiance:Listsearch[index]['Experiance'],),));
-                      },
-                      child:  Container(
-                        alignment: Alignment.topRight,
-                        color: Colors.white,
-                        width: 200,
-                        margin: EdgeInsets.only(right: 20,top:10),
-                        padding:EdgeInsets.only(right: 5,),
-                        child: new Text("${_filterList[index]}",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Changa',
-                            color: Colors.black54,
-                          ),),
-                      ),
-                    );
-                  }),
-            ),),),],);
-  }
 }
 class USER_PROFILE  extends StatefulWidget {
   final  name_Me;
@@ -422,7 +312,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
   List<String> _filterList;
   var _searchview = new TextEditingController();
 
-  bool _firstSearch = false;
+  bool _firstSearch = true;
   String _query = "";
   _USER_PROFILE() {
     //Register a closure to be called when the object changes.
@@ -467,20 +357,12 @@ class _USER_PROFILE extends State<USER_PROFILE> {
     // getChat();
   }
 
+
   @override
   Widget build(BuildContext context) {
      getChat();
-    return Column(
+    return Stack(
         children:<Widget>[
-          new Container(
-            margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 170),
-            child: new Column(
-              children: <Widget>[
-                _createSearchView(),
-                _firstSearch ? Text('hhhhhhhhhhhhhhhhhhhhhhhhhhhhh') : _performSearch()
-              ],
-            ),
-          ),
           // Container(
           //   margin: EdgeInsets.only(top:10),
           //   child:IconButton(
@@ -557,39 +439,49 @@ class _USER_PROFILE extends State<USER_PROFILE> {
           // ),
           SingleChildScrollView(
               child: Container(
+                transform: Matrix4.translationValues(0.0, -50.0, 0.0),
               margin: EdgeInsets.only(top:0),
              height: 521,
              width: 500,
-             child: Column(
+             child: Stack(
               children: [
               Container(
+                margin: EdgeInsets.only(top:110),
               child:Column(
               children:[
+              // Container(
+              //   child:Row(
+              //     children: [
+              //       Container(
+              //         margin: EdgeInsets.only(right: 35,),
+              //         child: Text('اختر خدمة',
+              //           style: TextStyle(
+              //           fontFamily: 'Changa',
+              //           color: Colors.black87,
+              //           fontSize: 15.0,
+              //           fontWeight: FontWeight.bold,
+              //         ),),
+              //       ),
+              //     ],
+              //   ),
+              //   ),
               Container(
-                child:Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 35,),
-                      child: Text('اختر خدمة',
-                        style: TextStyle(
-                        fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                    ),
-                  ],
-                ),
-                ),
-              Container(
-                color: Colors.white,
-                margin: EdgeInsets.only(top: 10,right: 22,left: 20),
+                color: Colors.grey[50],
+                margin: EdgeInsets.only(top: 0,right: 22,left: 20),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: <Widget>[
-                      RecomendPlantCard(
-                        image: "assets/work/najar.jpg",
+                      RecomendPlantCard1(
+                        image: "assets/work/mec.png",
+                        title: "ميكانيكي",
+                        press: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'أقفال',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
+                        },
+                      ),
+                      SizedBox(width: 3,),
+                      RecomendPlantCard2(
+                        image: "assets/work/najar.png",
                         title: "نجّار",
                         press: () {
                           print(widget.phone); print(widget.name_Me); print(widget.phone);
@@ -599,69 +491,31 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'نجار',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
-                      RecomendPlantCard(
-                        image: "assets/work/sapak.jpg",
-                        title: "سبّاك",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(token_Me:widget.token,work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/electric1.jpg",
+                      SizedBox(width: 3,),
+                      RecomendPlantCard3(
+                        image: "assets/work/ele.png",
                         title: "كهربائي",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'كهربائي',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'كهربائي',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
-                      RecomendPlantCard(
-                        image: "assets/work/fix.jpg",
-                        title: "تصليح",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'تصليح',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/lock.jpg",
-                        title: "أقفال",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'أقفال',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/sapaak.jpg",
-                        title: "سبّاك",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'سباك',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/dahan.jpg",
-                        title: "دهّان",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'دهان',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/mec.jpg",
-                        title: "ميكانيك",
-                        press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'ميكانيك',name_Me: widget.name_Me,location: widget.country,),),);
-                        },
-                      ),
-                      RecomendPlantCard(
-                        image: "assets/work/baleet.jpg",
+                      SizedBox(width: 3,),
+                      RecomendPlantCard4(
+                        image: "assets/work/bal.png",
                         title: "بلييط",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'بلييط',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'بلييط',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
-                      RecomendPlantCard(
-                        image: "assets/work/repaier.jpg",
-                        title: "إصلاح",
+                      SizedBox(width: 5,),
+                      RecomendPlantCard5(
+                        image: "assets/work/sabak.png",
+                        title: "سبّاك",
                         press: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(work: 'إصلاح',name_Me: widget.name_Me,location: widget.country,),),);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work: 'سباك',name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);
                         },
                       ),
+
                     ],
                   ),
 
@@ -669,22 +523,32 @@ class _USER_PROFILE extends State<USER_PROFILE> {
               ),
                 GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => All_Service(name_Me: widget.name_Me,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => All_Service(token:widget.token,name_Me: widget.name_Me,phone: widget.phone,country: widget.country,namefirst:widget.namefirst,namelast:widget.namelast,image: widget.image)));
                   },
                   child: Container(
-                    margin: EdgeInsets.only(right: 200,),
-                    child: Text('عرض جميع الخدمات',
+                    margin: EdgeInsets.only(right: 300,),
+                    child: Text('عرض المزيد',
                       style: TextStyle(
                         fontFamily: 'Changa',
-                        color: Colors.black,
-                        fontSize: 15.0,
+                        color: Colors.black54,
+                        fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                       ),),
                   ),
                 ),
             ],
           ),
-        ),],),
+        ),
+                new Container(
+                  margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 0),
+                  child: new Column(
+                    children: <Widget>[
+                      _createSearchView(),
+                      _firstSearch ? Text('') : _performSearch()
+                    ],
+                  ),
+                ),
+              ],),
     ),
     ),],);
   }
@@ -692,8 +556,19 @@ class _USER_PROFILE extends State<USER_PROFILE> {
 
     return new Container(
       height: 55,
-      margin: EdgeInsets.only(top: 30),
+      width: 410,
+      margin: EdgeInsets.only(top: 30,left: 10),
       padding: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.5),
+        //     blurRadius: 2.0,
+        //     spreadRadius: 0.0,
+        //     offset: Offset(1.0,1.0), // shadow direction: bottom right
+        //   )
+        // ],
+      ),
       // decoration: BoxDecoration(border: Border.all(width: 1.0)),
       child: new TextField(
         controller: _searchview,
@@ -706,7 +581,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white,
-          hintText: "البحث عن مقدم خدمة",
+          hintText: "ابحث",
           hintStyle: new TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.bold,
@@ -714,12 +589,12 @@ class _USER_PROFILE extends State<USER_PROFILE> {
           ),
           enabledBorder: new OutlineInputBorder(
             borderRadius: new BorderRadius.circular(15.0),
-            borderSide:  BorderSide(color:Colors.grey[100]),
+            borderSide:  BorderSide(color:Colors.grey[300]),
 
           ),
           focusedBorder: new OutlineInputBorder(
             borderRadius: new BorderRadius.circular(15.0),
-            borderSide:  BorderSide(color:Colors.grey[100]),
+            borderSide:  BorderSide(color:Colors.grey[300]),
 
           ),
           suffixIcon: GestureDetector(
@@ -748,10 +623,10 @@ class _USER_PROFILE extends State<USER_PROFILE> {
   Widget _performSearch() {
     _filterList = new List<String>();
     for (int i = 0; i < widget.Search.length; i++) {
-      var item = widget.Search[i]['namefirst']+" ";
+      var item = widget.Search[i]['Work'];
 
       if (item.toLowerCase().contains(_query.toLowerCase())) {
-        _filterList.add(item);
+        if(!_filterList.contains(item)){_filterList.add(item);}
       }
     }
     return _createFilteredListView();
@@ -781,8 +656,7 @@ class _USER_PROFILE extends State<USER_PROFILE> {
                   itemBuilder: (BuildContext context, int index) {
                     return new GestureDetector(
                       onTap: (){
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone_Me,tokenuser:widget.token_Me,Work:Listsearch[index]['Work'],image:Listsearch[index]['image'],phone:Listsearch[index]['phone'],name: Listsearch[index]['name'],namelast:Listsearch[index]['namelast'],name_Me: widget.name_Me,namefirst:Listsearch[index]['namefirst'],token:Listsearch[index]['token'],Information:Listsearch[index]['Information'],Experiance:Listsearch[index]['Experiance'],),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Search_user(country:widget.country,token_Me:widget.token,work:_filterList[index],name_Me: widget.name_Me,location: widget.country,namefirst_Me:widget.namefirst,nameLast_Me:widget.namelast,phone_Me: widget.phone,image_Me: widget.image,),),);MaterialPageRoute(builder: (context) => user_worker(phoneuser:widget.phone,tokenuser:widget.token,Work:Listsearch[index]['Work'],image:Listsearch[index]['image'],phone:Listsearch[index]['phone'],name: Listsearch[index]['name'],namelast:Listsearch[index]['namelast'],name_Me: widget.name_Me,namefirst:Listsearch[index]['namefirst'],token:Listsearch[index]['token'],Information:Listsearch[index]['Information'],Experiance:Listsearch[index]['Experiance'],),);
                       },
                       child:  Container(
                         alignment: Alignment.topRight,
@@ -820,7 +694,7 @@ class RecomendPlantCard extends StatelessWidget {
     return Container(
       color: Colors.white,
       margin: EdgeInsets.only(left: 10, top: 10, bottom: 10,right: 0),
-      width: 100,
+      width: 111,
       height: 130,
       child: Column(
         children: <Widget>[
@@ -830,7 +704,7 @@ class RecomendPlantCard extends StatelessWidget {
               height: 130,
               // padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color:Colors.grey.withOpacity(0.2),
+                color:Colors.grey[50],
                 borderRadius: BorderRadius.circular(29),
                 // boxShadow: [
                 //   BoxShadow(
@@ -858,7 +732,7 @@ class RecomendPlantCard extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Changa',
                             color: Colors.black,
-                            fontSize: 20.0,
+                            fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),),),
@@ -871,321 +745,406 @@ class RecomendPlantCard extends StatelessWidget {
     );
   }
 }
-class DataSearch extends SearchDelegate<String>{
-  List<dynamic>list;
-  var recentList=[];
-  final name_Me;
-  DataSearch({this.list,this.name_Me});
-  Future getSearch()async{
-    var url='https://'+IP4+'/testlocalhost/groupsearch.php';
-    var ressponse=await http.post(url,body: {
-      "Work":query,
-    });
-    // ignore: deprecated_member_use
-    return json.decode(ressponse.body);
-  }
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [IconButton(icon: Icon(Icons.clear), onPressed: (){query="";})];
-    throw UnimplementedError();
-  }
 
-  @override
-  Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    //return IconButton(icon: Icon(Icons.arrow_back), onPressed: (){});
-    return IconButton(
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_arrow,
-        progress: transitionAnimation,
+class RecomendPlantCard1 extends StatelessWidget {
+  RecomendPlantCard1({
+    Key key,
+    this.image,
+    this.title,
+    this.press,
+  }) : super(key: key);
 
-      ),
-      onPressed: (){
-        close(context, null);
-      },);
-    // return AppBar(
-    //   backgroundColor: Colors.yellow,
-    //   actions: [
-    //   IconButton(
-    //       icon: AnimatedIcon(
-    //         icon: AnimatedIcons.menu_arrow,
-    //         progress: transitionAnimation,
-    //
-    //       ),
-    //       onPressed: (){
-    //         close(context, null);
-    //       },),
-    //   ],
-    // );
-    throw UnimplementedError();
-  }
-
-  //String get searchFieldLabel => "احثوو,";
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    return Directionality(textDirection: TextDirection.rtl,
-      child:SingleChildScrollView(
-        child:Container(
-          color: MY_BLACK,
-          height: 700,
-          padding: EdgeInsets.only(top:30),
-          //  color:  Color(0xFF1C1C1C),
-          child:FutureBuilder(
-            future: getSearch(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(snapshot.hasData){
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Group(name_Me:name_Me,name:snapshot.data[index]['name'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phone'],image:snapshot.data[index]['image'],Work:snapshot.data[index]['Work'],Experiance:snapshot.data[index]['Experiance'],Information:snapshot.data[index]['Information'],token:snapshot.data[index]['token']);
-                  },
-                );
-              }
-              return Center(child: CircularProgressIndicator());
-            },
-          ),),),);
-    return Text("SARA");
-    throw UnimplementedError();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-
-    var search =query.isEmpty?recentList:list.where((p) => p.startsWith(query)).toList();
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child:Container(
-        height: 200,
-        margin: EdgeInsets.only(top: 50),
-        child:ListView.builder(itemCount:search.length,itemBuilder: (context,i){
-          return ListTile(leading: Icon(Icons.people_sharp),
-              title: Text(search[i],
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontFamily: 'Changa',
-                  color: Color(0xFF666360),
-                  fontWeight: FontWeight.bold,),
-              ),
-
-              onTap:(){
-                query=search[i];
-                recentList.add(query);
-                showResults(context);
-              }
-          );
-        }),),);
-    throw UnimplementedError();
-  }
-
-}
-class Group  extends StatefulWidget {
-  final name_Me;
-  final  name;
-  final  namefirst;
-  final  namelast;
-  final  phone;
-  final  image;
-  final  Work;
-  final  Experiance;
-  final  Information;
-  final  token;
-  final country;
-
-  Group({this.country,this.name_Me,this.name,this.namefirst,this.namelast, this.phone, this.image, this.Work, this.Experiance, this.Information, this.token});
-
-  @override
-  _Group createState() => _Group();
-}
-
-class _Group extends State<Group> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future getImages() async {
-    var url = 'https://' + IP4 + '/testlocalhost/Show_EXP.php';
-    var ressponse = await http.post(url, body: {
-      "phone": widget.phone,
-    });
-    // ignore: deprecated_member_use
-    // var responsebody = json.decode(ressponse.body);
-    // print(responsebody);
-    return json.decode(ressponse.body);
-  }
+  final String image, title;
+  final Function press;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        height: 230,
-        width: 200,
-        decoration: BoxDecoration(
-          //color:Colors.white,
-          color: Colors.white,
-         // borderRadius: BorderRadius.circular(20),
-          // boxShadow: [
-          //   BoxShadow(
-          //     offset: Offset(0, 1),
-          //     blurRadius: 20,
-          //     color: Color(0xFFECCB45),
-          //   ),
-          // ],
-        ),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    List<Colors> Color=[];
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+      width: 110,
+      height: 105,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: press,
+            child:Stack(
+              children:<Widget>[
+                // Icon(Icons.paint),
+                Container(
+                  width: 160,
+                 height: 101,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                      bottomRight:  Radius.circular(5),
+                      bottomLeft:  Radius.circular(5),
+                    ),
+                    color: Colors.grey[100],
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [X1,X3]
+                    ),
+                  ),
+                 child:  Center(
+                   child:Column(
+                     children: [
+                       Container(
+                         height: 70,
+                         width: 80,
+                         margin: EdgeInsets.only(top: 0),
+                         child:ClipRRect(
+                           borderRadius: BorderRadius.circular(5),
+                           child: Image.asset(
+                             image, height: 90,
+                             width: 100,
+                             // color: Colors.white,
+                             fit: BoxFit.contain,),
+                         ),),
+                       Container(
+                         margin: EdgeInsets.only(top: 2),
+                         child:Center(
+                           child:Text(title,
+                             textAlign: TextAlign.center,
+                             style: TextStyle(
+                               fontFamily: 'Changa',
+                               color: Colors.white,
+                               fontSize: 16.0,
+                               fontWeight: FontWeight.bold,
+                             ),
+                           ),),),
+                     ],
+                   ),),
+                ),
+              ],),
+          ),
+        ],),
+    );
+  }
+}
 
-        child: Column(
-          children: <Widget>[
-            Stack(children: [
+class RecomendPlantCard2 extends StatelessWidget {
+  RecomendPlantCard2({
+    Key key,
+    this.image,
+    this.title,
+    this.press,
+  }) : super(key: key);
+
+  final String image, title;
+  final Function press;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Colors> Color=[];
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+      width: 110,
+      height: 105,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: press,
+            child:Stack(
+              children:<Widget>[
+                // Icon(Icons.paint),
               Container(
-                margin: EdgeInsets.only(top: 50, right: 30),
-                child: CircleAvatar(backgroundImage: NetworkImage(
-                    'https://' + IP4 + '/testlocalhost/upload/' + widget.image),
-                  radius: 37.0,),),
-              Container(
-                width: 200,
-                //color: Colors.red,
-                margin: EdgeInsets.only(top: 40, right: 120, left: 50),
-                child: Text(widget.namefirst + " " + widget.namelast,
-                  style: TextStyle(
-                    fontSize: 21.0,
-                    fontFamily: 'Changa',
-                    color: Color(0xFF666360),
-                    fontWeight: FontWeight.bold,
-                  ),),),
-              Container(
-                width: 200,
-                margin: EdgeInsets.only(top: 70, right: 120),
-                child: Text(widget.Work,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontFamily: 'Changa',
-                    color: Color(0xFF666360),
-                    fontWeight: FontWeight.bold,
+              height: 101,
+              width: 160,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5),
+                    bottomRight:  Radius.circular(5),
+                    bottomLeft:  Radius.circular(5),
                   ),
-                ),),
-              Row(
-                children: [
-                  Container(
-                    width: 130,
-                    margin: EdgeInsets.only(top: 100, right: 120),
-                    child: Text(widget.phone,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontFamily: 'Changa',
-                        color: Color(0xFF666360),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),),
-                  Container(
-                    margin: EdgeInsets.only(top: 100, right: 3, left: 15,),
-                    child: Icon(Icons.phone,
-                      color: Color(0xFF666360),),
+                  color: Colors.grey[100],
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [red1,red2]
                   ),
-                ],),
-              //Container (margin: EdgeInsets.only(top: 20,left: 150),child:Text(widget.name),),
-              Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 150, right: 45),
-                    child: Text("4.9",
-                      style: TextStyle(
-                        color: Color(0xFF666360),
+                ),
+              child:Center(
+                child:Column(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 70,
+                      margin: EdgeInsets.only(top: 10),
+                      child:ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.asset(
+                          image, height: 90,
+                          width: 100,
+                          // color: Colors.white,
+                          fit: BoxFit.contain,),
                       ),),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 150, right: 3, left: 15,),
-                    child: Icon(Icons.star,
-                      color: Color(0xFFECCB45),),
-                  ),
+                    Container(
+                      margin: EdgeInsets.only(top: 2),
+                      child:Center(
+                        child:Text(title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Changa',
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),),),
+                  ],
+                ),
+              ),),
+              ],),
+          ),
+        ],),
+    );
+  }
+}
 
-                ],
+class RecomendPlantCard3 extends StatelessWidget {
+  RecomendPlantCard3({
+    Key key,
+    this.image,
+    this.title,
+    this.press,
+  }) : super(key: key);
+
+  final String image, title;
+  final Function press;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Colors> Color=[];
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+      width: 110,
+      height: 105,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: press,
+            child:Stack(
+              children:<Widget>[
+                // Icon(Icons.paint),
+              Container(
+              height: 101,
+              width: 160,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5),
+                    bottomRight:  Radius.circular(5),
+                    bottomLeft:  Radius.circular(5),
+
+                  ),
+                  color: Colors.grey[100],
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [blue1,blue2]
+                  ),
+                ),
+              child:Center(
+                child:Column(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 70,
+                      margin: EdgeInsets.only(top: 10),
+                      child:ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.asset(
+                          image, height: 90,
+                          width: 100,
+                          // color: Colors.white,
+                          fit: BoxFit.contain,),
+                      ),),
+                    Container(
+                      margin: EdgeInsets.only(top: 2),
+                      child:Center(
+                        child:Text(title,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Changa',
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),),),
+                  ],
+                ),
+              ),),
+              ],),
+          ),
+        ],),
+    );
+  }
+}
+
+class RecomendPlantCard4 extends StatelessWidget {
+  RecomendPlantCard4({
+    Key key,
+    this.image,
+    this.title,
+    this.press,
+  }) : super(key: key);
+
+  final String image, title;
+  final Function press;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Colors> Color=[];
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10),
+      width: 110,
+      height: 105,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: press,
+            child:Stack(
+              children:<Widget>[
+                // Icon(Icons.paint),
+              Container(
+              height: 101,
+              width: 160,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(5),
+                  bottomLeft: Radius.circular(5),
+                  bottomRight: Radius.circular(5),
+
+                ),
+                color: Colors.grey[100],
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [green1,green2]
+                ),
               ),
-              // Row(
-              //   children: [
-              //     Container(
-              //       margin: EdgeInsets.only(top: 125,right: 150),
-              //       child:Text("4.9"),
-              //     ),
-              //     Container(
-              //       margin: EdgeInsets.only(top: 120,right: 3,left: 15,),
-              //       child:Icon(Icons.star),
-              //     ),
-              //     Container(
-              //       margin: EdgeInsets.only(top: 120,left: 0,right: 5),
-              //       child:Text(" 123 تعليق"),
-              //     ),
-              //     Container(
-              //       margin: EdgeInsets.only(top: 120,right: 3,left: 90),
-              //       child:Icon(Icons.comment),
-              //     ),
-              //
-              //   ],
-              // ),
-              Row(
-                children: [
-                  Container(
-                    width: 80,
-                    margin: EdgeInsets.only(left: 0, right: 120, top: 150),
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.transparent)
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 2),
-                      color: Color(0xFFECCB45),
-                      onPressed: () async {
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => user_order(phone:widget.phone,),));
-                      },
-                      child: Center(child: Text("طلب",
-                        style: TextStyle(
-                          fontSize: 17.0,
-                          fontFamily: 'Changa',
-                          color: Color(0xFF1C1C1C),
-                          fontWeight: FontWeight.bold,
-                        ),),),),
+              child:Center(
+                  child:Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 70,
+                        margin: EdgeInsets.only(top: 10),
+                        child:ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.asset(
+                            image, height: 90,
+                            width: 100,
+                            // color: Colors.white,
+                            fit: BoxFit.contain,),
+                        ),),
+                      Container(
+                        margin: EdgeInsets.only(top: 2),
+                        child:Center(
+                          child:Text(title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Changa',
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),),),
+                    ],
                   ),
-                  Container(
-                    width: 120,
-                    margin: EdgeInsets.only(left: 0, right: 10, top: 150),
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.transparent)
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 3),
-                      color: Color(0xFFECCB45),
-                      onPressed: () async {
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => user_worker(name_Me:widget.name_Me,name: widget.name, namefirst: widget.namefirst, namelast: widget.namelast, phone: widget.phone, image: widget.image, Work: widget.Work,Experiance: widget.Experiance,Information: widget.Information,token: widget.token)),);
-                         },
-                      child: Center(child: Text("عرض المزيد",
-                        style: TextStyle(
-                          fontSize: 17.0,
-                          fontFamily: 'Changa',
-                          color: Color(0xFF1C1C1C),
-                          fontWeight: FontWeight.bold,
-                        ),),),),
+                 ),),
+              ],),
+          ),
+        ],),
+    );
+  }
+}
+
+class RecomendPlantCard5 extends StatelessWidget {
+  RecomendPlantCard5({
+    Key key,
+    this.image,
+    this.title,
+    this.press,
+  }) : super(key: key);
+
+  final String image, title;
+  final Function press;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Colors> Color=[];
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      margin: EdgeInsets.only(left: 10, top: 10, bottom: 10,),
+      width: 110,
+      height: 105,
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: press,
+            child:Stack(
+              children:<Widget>[
+                // Icon(Icons.paint),
+                Container(
+                  height: 101,
+                  width: 160,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5),
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5),
+                    ),
+                    color: Colors.grey[100],
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [perp1,perp2]
+                    ),
                   ),
-
-                ],),
-            ],),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              width: 300,
-              // child:Divider(
-              //   color: Color(0xFF666360),
-              //   thickness: 2,
-              // ),
-            ),
-
-          ],),
-      ),);
+                child:Center(
+                  child:Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 70,
+                        margin: EdgeInsets.only(top: 10),
+                        child:ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.asset(
+                            image, height: 90,
+                            width: 100,
+                            // color: Colors.white,
+                            fit: BoxFit.contain,),
+                        ),),
+                      Container(
+                        margin: EdgeInsets.only(top: 2),
+                        child:Center(
+                          child:Text(title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Changa',
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),),),
+                    ],
+                  ),
+                ),
+                ),
+              ],),
+          ),
+        ],),
+    );
   }
 }

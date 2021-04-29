@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterphone/Chat/Conversation.dart';
+import 'package:flutterphone/ChatUuser/Conversation.dart';
 import 'package:flutterphone/Inside_the_app/user_Profile.dart';
 import 'package:flutterphone/Worker/GET_IMGS.dart';
 import 'package:http/http.dart' as http;
