@@ -105,18 +105,18 @@ class  _Conversation extends State<Conversation> {
     return Directionality(textDirection: TextDirection.rtl,
       child:Stack(
           children: [
-      Container(
-      decoration: BoxDecoration(
-      color: Colors.grey.withOpacity(0.3),
-      image: new DecorationImage(
-        fit: BoxFit.cover,
-        image: new AssetImage(
-          'assets/icons/watsapp.jpg',
-        ),
-      ),
-    ),),
+    //   Container(
+    //   decoration: BoxDecoration(
+    //   color: Colors.grey.withOpacity(0.3),
+    //   image: new DecorationImage(
+    //     fit: BoxFit.cover,
+    //     image: new AssetImage(
+    //       'assets/icons/watsapp.jpg',
+    //     ),
+    //   ),
+    // ),),
     Scaffold(
-      backgroundColor: Colors.transparent,      // appBar: AppBar(
+      backgroundColor:Colors.white,      // appBar: AppBar(
       //   elevation: 0.0,
       //   backgroundColor:L_ORANGE.withOpacity(0.75),
       //   leading:   IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,), onPressed: (){
@@ -142,7 +142,7 @@ class  _Conversation extends State<Conversation> {
                             },
                             child:Container(
                               // margin: EdgeInsets.only(left:100,top:10),
-                              child:Icon(Icons.arrow_back_ios,color: Colors.white,size:18,),
+                              child:Icon(Icons.arrow_back_ios,color: Colors.black87,size:18,),
                             ),
                           ),
                         ),
@@ -158,7 +158,7 @@ class  _Conversation extends State<Conversation> {
                           width: 520,
                           height: 55,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Colors.grey[100],
                           ),
                           // color: Colors.red,
                           //margin: EdgeInsets.only(right: 50),
@@ -174,30 +174,30 @@ class  _Conversation extends State<Conversation> {
                                     },
                                     child: new Icon(
                                       Icons.send,
-                                      color: Colors.white,
+                                      color: Y,
                                       // size: 26.0,
                                     ),
                                     shape: new CircleBorder(),
-                                    color: Y,
+                                    color:Colors.grey[100],
                                   ),),),
                               Container(
                                 width: 275,
-                                height: 40,
-                                margin:EdgeInsets.only(left:0,right:0,top:15),
+                                height: 50,
+                                margin:EdgeInsets.only(left:0,right:0,top:5),
                                 child: TextFormField(
                                   controller: massageControler,
                                   cursorColor: Y,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: Colors.white,
+                                    fillColor: Colors.grey[100],
                                     enabledBorder: new OutlineInputBorder(
                                       borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.white),
+                                      borderSide:  BorderSide(color:Colors.grey[100],),
 
                                     ),
                                     focusedBorder: new OutlineInputBorder(
                                       borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.white),
+                                      borderSide:  BorderSide(color:Colors.grey[100],),
 
                                     ),
                                     hintText: 'اكتب هنا',
@@ -214,6 +214,7 @@ class  _Conversation extends State<Conversation> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),),
+
                               Container(
                                 margin: EdgeInsets.only(left: 5,right:5),
                                 child:IconButton(
@@ -288,17 +289,17 @@ class MessageTile extends StatelessWidget {
               // width: MediaQuery.of(context).size.width*0.5,
               padding: EdgeInsets.symmetric(horizontal: 24,vertical: 11),
               decoration: BoxDecoration(
-                  color:isSendByMe?Y5:Colors.white,
+                  color:isSendByMe?Y5:Colors.grey[100],
                   borderRadius: isSendByMe?BorderRadius.only(
-                  topRight:Radius.circular(19),
-                  topLeft: Radius.circular(19),
-                  bottomLeft: Radius.circular(19),
+                  topRight:Radius.circular(12),
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(0),)
                  :BorderRadius.only(
-                  topRight:Radius.circular(19),
-                  topLeft: Radius.circular(19),
+                  topRight:Radius.circular(12),
+                  topLeft: Radius.circular(12),
                   bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(19),)),
+                  bottomRight: Radius.circular(12),)),
 
                   child: Text(massege,
                   style: TextStyle(

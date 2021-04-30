@@ -15,13 +15,26 @@ class viewreservation extends StatefulWidget {
   // final phone;
   // final id;
 
-  final phoneuserd;
-  final namefirstd;
-  final namelastd;
-  final nameofworkd;
-  final workerphoned;
+  final name_Me;
+  final country;
+  final namefirst;
+  final namelast;
+  final image;
+  final phone;
+  final phoneworker;
+  final tokenworker;
+  final token_Me;
+  final DateTime date;
+  final DateTime time;
+  final AVG;
+  final work;
+  final Information;
+  final Experiance;
+  final nameworker;
+  final client_count;
+  final comment;
+  viewreservation({this.comment,this.client_count,this.Information,this.Experiance,this.nameworker,this.AVG,this.work,this.date,this.token_Me,this.phoneworker,this.tokenworker,this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
 
-  viewreservation({this.workerphoned,this.phoneuserd,this.nameofworkd,this.namelastd,this.namefirstd});
   @override
   _viewreservationState createState() => _viewreservationState();
 }
@@ -111,7 +124,7 @@ class _viewreservationState extends State<viewreservation> {
                 ListFromdate.add( snapshot.data[index]['Fromdate']);
                 listTodate.add( snapshot.data[index]['Todate']);
                 if(index==snapshot.data.length-1)
-                  return datep (fromdate:ListFromdate,Todate:listTodate,workerphoned: widget.workerphoned,namefirstd: widget.namefirstd,namelastd: widget.namelastd,phoneuserd: widget.phoneuserd,nameofworkd: widget.nameofworkd);
+                  return datep (fromdate:ListFromdate,Todate:listTodate,workerphoned: widget.phoneworker,namefirstd: widget.namefirst,namelastd: widget.namelast,phoneuserd: widget.phone,nameofworkd: widget.nameworker);
                 return  Container (color:Colors.red);
               },
               // return datep (fromdate:ListFromdate,Todate:listTodate,workerphoned: widget.workerphoned,namefirstd: widget.namefirstd,namelastd: widget.namelastd,phoneuserd: widget.phoneuserd,nameofworkd: widget.nameofworkd,);
@@ -127,9 +140,9 @@ class _viewreservationState extends State<viewreservation> {
   }
   viewreservations() async {
     var url = 'https://' + IP4 + '/DUAA/PHP/seereservations.php';
-    print(widget.workerphoned);
+    print(widget.phoneworker);
     var ressponse = await http.post(url, body: {
-      "phone": widget.workerphoned,
+      "phone": widget.phoneworker,
     });
     // ignore: deprecated_member_use
     // var responsebody = json.decode(ressponse.body);
@@ -355,13 +368,26 @@ class _datepState extends State<datep> {
 }
 
 class user extends StatefulWidget {
-  final phone;
+  final name_Me;
+  final country;
   final namefirst;
-  final nameLast;
-  final phoneuser;
-  final nameLast_Me;
-  final namefirst_Me;
-  user({this.phone,this.phoneuser,this.nameLast,this.namefirst,this.nameLast_Me,this.namefirst_Me});
+  final namelast;
+  final image;
+  final phone;
+  final phoneworker;
+  final tokenworker;
+  final token_Me;
+  final DateTime date;
+  final DateTime time;
+  final AVG;
+  final work;
+  final Information;
+  final Experiance;
+  final nameworker;
+  final client_count;
+  final comment;
+  user({this.comment,this.client_count,this.Information,this.Experiance,this.nameworker,this.AVG,this.work,this.date,this.token_Me,this.phoneworker,this.tokenworker,this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
+
   @override
   _userState createState() => _userState();
 }
@@ -416,7 +442,7 @@ class _userState extends State<user> {
       },
     );
   }
-  bool box1=false;
+  bool box1=true;
   bool box2=false;
   bool box3=false;
   bool box4=false;
@@ -738,7 +764,12 @@ class _userState extends State<user> {
                 // else if(c2){
                 //   Navigator.push(context, MaterialPageRoute(builder: (context) => My_SLot(date:widget.time,country:widget.country,namelast:widget.namelast,namefirst:widget.namefirst,image:widget.image,nameworker:widget.name,work:widget.work,name_Me:widget.username,phoneworker: widget.phoneworker,phone: widget.phone,),),);
                 // }
-                Navigator.push(context, MaterialPageRoute(builder: (context) =>war_description()));
+                String type="";
+                if(box1){type="تصميم مطبخ";}
+                if(box2){type="أثاث بيت جديد";}
+                if(box3){type="تفصيل أبواب";}
+                if(box4){type="تصميم خزانة";}
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>war_description(type:type,tokenworker:widget.tokenworker,token_Me:widget.token_Me,comment:widget.comment,client_count:widget.client_count,Experiance:widget.Experiance,Information:widget.Information,date:widget.time,country:widget.country,namelast:widget.namelast,namefirst:widget.namefirst,image:widget.image,nameworker:widget.nameworker,work:widget.work,name_Me:widget.name_Me,phoneworker: widget.phoneworker,phone: widget.phone)));
               },
               color:Y,
               child: Text(
@@ -778,10 +809,10 @@ class _userState extends State<user> {
     var url = 'https://'+IP4+'/DUAA/PHP/addlongtimerequest.php';
     var ressponse = await http.post(url, body: {
       "nameofwork": nameofwork,
-      "namefirst":widget.namefirst_Me,
-      "namelast":widget.nameLast_Me,
-      "phoneuser": widget.phoneuser,
-      "workerphone":widget.phone,
+      "namefirst":widget.namefirst,
+      "namelast":widget.namelast,
+      "phoneuser": widget.phone,
+      "workerphone":widget.phoneworker,
       "describes":describe.text,
     });
 

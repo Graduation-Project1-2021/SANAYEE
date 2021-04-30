@@ -9,9 +9,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
-
-import 'Profile.dart';
-import 'State_order.dart';
 import 'orders_workers.dart';
 
 String IP4="192.168.1.8";
@@ -134,7 +131,7 @@ class _not_conferm_order extends State<not_conferm_order> {
                               itemCount: 1,
                               itemBuilder: (context, index) {
                                 var Listorder=snapshot.data;
-                                return order(name:widget.name,List1:Listorder,phone: widget.phone,time: widget.time,);
+                                return order(lat:widget.lat,lng:widget.lng,name:widget.name,List1:Listorder,phone: widget.phone,time: widget.time,);
                               },
                             );
                           }
@@ -161,7 +158,9 @@ class order extends StatefulWidget {
   final  token;
   final namefirst;
   final namelast;
-  order({this.name,this.phone,this.List1,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
+  final lng;
+  final lat;
+  order({this.lng,this.lat,this.name,this.phone,this.List1,this.time,this.namefirst,this.namelast,this.image,this.Work, this.Experiance, this.Information, this.token});
   @override
   _order createState() => _order();
 }
@@ -218,7 +217,7 @@ class _order extends State<order> {
     print(formattedDate);
     // print(_selectedDay);
     print(widget.name);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm_order(phone:widget.phone,time: _selectedDay,name: widget.name,),),);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm_order(lat:widget.lat,lng:widget.lng,phone:widget.phone,time: _selectedDay,name: widget.name,),),);
   }
   Future getallorders() async {
     var formattedDate = DateFormat('yyyy-MM-dd').format(widget.time);
@@ -311,7 +310,6 @@ class _order extends State<order> {
                       return Empty();
 
                     }
-
                     return ListView.builder(
                       itemCount:snapshot.data.length,
                       itemBuilder: (context, index) {
@@ -319,7 +317,7 @@ class _order extends State<order> {
                         print(widget.name);
                         print('ASDASDASD');
 
-                        return not_conferm(country:snapshot.data[index]['country'],city:snapshot.data[index]['city'],Information:snapshot.data[index]['Information'],Experiance:snapshot.data[index]['Experiance'],orderimage:snapshot.data[index]['orderimage'],workername:widget.name,timesend:snapshot.data[index]['timesend'],datesend:snapshot.data[index]['datesend'],image:snapshot.data[index]['image'],phoneworker:widget.phone,description:snapshot.data[index]['description'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phoneworker'],name:snapshot.data[index]['username'],date:snapshot.data[index]['date'],timestart:snapshot.data[index]['timestart'],timeend:snapshot.data[index]['timeend'],Am_Pm:snapshot.data[index]['Am_Pm'],id:snapshot.data[index]['id']);
+                        return not_conferm(lat:widget.lat,lng:widget.lng,latuser:snapshot.data[index]['lat'],lnguser:snapshot.data[index]['lng'],country:snapshot.data[index]['country'],city:snapshot.data[index]['city'],Information:snapshot.data[index]['Information'],Experiance:snapshot.data[index]['Experiance'],orderimage:snapshot.data[index]['orderimage'],workername:widget.name,timesend:snapshot.data[index]['timesend'],datesend:snapshot.data[index]['datesend'],image:snapshot.data[index]['image'],phoneworker:widget.phone,description:snapshot.data[index]['description'],namefirst:snapshot.data[index]['namefirst'],namelast:snapshot.data[index]['namelast'],phone:snapshot.data[index]['phoneworker'],name:snapshot.data[index]['username'],date:snapshot.data[index]['date'],timestart:snapshot.data[index]['timestart'],timeend:snapshot.data[index]['timeend'],Am_Pm:snapshot.data[index]['Am_Pm'],id:snapshot.data[index]['id']);
                       },
                     );
                   }
@@ -444,8 +442,12 @@ class not_conferm  extends StatefulWidget {
   final Information;
   final Experiance;
   final city;
+  final lat;
+  final lng;
+  final latuser;
+  final lnguser;
   //
-  not_conferm({this.city,this.Information,this.Experiance,this.orderimage,this.workername,this.datecancel,this.timecancel,this.index,this.AVG,this.token,this.workertoken,this.timeaccept,this.dateaccept,this.datesend,this.timesend,this.description,this.id,this.country,this.phoneworker,this.work,this.image,this.namefirst,this.namelast,this.name,this.date, this.timeend, this.timestart, this.Am_Pm,this.phone, this.time});
+  not_conferm({this.latuser,this.lnguser,this.lng,this.lat,this.city,this.Information,this.Experiance,this.orderimage,this.workername,this.datecancel,this.timecancel,this.index,this.AVG,this.token,this.workertoken,this.timeaccept,this.dateaccept,this.datesend,this.timesend,this.description,this.id,this.country,this.phoneworker,this.work,this.image,this.namefirst,this.namelast,this.name,this.date, this.timeend, this.timestart, this.Am_Pm,this.phone, this.time});
 
   @override
   _not_conferm createState() => _not_conferm();
@@ -469,11 +471,6 @@ class _not_conferm extends State<not_conferm> {
   {
     return GestureDetector(
       onTap: (){
-        print(widget.phoneworker);
-        print(widget.workername);
-        print('phoneeeeeeeeeeeeeeeeeeeeeeeeeeee');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => State_order(workername:widget.workername,chooseDate:_selectedDay,name:widget.name,id:widget.id,timesend:widget.timesend,datesend:widget.datesend,date:widget.date,time:widget.timestart+"-"+widget.timeend,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
-
       },
       child:Container(
         width: 380,
@@ -700,6 +697,8 @@ class _not_conferm extends State<not_conferm> {
                     ),),
                   GestureDetector(
                     onTap: (){
+                      print("delete");
+                      print(widget.id);
                       _dialogCall2();
                     },
                     child: Container(
@@ -736,9 +735,13 @@ class _not_conferm extends State<not_conferm> {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Directionality(textDirection: ui.TextDirection.rtl,
+          print(widget.lat);
+          print(widget.lng);
+          print(widget.latuser);
+          print(widget.lnguser);
 
-            child:eaccept_order(phoneworker:widget.phoneworker,workername:widget.workername,name:widget.name,ChooseDate:_selectedDay,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
+          return Directionality(textDirection: ui.TextDirection.rtl,
+            child:eaccept_order(lat:widget.lat,lng:widget.lng,latuser:widget.latuser,lnguser:widget.lnguser,orderimage:widget.orderimage,timestart:widget.timestart,timeend:widget.timeend,country:widget.country,city:widget.city,phoneworker:widget.phoneworker,workername:widget.workername,name:widget.name,ChooseDate:_selectedDay,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
         });
   }
   Future<void> _dialogCall2() {
@@ -747,7 +750,7 @@ class _not_conferm extends State<not_conferm> {
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:delete_order(name:widget.workername,work:widget.work,Information:widget.Information,Experiance:widget.Experiance,phoneworker:widget.phoneworker,chooseDate:_selectedDay,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
+            child:delete_order(country:widget.country,city:widget.city,name:widget.workername,work:widget.work,Information:widget.Information,Experiance:widget.Experiance,phoneworker:widget.phoneworker,chooseDate:_selectedDay,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
         });
   }
 
@@ -755,11 +758,13 @@ class _not_conferm extends State<not_conferm> {
 
 class eaccept_order extends StatefulWidget {
   @override
+  final orderimage;
   final id;
   final phone;
   final time;
   final image;
   final country;
+  final city;
   final namefirst;
   final namelast;
   final phoneuser;
@@ -773,7 +778,11 @@ class eaccept_order extends StatefulWidget {
   final ChooseDate;
   final name;
   final workername;
-  eaccept_order({this.workername,this.name,this.ChooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
+  final lat;
+  final lng;
+  final latuser;
+  final lnguser;
+  eaccept_order({this.latuser,this.lnguser,this.lng,this.lat,this.orderimage,this.city,this.workername,this.name,this.ChooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
   _eaccept_order createState() => new _eaccept_order();
 
 }
@@ -810,7 +819,8 @@ class _eaccept_order extends State<eaccept_order> {
                         var formattedDate = DateFormat('yyyy-MM-dd').format(date);
                         var formattedTime = DateFormat('HH:mm:ss').format(date);
                         accept_Order(formattedDate,formattedTime);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(workername:widget.workername,name:widget.name,timesend:widget.timesend,timeaccept:formattedTime,dateaccept:formattedDate,datesend:widget.datesend,date:widget.date,time:widget.time,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,ChooseDate:widget.ChooseDate,),),);
+                        print(widget.orderimage);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(lat:widget.lat,lng:widget.lng,latuser:widget.latuser,lnguser:widget.lnguser,orderimage:widget.orderimage,time:widget.timestart+" - "+widget.timeend,country:widget.country,city:widget.city,workername:widget.workername,name:widget.name,timesend:widget.timesend,timeaccept:formattedTime,dateaccept:formattedDate,datesend:widget.datesend,date:widget.date,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,ChooseDate:widget.ChooseDate,),),);
                         // Navigator.pop(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm__order(time: widget.time,phone: widget.phone,)),);
                       },
@@ -868,6 +878,7 @@ class _eaccept_order extends State<eaccept_order> {
 
 class delete_order extends StatefulWidget {
   @override
+  final city;
   final id;
   final phone;
   final time;
@@ -888,7 +899,7 @@ class delete_order extends StatefulWidget {
   final Experiance;
   final work;
   final Information;
-  delete_order({this.name,this.Information,this.Experiance,this.work,this.chooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
+  delete_order({this.city,this.name,this.Information,this.Experiance,this.work,this.chooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
   _delete_order createState() => new _delete_order();
 
 }
@@ -968,14 +979,13 @@ class _delete_order extends State<delete_order> {
     DateTime date=DateTime.now();
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);
     var formattedTime = DateFormat('HH:mm:ss').format(date);
+    print(widget.id);
     var url = 'https://' + IP4 + '/testlocalhost/delete_order.php';
     var ressponse = await http.post(url, body: {
       "id": widget.id,
-      "datecancel":formattedDate,
-      "timecancel":formattedTime,
       "who":'worker',
     });
     // ignore: deprecated_member_use
-    return json.decode(ressponse.body);
+    //return json.decode(ressponse.body);
   }
 }

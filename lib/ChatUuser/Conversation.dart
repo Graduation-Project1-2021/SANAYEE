@@ -102,7 +102,7 @@ class  _Conversation extends State<Conversation> {
   Widget build(BuildContext context) {
     return Directionality(textDirection: TextDirection.rtl,
     child:Scaffold(
-      backgroundColor: chat,
+      backgroundColor:Colors.white,
       // appBar: AppBar(
       //   elevation: 0.0,
       //   backgroundColor:L_ORANGE.withOpacity(0.75),
@@ -113,123 +113,113 @@ class  _Conversation extends State<Conversation> {
       body:SingleChildScrollView(
           child:Column(
                children: [
-              Positioned(
-                  top: 10,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 70),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            //Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,phone:phone,)));
-                          },
-                          child:  Container(
-                            margin: EdgeInsets.only(right: 10,left:0),
-                            child:Icon(Icons.arrow_back_ios,color: Colors.black54,size:18,),
-                          ),
-                        ),
-                        Container(
-                          // margin: EdgeInsets.only(right:50,top: 75),
-                          child:CircleAvatar(backgroundImage: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.image),radius: 25.0,),
-                        ),
-                        SizedBox(width:10,),
-                        Container(
-                          // margin: EdgeInsets.only(top:85,right:115),
-                          child: Text(widget.namefirst+ " "+widget.namelast,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                              fontFamily: 'Changa',
-                              fontWeight: FontWeight.bold,),),
-                        ),
-                      ],
-                    ),),
-              ),
                  Container(
-                   width: 450,
-                   // margin: EdgeInsets.only(top: 135,),
-                   child: Divider(
-                     thickness: 1.0,
-                     color: Colors.black26.withOpacity(0.1),
+                   height:800,
+                   child: SingleChildScrollView(
+                     child:Column(
+                       children: [
+                         Container(
+                           height: 20,
+                           margin: EdgeInsets.only(left:370,top:70),
+                           child:GestureDetector(
+                             onTap: (){
+                               print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                               Navigator.pop(context);
+                               // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Chat(name_Me:widget.name_Me,chatsRoomList: chatsRoom,phone:phone,)));
+                             },
+                             child:Container(
+                               // margin: EdgeInsets.only(left:100,top:10),
+                               child:Icon(Icons.arrow_back_ios,color: Colors.black87,size:18,),
+                             ),
+                           ),
+                         ),
+                         Container(
+                           height: 650,
+                           margin: EdgeInsets.only(top:0),
+                           child:chatMassegeList(),
+                         ),
+                         Container(
+                           // transform: Matrix4.translationValues(0.0, -40, 0.0),
+                           //alignment: Alignment.bottomCenter,
+
+                           width: 520,
+                           height: 55,
+                           decoration: BoxDecoration(
+                             color: Colors.grey[100],
+                           ),
+                           // color: Colors.red,
+                           //margin: EdgeInsets.only(right: 50),
+                           child: Row(
+                             children: [
+                               Container(
+                                 width: 60,
+                                 margin: EdgeInsets.only(left:5,right: 10), padding: EdgeInsets.only(left:2.5,right: 5),
+                                 child:Directionality(textDirection: TextDirection.ltr,
+                                   child: FlatButton(
+                                     onPressed: () {
+                                       sendMassage();
+                                     },
+                                     child: new Icon(
+                                       Icons.send,
+                                       color: Y,
+                                       // size: 26.0,
+                                     ),
+                                     shape: new CircleBorder(),
+                                     color:Colors.grey[100],
+                                   ),),),
+                               Container(
+                                 width: 275,
+                                 height: 50,
+                                 margin:EdgeInsets.only(left:0,right:0,top:5),
+                                 child: TextFormField(
+                                   controller: massageControler,
+                                   cursorColor: Y,
+                                   decoration: InputDecoration(
+                                     filled: true,
+                                     fillColor: Colors.grey[100],
+                                     enabledBorder: new OutlineInputBorder(
+                                       borderRadius: new BorderRadius.circular(10.0),
+                                       borderSide:  BorderSide(color:Colors.grey[100],),
+
+                                     ),
+                                     focusedBorder: new OutlineInputBorder(
+                                       borderRadius: new BorderRadius.circular(10.0),
+                                       borderSide:  BorderSide(color:Colors.grey[100],),
+
+                                     ),
+                                     hintText: 'اكتب هنا',
+                                     hintStyle: TextStyle(
+                                       fontSize: 14.0,
+                                       fontFamily: 'Changa',
+                                       color: Color(0xFF666360),
+                                     ),
+                                   ),
+                                   style: TextStyle(
+                                     fontSize: 15.0,
+                                     fontFamily: 'Changa',
+                                     color: Color(0xFF1C1C1C),
+                                     fontWeight: FontWeight.bold,
+                                   ),
+                                 ),),
+
+                               Container(
+                                 margin: EdgeInsets.only(left: 5,right:5),
+                                 child:IconButton(
+                                   onPressed: () async {
+                                     await getImageGallory();
+                                     print("image");
+                                     sendIMage();
+                                   },
+
+                                   icon: Icon(Icons.image,
+                                     color: Colors.black87,),
+                                 ),),
+                             ],),
+                         ),
+                       ],
+                     ),
                    ),
                  ),
-                Container(
-                  height:662,
-                  child: SingleChildScrollView(
-                    child:Column(
-                      children: [
-                        Container(
-                          height: 600,
-                          child:chatMassegeList(),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top:0),
-                          //alignment: Alignment.bottomCenter,
-                          width: 520,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          // color: Colors.red,
-                          //margin: EdgeInsets.only(right: 50),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 60,
-                                margin: EdgeInsets.only(left:5,right: 10), padding: EdgeInsets.only(left:2.5,right: 5),
-                                child:Directionality(textDirection: TextDirection.ltr,
-                                  child: FlatButton(
-                                    onPressed: () {
-                                      sendMassage();
-                                    },
-                                    child: new Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                      // size: 26.0,
-                                    ),
-                                    shape: new CircleBorder(),
-                                    color: Y,
-                                  ),),),
-                              Container(
-                                width: 275,
-                                height: 40,
-                                margin:EdgeInsets.only(left:0,right:0),
-                                child: TextFormField(
-                                  controller: massageControler,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.grey.withOpacity(0.5),
-                                    enabledBorder: new OutlineInputBorder(
-                                      borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
-
-                                    ),
-                                    focusedBorder: new OutlineInputBorder(
-                                      borderRadius: new BorderRadius.circular(10.0),
-                                      borderSide:  BorderSide(color:Colors.grey.withOpacity(0.1)),
-
-                                    ),
-                                  ),
-                                ),),
-                              Container(
-                                margin: EdgeInsets.only(left: 5,right:5),
-                                child:IconButton(
-                                  onPressed: () async {
-                                    await getImageGallory();
-                                    print("image");
-                                    sendIMage();
-                                  },
-
-                                  icon: Icon(Icons.image,
-                                    color: Colors.black87,),
-                                ),),
-                            ],),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
             ],),
             ),
             // image!= null? Container(
@@ -286,17 +276,17 @@ class MessageTile extends StatelessWidget {
               // width: MediaQuery.of(context).size.width*0.5,
               padding: EdgeInsets.symmetric(horizontal: 24,vertical: 11),
               decoration: BoxDecoration(
-                  color:isSendByMe?Y.withOpacity(0.8):Colors.grey.withOpacity(0.5),
+                  color:isSendByMe?Y5:Colors.grey[100],
                   borderRadius: isSendByMe?BorderRadius.only(
-                  topRight:Radius.circular(19),
-                  topLeft: Radius.circular(19),
-                  bottomLeft: Radius.circular(19),
-                  bottomRight: Radius.circular(0),)
-                 :BorderRadius.only(
-                  topRight:Radius.circular(19),
-                  topLeft: Radius.circular(19),
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(19),)),
+                    topRight:Radius.circular(12),
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(0),)
+                      :BorderRadius.only(
+                    topRight:Radius.circular(12),
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(12),)),
 
                   child: Text(massege,
                   style: TextStyle(

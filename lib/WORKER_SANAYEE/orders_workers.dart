@@ -17,6 +17,7 @@ import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import '../database.dart';
 import 'package:flutterphone/Chatworker/chatListworker.dart';
+import 'odersperson_day.dart';
 import 'view.dart';
 import 'Profile.dart';
 import 'Worker_Slot.dart';
@@ -116,8 +117,6 @@ class  _order_worker extends State<order_worker> {
   }
   void initState() {
     super.initState();
-    getdata1();
-    getdata2();
     getChat();
 
   }
@@ -258,21 +257,50 @@ class  _order_worker extends State<order_worker> {
           ClipPath(
             clipper: ClippingClass(),
             child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height*0.32,
+              height: 380,
+              width: 500,
               decoration: BoxDecoration(
-                // gradient: LinearGradient(
-                //     begin: Alignment.topCenter,
-                //     end: Alignment.bottomCenter,
-                //     // colors: [B,A,G]
-                //     colors: [Y1,Y4]
-                // ),
-              ),
-              child: Image.asset('assets/work/intro3.jpg',width:500,fit: BoxFit.fitWidth,),
+                color: Colors.black87.withOpacity(0.9),
+                image: new DecorationImage(
+                  fit: BoxFit.cover,
+                  colorFilter:
+                  ColorFilter.mode(Colors.black87.withOpacity(0.4),
+                      BlendMode.dstATop),
+                  image: new AssetImage('assets/work/cvw.jpg',),
+                ),
             ),
-          ),
+          ),),
+          // Container(
+          //   margin: EdgeInsets.only(top: 100,),
+          //   height: 100,
+          //   decoration: BoxDecoration(
+          //     color:Colors.transparent,
+          //     image: DecorationImage(
+          //       colorFilter:
+          //       ColorFilter.mode(Colors.transparent,
+          //           BlendMode.colorBurn),
+          //       image: new AssetImage(
+          //         'assets/work/output-onlinepngtools1.png',
+          //       ),
+          //     ),
+          //
+          //   ),
+          // ),
           Container(
-            margin: EdgeInsets.only(top: 260,right: 150),
+            height: 100,
+            margin: EdgeInsets.only(top: 150,),
+            child:Center(
+                child:Text('صنايعي ',
+                  style: TextStyle(
+                    fontSize: 55,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                    fontFamily: 'vibes',
+                    //fontStyle: FontStyle.italic,
+                  ),)
+            ),),
+          Container(
+            margin: EdgeInsets.only(top: 300,right: 150),
             child: Row(
               children: [
 
@@ -283,8 +311,8 @@ class  _order_worker extends State<order_worker> {
                     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Worker_SLot(name: widget.name,phone: widget.phone,time:date,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst)));
                   },
                   child:SizedBox(
-                    height: 100,
-                    width: 100,
+                    height: 90,
+                    width: 95,
                     child: Card(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -309,7 +337,7 @@ class  _order_worker extends State<order_worker> {
                                       'جدول أعمالي',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 15.0,
+                                        fontSize: 14.0,
                                         fontFamily: 'Changa',
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -342,7 +370,7 @@ class  _order_worker extends State<order_worker> {
           //       ),)
           // ),
           Container(
-            margin: EdgeInsets.only(top: 370),
+            margin: EdgeInsets.only(top: 405),
             child:Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -355,7 +383,7 @@ class  _order_worker extends State<order_worker> {
                   },
                   child:SizedBox(
                     height: 100,
-                    width: 150,
+                    width: 130,
                     child: Card(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -380,7 +408,7 @@ class  _order_worker extends State<order_worker> {
                                       'طلبات الورشات',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 15.0,
+                                        fontSize: 14.0,
                                         fontFamily: 'Changa',
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -399,11 +427,11 @@ class  _order_worker extends State<order_worker> {
                   onTap: (){
                     print(widget.phone);
                     DateTime date=DateTime.now();
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => not_conferm_order(Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,time:date,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => not_conferm_order(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.Work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,time:date,)));
                   },
                   child:SizedBox(
                     height: 100,
-                    width: 150,
+                    width: 130,
                     child: Card(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -428,7 +456,7 @@ class  _order_worker extends State<order_worker> {
                                       'طلبات الطقات',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 15.0,
+                                        fontSize: 14.0,
                                         fontFamily: 'Changa',
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -447,7 +475,7 @@ class  _order_worker extends State<order_worker> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 480),
+            margin: EdgeInsets.only(top: 512),
             child:Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -479,8 +507,8 @@ class  _order_worker extends State<order_worker> {
 
 _customCard1({String imageUrl, String item}){
   return SizedBox(
-    height: 168,
-    width: 150,
+    height: 135,
+    width: 130,
     child: Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
@@ -488,12 +516,12 @@ _customCard1({String imageUrl, String item}){
       ),
       elevation: 5,
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset(imageUrl,width: 70,height: 70,),
+            Image.asset(imageUrl,width: 50,height: 50,),
             Align(
               alignment: Alignment.center,
               child: Column(
@@ -505,7 +533,7 @@ _customCard1({String imageUrl, String item}){
                       item,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 15.0,
+                        fontSize: 14.0,
                         fontFamily: 'Changa',
                         fontWeight: FontWeight.bold,
                       ),
@@ -522,8 +550,8 @@ _customCard1({String imageUrl, String item}){
 }
 _customCard2({String imageUrl, String item}){
   return SizedBox(
-    height: 168,
-    width: 150,
+    height: 135,
+    width: 130,
     child: Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
@@ -531,13 +559,13 @@ _customCard2({String imageUrl, String item}){
       ),
       elevation: 5,
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 0,),
-            Image.asset(imageUrl,width: 60,height: 50,),
+            Image.asset(imageUrl,width: 40,height: 40,),
             Align(
               alignment: Alignment.center,
               child: Column(
@@ -549,7 +577,7 @@ _customCard2({String imageUrl, String item}){
                       item,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 15.0,
+                        fontSize: 14.0,
                         fontFamily: 'Changa',
                         fontWeight: FontWeight.bold,
                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/WORKER_SANAYEE/homepage.dart';
+import 'package:flutterphone/WORKER_SANAYEE/odersperson_day.dart';
 import 'package:flutterphone/components/already_have_an_account_acheck.dart';
 import 'package:flutterphone/screens/signuser_screen.dart';
 import 'package:flutterphone/WORKER_SANAYEE/Profile.dart';
@@ -75,7 +76,7 @@ class _Body extends State<Loginscreen> {
         context,
         MaterialPageRoute(
           builder: (context) {
-            return Home_Page(name:nameController.text);
+            return orderpperson_map(name_Me:nameController.text);
             //  return ProfilePage(nameController.text);
 
           },
@@ -103,11 +104,11 @@ class _Body extends State<Loginscreen> {
         children: [
       Container(
       decoration: BoxDecoration(
-      color: Colors.grey.withOpacity(0.3),
+        color: Colors.black54.withOpacity(0.8),
       image: new DecorationImage(
         fit: BoxFit.cover,
         colorFilter:
-        ColorFilter.mode(Colors.blue.withOpacity(0.3),
+        ColorFilter.mode(Colors.black54.withOpacity(0.35),
             BlendMode.dstATop),
         image: new AssetImage(
           'assets/work/cv.jpg',
@@ -202,6 +203,13 @@ class _Body extends State<Loginscreen> {
                                           Name_Null=true;
                                           return null;
                                         }},
+                                      onChanged: (content) {
+                                        Name_Null=true;
+                                        login_Sucsess=true;
+                                        setState(() {
+
+                                        });
+                                      },
                                       cursorColor:Colors.grey[600],
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
@@ -273,6 +281,13 @@ class _Body extends State<Loginscreen> {
                                           Pass_Null=true;
                                           return null;
                                         }},
+                                      onChanged: (content) {
+                                        Pass_Null=true;
+                                        login_Sucsess=true;
+                                        setState(() {
+
+                                        });
+                                      },
                                       obscureText: !_showPassword,
                                       cursorColor:Colors.grey[600],
                                       textAlign: TextAlign.right,
@@ -349,6 +364,7 @@ class _Body extends State<Loginscreen> {
 
                                       ),),
                                   ): Container(
+                                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
                                     margin: EdgeInsets.fromLTRB(140,0,0, 1),
                                     child: Text(' * اسم المستخدم أو كلمة المرور خاطئة',textAlign:TextAlign.end,
                                       style: TextStyle(

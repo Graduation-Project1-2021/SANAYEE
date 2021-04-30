@@ -188,26 +188,53 @@ class _HomeState extends State<Search_user> {
       textDirection: TextDirection.rtl,
       child:Scaffold(
         backgroundColor: Colors.grey[50],
-        appBar: new AppBar(
-          backgroundColor: Y,
-          leading:GestureDetector(
-            onTap:(){
-              Navigator.pop(context,);
-             // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
-            },
-            child:Icon(Icons.arrow_back,color: Colors.white,),
-          ),
-          title: new Text(widget.work,
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Changa',
-              color: Colors.white,
-            ),
-          ),
-        ),
+        // appBar: new AppBar(
+        //   backgroundColor: Y,
+        //   leading:GestureDetector(
+        //     onTap:(){
+        //       Navigator.pop(context,);
+        //      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+        //     },
+        //     child:Icon(Icons.arrow_back,color: Colors.white,),
+        //   ),
+        //   title: new Text(widget.work,
+        //     style: TextStyle(
+        //       fontSize: 16.0,
+        //       fontWeight: FontWeight.bold,
+        //       fontFamily: 'Changa',
+        //       color: Colors.white,
+        //     ),
+        //   ),
+        // ),
         body: Stack(
           children: [
+            Container(
+              child:Row(
+                children: [
+                  GestureDetector(
+                    onTap:(){
+                      Navigator.pop(context,);
+                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => U_PROFILE(name_Me: widget.name_Me,)));
+                    },
+                    child:Container(
+                      margin: EdgeInsets.only(top:70,left: 10,right: 10),
+                      child:Icon(Icons.arrow_back,color: Colors.black87,),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top:70,left: 200,right: 5),
+                    child:Text(widget.work,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Changa',
+                            color: Colors.black87,
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+            ),
             Container(
               height: 5,
               child: FutureBuilder(
@@ -231,7 +258,7 @@ class _HomeState extends State<Search_user> {
             Container(
               height: 30,
               width: 350,
-              margin: EdgeInsets.only(left: 10.0, right: 20.0, top: 100),
+              margin: EdgeInsets.only(left: 10.0, right: 20.0, top: 190),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -396,14 +423,14 @@ class _HomeState extends State<Search_user> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 105,right: 375),
+              margin: EdgeInsets.only(top: 195,right: 375),
               child:Icon(Icons.arrow_forward_ios,size: 18,color: Colors.black87,),
             ),
             button1==true && button3==false && button2==false && button4==false?  Container(
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:205),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -448,7 +475,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -483,7 +510,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -518,7 +545,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -553,7 +580,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -588,7 +615,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -622,7 +649,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -658,7 +685,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -694,7 +721,7 @@ class _HomeState extends State<Search_user> {
               height: 500,
               width: 500,
               // color:  Color(0xFFF3D657),
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               //padding:EdgeInsets.only(right:25,left: 25),
               decoration: BoxDecoration(
                 // color:Color(0xFF1C1C1C),
@@ -727,16 +754,16 @@ class _HomeState extends State<Search_user> {
               ),
             ):Container(),
             button5==true && button3==false && button2==false? Container(
-                margin: EdgeInsets.only(top:150),
+                margin: EdgeInsets.only(top:210),
                 child:Search_map(work: widget.work,),) :Container(),
             button5==true && button3==true && button2==false? Container(
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               child:Search_map_rate(work: widget.work,),) :Container(),
             button5==true && button3==false && button2==true? Container(
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               child:Search_map_avalibel(work: widget.work,),) :Container(),
             button5==true && button3==true && button2==true? Container(
-              margin: EdgeInsets.only(top:150),
+              margin: EdgeInsets.only(top:210),
               child:Search_map_avalibel_rate(work: widget.work,),) :Container(),
             new Container(
               margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 0.0),
@@ -919,7 +946,7 @@ class _HomeState extends State<Search_user> {
     return new Container(
       height: 55,
       width: 430,
-      margin: EdgeInsets.only(top: 30,right: 0,left: 10),
+      margin: EdgeInsets.only(top: 120,right: 0,left: 10),
       padding: EdgeInsets.only(right: 10),
       // decoration: BoxDecoration(border: Border.all(width: 1.0)),
       child: new TextField(

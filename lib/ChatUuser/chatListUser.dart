@@ -51,15 +51,17 @@ class  _Chat extends State<Chat> {
     return Column(
       children:[
         Container(
-          height: 150,
+          height: 170,
+          width: 500,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                // colors: [B,A,G]
-                colors: [Y1,Y4]
-            ),
-          ),),
+            color: Colors.black87.withOpacity(0.9),
+            image: new DecorationImage(
+              fit: BoxFit.cover,
+              colorFilter:
+              ColorFilter.mode(Colors.black87.withOpacity(0.4),
+                  BlendMode.dstATop),
+              image: new AssetImage('assets/work/cvtop.jpg',),
+            ),),),
         Container(
           height: 500,
           margin: EdgeInsets.only(top: 0),

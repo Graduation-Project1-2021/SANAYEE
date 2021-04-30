@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/WORKER_SANAYEE/homepage.dart';
 import 'package:flutterphone/WORKER_SANAYEE/menue_Page.dart';
+import 'package:flutterphone/WORKER_SANAYEE/odersperson_day.dart';
 import 'package:flutterphone/WORKER_SANAYEE/orders_workers.dart';
 import 'package:flutterphone/WORKER_SANAYEE/Profile.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -51,16 +52,28 @@ class  _Chat extends State<Chat> {
   Widget ChatsRoomList(){
     return Column(
     children:[
+      // Container(
+      //   // transform: Matrix4.translationValues(0, -100.0, 0),
+      //   margin:EdgeInsets.only(top:0),
+      //   width: double.infinity,
+      //   height: 170,
+      //   decoration: BoxDecoration(
+      //     color: Colors.grey[50],
+      //   ),
+      //   child: Image.asset('assets/work/cvtop.jpg',width:500,fit: BoxFit.fitWidth,),
+      // ),
       Container(
-        // transform: Matrix4.translationValues(0, -100.0, 0),
-        margin:EdgeInsets.only(top:0),
-        width: double.infinity,
-        height: 170,
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-        ),
-        child: Image.asset('assets/work/intro3.jpg',width:500,fit: BoxFit.fitWidth,),
-      ),
+          height: 170,
+          width: 500,
+          decoration: BoxDecoration(
+          color: Colors.black87.withOpacity(0.9),
+      image: new DecorationImage(
+        fit: BoxFit.cover,
+        colorFilter:
+        ColorFilter.mode(Colors.black87.withOpacity(0.4),
+            BlendMode.dstATop),
+        image: new AssetImage('assets/work/cvtop.jpg',),
+      ),),),
      Container(
       height: 500,
       margin: EdgeInsets.only(top: 0),

@@ -71,11 +71,11 @@ class _Body extends State<WelcomeScreen> {
 
           Container(
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.black54.withOpacity(0.8),
                 image: new DecorationImage(
                   fit: BoxFit.cover,
                   colorFilter:
-                  ColorFilter.mode(Colors.blue.withOpacity(0.3),
+                  ColorFilter.mode(Colors.black54.withOpacity(0.35),
                       BlendMode.dstATop),
                   image: new AssetImage(
                     'assets/work/cv.jpg',

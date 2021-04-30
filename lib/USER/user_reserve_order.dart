@@ -994,8 +994,8 @@ class _warshat extends State<warshat> {
                       Container(
                         width: 100,
                         alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 0,right: 20),
-                        child: Text('انتظار الموافقة', style: TextStyle(
+                        margin: EdgeInsets.only(top: 0,right: 35),
+                        child: Text('  انتظار الموافقة', style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: Colors.black54,
@@ -1571,7 +1571,7 @@ class _delete_order extends State<delete_order> {
                           progressColor: Y,
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 25,),
                       Container(
                         width: 100,
                         alignment: Alignment.topLeft,

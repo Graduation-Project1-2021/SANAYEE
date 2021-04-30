@@ -484,7 +484,6 @@ class _order_accept extends State<order_accept> {
   {
     return GestureDetector(
       onTap: (){
-        print("SDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"+widget.workername);
         Navigator.push(context, MaterialPageRoute(builder: (context) => State_order_accept(tokenworker:widget.tokenworker,imageworker:widget.imageworker,namelastworker:widget.namelastworker,namefirstworker:widget.namefirstworker,Experiance:widget.Experiance,Information:widget.Information,work:widget.work,country:widget.country,city:widget.city,latuser:widget.latuser,lnguser:widget.lnguser,lat:widget.lat,lng:widget.lng,Am_Pm:widget.Am_Pm,orderimage:widget.orderimage,workername:widget.workername,ChooseDate:widget.ChooseDate,name:widget.name,id:widget.id,timesend:widget.timesend,timeaccept:widget.timeaccept,dateaccept:widget.dateaccept,datesend:widget.datesend,date:widget.date,time:widget.timestart+" - "+widget.timeend,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
       },
       child:Container(

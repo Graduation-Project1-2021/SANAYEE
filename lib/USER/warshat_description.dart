@@ -3,6 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterphone/USER/WORKER_PROFILE.dart';
+import 'package:flutterphone/USER/descriptionorder.dart';
 import 'package:flutterphone/USER/user_Profile.dart';
 import 'package:flutterphone/Inside_the_app/user_order.dart';
 import 'dart:convert';
@@ -24,18 +25,30 @@ import 'package:flutter/material.dart';
 import 'package:flutterphone/USER/user_slot.dart';
 import '../constants.dart';
 import '../Inside_the_app/user_order.dart';
+String IP4="192.168.1.8";
+
 class war_description extends StatefulWidget {
-  final name;
+  final name_Me;
   final country;
   final namefirst;
   final namelast;
   final image;
   final phone;
-  final work;
-  final DateTime time;
   final phoneworker;
-  final username;
-  war_description({this.phoneworker,this.username,this.time,this.phone,this.image,this.country,this.work,this.name,this.namelast,this.namefirst});
+  final tokenworker;
+  final token_Me;
+  final DateTime date;
+  final DateTime time;
+  final AVG;
+  final work;
+  final Information;
+  final Experiance;
+  final nameworker;
+  final client_count;
+  final comment;
+  final type;
+  war_description({this.type,this.comment,this.client_count,this.Information,this.Experiance,this.nameworker,this.AVG,this.work,this.date,this.token_Me,this.phoneworker,this.tokenworker,this.name_Me,this.country,this.namefirst,this.namelast,this.image,this.phone,this.time});
+
   _war_description createState() => _war_description();
 }
 
@@ -48,17 +61,21 @@ class _war_description extends State<war_description> {
   Image image;
   File image_file;
   bool desc=true;
+  PickedFile im_file;
   void Desc(){
     desc=true;
     setState(() {
 
     });
   }
+  final picker = ImagePicker();
   Future getImageGallory() async {
-    final x = await ImagePicker.pickImage(source: ImageSource.gallery);
-    imagePath = x.path;
-    image_file = x;
-    image = Image(image: FileImage(x),width: 400,height: 150,fit: BoxFit.cover,);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    // final x = await ImagePicker.pickImage(source: ImageSource.gallery);
+    // imagePath = x.path;
+    // image_file = x;
+    im_file =pickedFile;
+    image = Image(image: FileImage(File(im_file.path)),width: 600,height: 200,fit: BoxFit.cover,);
   }
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,20 +302,8 @@ class _war_description extends State<war_description> {
                       width:600,
                       // margin: EdgeInsets.only(left: 8,right: 15),
                       child: FlatButton(
-                        onPressed: ()async{
-
-                          if(description.text.isEmpty){
-                            setState(() {
-                              desc=false;
-                            });
-                          }
-                          else{
-                            setState(() {
-                              desc=true;
-                            });
-                            // await reserve();
-                          }
-                          print(desc);
+                        onPressed: ()async {
+                          await _dialogCall();
                         },
                         color:Y,
                         child: Text(
@@ -318,76 +323,182 @@ class _war_description extends State<war_description> {
                 ),),
             ),),],),);
   }
+
+  Future<void> _dialogCall() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Directionality(textDirection: ui.TextDirection.rtl,
+            child:MyDialog(type:widget.type,workername:widget.nameworker,im_file:im_file,country:widget.country,work:widget.work,namefirst:widget.namefirst,namelast:widget.namelast,image: widget.image,description:description.text,username:widget.name_Me,phoneworker:widget.phoneworker,phone:widget.phone,tokenworker:widget.tokenworker,token:widget.token_Me,),);
+        });
+  }
 }
 class MyDialog extends StatefulWidget {
   @override
+  final work;
   final phone;
   final id;
   final token;
   final tokenworker;
   final phoneworker;
   final username;
-  MyDialog({this.phone,this.id,this.username,this.token,this.phoneworker,this.tokenworker});
+  final description;
+  final namefirst;
+  final namelast;
+  final image;
+  final country;
+  final type;
+  final workername;
+  PickedFile im_file;
+  MyDialog({this.type,this.workername,this.im_file,this.country,this.work,this.namefirst,this.namelast,this.image,this.description,this.phone,this.id,this.username,this.token,this.phoneworker,this.tokenworker});
   _MyDialogState createState() => new _MyDialogState();
 }
 
 class _MyDialogState extends State<MyDialog> {
 
-  TextEditingController description =TextEditingController();
-  String imagePath;
-  Image image;
-  File image_file;
-  bool desc=true;
+  // String imagePath;
+  // Image image;
+  // File image_file;
   @override
   Widget build(BuildContext context){
-    print(widget.phoneworker);   print(widget.phone);   print(widget.token); print(widget.username);   print(widget.tokenworker); print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
     return AlertDialog(
       backgroundColor: Colors.white,
       actionsPadding: EdgeInsets.zero,
       content: new SingleChildScrollView(
         child: new ListBody(
           children: <Widget>[
-            GestureDetector(
-              child:Container(
-                margin: EdgeInsets.only(left: 0, right: 259),
-                child:Icon(
-                    Icons.close,
-                    color: Colors.grey.withOpacity(0.5)),
-              ),
-              onTap: (){
-                Navigator.pop(context);
-              },
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 0,top: 10),
+                  child: Text('هل أنت متأكد من أنك تريد حجز هذه الورشة ؟',
+                    style: TextStyle(
+                      fontFamily: 'Changa',
+                      color: Colors.black45,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                ),
+                SizedBox(height:50,),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async{
+                        await reserve();
+                         Navigator.pop(context);
+                         Navigator.push(context, MaterialPageRoute(builder: (context) => not_conferm_user_statues(country:widget.country,work:widget.work,name_Me:widget.username,id:widget.id,phoneworker:widget.phoneworker,description:widget.description,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phone,image: widget.image,),),);
+                         },
+                      child: Container(
+                          margin: EdgeInsets.only(right: 170),
+                          child:Text('حسنا',
+                            style: TextStyle(
+                              fontFamily: 'Changa',
+                              color: Y,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(right: 48),
+                          child:Text('إلغاء',
+                            style: TextStyle(
+                              fontFamily: 'Changa',
+                              color: Y,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                      ),
+                    ),
+                  ],
+                ),
+                // SizedBox(width: 10,),
+              ],
             ),
-
           ],
         ),
       ),
     );
   }
+  Future reserve()async{
+    File _file;
+    DateTime date=DateTime.now();
+    var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    var formattedTime = DateFormat('HH:mm:ss').format(date);
+    print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
+    print(widget.phoneworker);
+    print(widget.phone);
+    print(widget.namelast);
+    print(widget.namefirst);
+    print(widget.workername);
+    print(widget.type);
+    print(widget.username);
+    print(widget.description);
+    var url;
+    var ressponse;
+    if(widget.im_file==null && widget.description=='') {
+      print("nnnnnnnnnnnnnnnnnnnnnnnnuuuuuuuuuuuuuuuuuullll");
+      url = 'https://'+IP4+'/testlocalhost/reserve_war_without.php';
+      ressponse = await http.post(url, body: {
+        "phoneuser": widget.phone,
+        "workerphone": widget.phoneworker,
+        "nameofwork": widget.workername,
+        "type": widget.type,
+      });
+    }
+    else  if(widget.im_file==null && widget.description!='') {
+      url = 'https://'+IP4+'/testlocalhost/reserve_war_des.php';
+      ressponse = await http.post(url, body: {
+        "phoneuser": widget.phone,
+        "workerphone": widget.phoneworker,
+        "nameofwork": widget.workername,
+        "type": widget.type,
+        "describes":widget.description,
+      });
+    }
+    else if(widget.im_file!=null && widget.description=='') {
+      _file = File(widget.im_file.path);
+      url = 'https://'+IP4+'/testlocalhost/reserve_war_im.php';
+      String base64 = base64Encode(_file.readAsBytesSync());
+      String imagename = _file.path.split('/').last;
+      print("baseeeeeeeeeeeeee");
+      print(base64);
+      print(imagename);
+      ressponse = await http.post(url, body: {
+        "phoneuser": widget.phone,
+        "workerphone": widget.phoneworker,
+        "nameofwork": widget.workername,
+        "type": widget.type,
+        "base64":base64,
+        "image":imagename,
+      });
 
-// Future reserve()async{
-//
-//   DateTime date=DateTime.now();
-//   var formattedDate = DateFormat('yyyy-MM-dd').format(date);
-//   var formattedTime = DateFormat('HH:mm:ss').format(date);
-//   print(widget.id);
-//   print(widget.phone); print(widget.username); print(widget.phoneworker);
-//   print(description.text); print(widget.tokenworker); print(widget.token); print(formattedDate); print(formattedTime);
-//   print("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''");
-//   var url = 'https://'+IP4+'/testlocalhost/reserve.php';
-//   var ressponse = await http.post(url, body: {
-//     "description": description.text,
-//     "phone": widget.phone,
-//     "id": widget.id,
-//     "tokenuser":widget.token,
-//     "tokenworker":widget.tokenworker,
-//     "phoneworker":widget.phoneworker,
-//     "username":widget.username,
-//     "datesend":formattedDate,
-//     "timesend":formattedTime,
-//   });
-//   String massage= json.decode(ressponse.body);
-//   print(massage);
-// }
+    }
+    else  if(widget.im_file!=null && widget.description!='') {
+      _file = File(widget.im_file.path);
+      url = 'https://'+IP4+'/testlocalhost/reserve_war.php';
+      String base64 = base64Encode(_file.readAsBytesSync());
+      String imagename = _file.path.split('/').last;
+      print("baseeeeeeeeeeeeee");
+      print(base64);
+      print(imagename);
+      ressponse = await http.post(url, body: {
+        "phoneuser": widget.phone,
+        "workerphone": widget.phoneworker,
+        "nameofwork": widget.workername,
+        "type": widget.type,
+        "describes":widget.description,
+        "base64":base64,
+        "image":imagename,
+      });
 
-}
+    }
+    //String massage= json.decode(ressponse.body);
+    //print(massage);
+  }}

@@ -10,7 +10,7 @@ import 'package:flutterphone/constants.dart';
 import '../constants.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
-
+import 'State_warshe_accept.dart';
 import 'orders_workers.dart';
 
 String  name="";
@@ -109,7 +109,7 @@ class _viewWarshaState extends State<viewWarsha> {
                           print(snapshot.data[index]['workerphone']);
                           // return Container(height: 200,);
                           print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"+snapshot.data[index]['id']);
-                          return view (city:snapshot.data[index]['city'],country:snapshot.data[index]['country'],id:snapshot.data[index]['id'],type:snapshot.data[index]['type'],image:snapshot.data[index]['image'],describes:snapshot.data[index]['describes'],nameofwork : snapshot.data[index]['nameofwork'],workerphone : snapshot.data[index]['workerphone'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phoneuser: snapshot.data[index]['phoneuser']);
+                          return view (orderimage:snapshot.data[index]['orderimage'],latuser:snapshot.data[index]['lat'],lnguser:snapshot.data[index]['lng'],token:widget.token,work:widget.Work,lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,city:snapshot.data[index]['city'],country:snapshot.data[index]['country'],id:snapshot.data[index]['id'],type:snapshot.data[index]['type'],image:snapshot.data[index]['image'],describes:snapshot.data[index]['describes'],nameofwork : snapshot.data[index]['nameofwork'],workerphone : snapshot.data[index]['workerphone'], namefirst: snapshot.data[index]['namefirst'], namelast: snapshot.data[index]['namelast'], phoneuser: snapshot.data[index]['phoneuser']);
 
                         },
                       );
@@ -170,7 +170,16 @@ class view extends StatefulWidget {
   final id;
   final city;
   final country;
-  view({this.country,this.city,this.id,this.image,this.type,this.namelast,this.workerphone,this.namefirst,this.phoneuser,this.nameofwork,this.describes});
+  final lat;
+  final lng;
+  final latuser;
+  final lnguser;
+  final Information;
+  final Experiance;
+  final work;
+  final token;
+  final orderimage;
+  view({this.orderimage,this.latuser,this.lnguser,this.token,this.Information,this.Experiance,this.work,this.lat,this.lng,this.country,this.city,this.id,this.image,this.type,this.namelast,this.workerphone,this.namefirst,this.phoneuser,this.nameofwork,this.describes});
   @override
   _viewState createState() => _viewState();
 }
@@ -287,7 +296,7 @@ class _viewState extends State<view> {
               ],
             ),
           ),
-          press?Container():Container(
+          !press&& widget.describes!=null?Container(
             margin: EdgeInsets.only(top:10,right: 15),
             child:  Row(
               children: [
@@ -305,7 +314,7 @@ class _viewState extends State<view> {
                 Container(
                   width:250,
                   height: 75,
-                  child:Text(describes, style: TextStyle(
+                  child:Text(widget.describes, style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: Colors.black54,
@@ -315,16 +324,16 @@ class _viewState extends State<view> {
                 ),
               ],
             ),
-          ),
-          image!=null && !press?Container(
+          ):Container(),
+          widget.orderimage!=null && !press?Container(
             // print(_image[index].id+"");
             width: 200,
             height: 150,
-            margin: EdgeInsets.only(left: 150,top:0,bottom: 15),
+            margin: EdgeInsets.only(left: 150,top:15,bottom: 15),
             decoration: BoxDecoration(
               color:Colors.white,
               borderRadius: BorderRadius.circular(5),
-              image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+image),
+              image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.orderimage),
                 fit: BoxFit.cover,
               ),
             ),
@@ -345,7 +354,7 @@ class _viewState extends State<view> {
                   child: Container(
                     child: Row(
                       children: [
-                        Text('عرض أقل',
+                        Text('عرض أقل ',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -353,6 +362,7 @@ class _viewState extends State<view> {
                             fontFamily: 'Changa',
                           ),),
                         Icon(Icons.keyboard_arrow_up_outlined,size: 20,),
+                        SizedBox(width:5,),
                       ],
                     ),
                   ),
@@ -360,8 +370,10 @@ class _viewState extends State<view> {
                 GestureDetector(
                   onTap: (){
                       press=!press;
-                      if(image==null)h=165;
-                      else h=410;
+                      if( widget.orderimage==null && widget.describes==null)h=165;
+                      else if( widget.orderimage==null && widget.describes!=null)h=250;
+                      else if( widget.orderimage!=null && widget.describes==null)h=350;
+                      else h=470;
                       setState(() {
 
                       });
@@ -566,6 +578,10 @@ class _viewState extends State<view> {
                 print("SARAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhh");
                 addlongtimework(picked);
                 Navigator.of(context).pop();
+                var formattedDate1 = DateFormat('yyyy-MM-dd').format(picked.first);
+                var formattedDate2 = DateFormat('yyyy-MM-dd').format(picked.last);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => State_warshe_accept(name:widget.nameofwork,type:widget.type,from:formattedDate1,to:formattedDate2,tokenworker:widget.token,imageworker:widget.image,namelastworker:widget.namelast,namefirstworker:widget.namefirst,Information:widget.Information,Experiance:widget.Experiance,work:widget.work,country:widget.country,city:widget.city,description:widget.describes,latuser:widget.latuser,lnguser:widget.lnguser,lat:widget.lat,lng:widget.lng,orderimage:widget.orderimage,workername:widget.nameofwork,id:widget.id,namefirst: widget.namefirst,namelast: widget.namelast,phoneuser: widget.phoneuser,image: widget.image,phoneworker:widget.workerphone),),);
+                //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => viewWarsha(lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.nameofwork,phone: widget.workerphone)));
               },
               child:Container(
                 width: 70,
@@ -589,14 +605,7 @@ class _viewState extends State<view> {
     int i = 0;
     var url ='https://'+IP4+'/testlocalhost/reservations.php';
     var ressponse = await http.post(url, body: {
-      "nameofwork": widget.nameofwork,
-      "namefirst": widget.namefirst,
-      "namelast": widget.namelast,
-      "phoneuser": widget.phoneuser,
-      "workerphone": widget.workerphone,
-      "type": widget.type,
-      "images": widget.image,
-      "describes": widget.describes,
+      "id":widget.id,
       "Fromdate": picked.first.toString(),
       "Todate": picked.last.toString(),
     });
@@ -719,9 +728,6 @@ class _delete_order extends State<delete_order> {
     var url = 'https://' + IP4 + '/testlocalhost/delete_warsha.php';
     var ressponse = await http.post(url, body: {
       "id": widget.id,
-      "datecancel":formattedDate,
-      "timecancel":formattedTime,
-      "who":'worker',
     });
     // ignore: deprecated_member_use
     return json.decode(ressponse.body);

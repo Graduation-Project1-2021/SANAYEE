@@ -271,7 +271,7 @@ class _chooseState extends State<choose> {
                                           print(date);
                                           if(c2){
                                             if(widget.work=="نجار")
-                                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => user()));
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => user(tokenworker:widget.tokenworker,token_Me:widget.tokenuser,comment:widget.comment,client_count:widget.client_num,Experiance:widget.Experiance,Information:widget.Information,date:widget.time,country:widget.country,namelast:widget.namelast,namefirst:widget.namefirst,image:widget.image,nameworker:widget.name,work:widget.work,name_Me:widget.username,phoneworker: widget.phoneworker,phone: widget.phone)));
                                             else  if(widget.work=="كهربائي")
                                               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => sabak()));
 

@@ -1,268 +1,3 @@
-// import 'dart:async';
-// import 'dart:convert';
-// import "dart:io";
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:location/location.dart';
-// import 'package:http/http.dart' as http;
-// String IP4="192.168.2.108";
-// // var url = "http://maps.google.com/mapfiles/ms/icons/";
-// // url + = "blue";
-// int count =0;
-// List<dynamic>Worker;
-// class MyHttpOverrides extends HttpOverrides{
-//   @override
-//   HttpClient createHttpClient(SecurityContext context){
-//     return super.createHttpClient(context)
-//       ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
-//   }
-// }
-//
-// class MyApp1 extends StatefulWidget {
-//   _mState createState() => _mState();
-// }
-//
-// class _mState extends State<MyApp1> {
-//
-//   Future getMarker()async{
-//     print("Yes from getmarker");
-//     var url='https://'+IP4+'/testlocalhost/PHP/markers.php';
-//     var ressponse=await http.get(url);
-//     print(json.decode(ressponse.body));
-//     print("vvxbccccccccccccccccccccccc");
-//     return json.decode(ressponse.body);
-//
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     print("000000000000000000000000000000000000000");
-//     return Scaffold(
-//       //appBar: ,
-//       body:Column(
-//         children:<Widget>[
-//           Container(
-//             child: Text("Ma ddddddddddddddddddddddddddddddddp"),
-//           ),
-//           Expanded(
-//
-//             child:Container(
-//               height: 100,
-//               child: FutureBuilder(
-//                   future: getMarker(),
-//                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-//                     if (snapshot.hasData) {
-//                       print("has data================================================================================================");
-//                       //_MyHomePageState c= new _MyHomePageState();
-//                       return ListView.builder(
-//                         itemCount: 1,
-//                         itemBuilder: (context, index) {
-//                           var Listr=snapshot.data;
-//                           print(Listr[0]['lng']);
-//                           return w(Location:Listr,);
-//                         },);
-//                     }
-//                     return Container(child:CircularProgressIndicator(),
-//                       //child:Text("hi"),
-//                     );
-//
-//                   }
-//               ),
-//             ),),],),);
-//
-//
-//   }
-// }
-// class w extends StatefulWidget {
-//   List<dynamic>Location;
-//   w({this.Location});
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<w> {
-//   PermissionStatus _permissionGranted;
-//   bool serviceEnabled;
-//   int i=0;
-//   var List_Worker=[];
-//   List<Marker> markers=[];
-//   Completer<GoogleMapController> _controller = Completer();
-//   static final CameraPosition _kGooglePlex = CameraPosition(
-//     target: LatLng(37.42796133580664, -122.085749655962),
-//     zoom: 14.4746,
-//   );
-//
-//   get url => null;
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-//   bool S=false;
-//   Fetch()async{
-//     for(;i<widget.Location.length;i++){
-//       await checkLocationServicesInDevice(double.parse(widget.Location[i]['lat']),double.parse(widget.Location[i]['lng']));
-//     }
-//     setState(() {
-//       S=true;
-//     });
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     Fetch();
-//     return S?Container(
-//       height: 700,
-//       child:showgooglemap(markers),):Center(child: CircularProgressIndicator());
-//     //  child:FutureBuilder(
-//     //    future: checkLocationServicesInDevice(),
-//     //      builder: (BuildContext context, AsyncSnapshot <double>snapshot) {
-//     //        if (snapshot.hasData) {
-//     //          print("================================================111111");
-//     //              return Container(child:Text(snapshot.data.toString()),);
-//     //        }
-//     //        return Center(child: CircularProgressIndicator());
-//     //
-//     //      }
-//     //
-//     // ),
-//   }
-//   // @override
-//   Future <double>checkLocationServicesInDevice(double lat1,double lng1) async {
-//     print("i am in location");
-//     Location location = new Location();
-//     LocationData _location ;
-//     serviceEnabled = await location.serviceEnabled();
-//
-//     if(serviceEnabled)
-//     {
-//
-//       _permissionGranted = await location.hasPermission();
-//
-//       if(_permissionGranted == PermissionStatus.granted)
-//       {
-//         _location = await location.getLocation();
-//         print(_location.latitude.toString() + " " + _location.longitude.toString());
-//         double lat=_location.latitude;
-//         double log=_location.longitude;
-//         Marker m=new Marker(markerId: MarkerId("User Location"),infoWindow: InfoWindow(title:"your current location"), position: LatLng(32.464634
-//             ,35.293858));
-//         markers.add(m);
-//         double d= calculateDistance(lat,log,lat1,lng1);
-//         print(lat1);
-//         print(lng1);
-//         print(d);
-//         print("Now you are registered in the system");
-//         return d;
-//
-//
-//
-// //for more  than one location(continuous taking of the location)
-//
-//         // location.onLocationChanged.listen((LocationData currentLocation) {
-//         //   print(currentLocation.latitude.toString() + " " +
-//         //       currentLocation.longitude.toString());
-//         // });
-//       }else{
-//
-//         _permissionGranted = await location.requestPermission();
-//
-//         if(_permissionGranted == PermissionStatus.granted)
-//         {
-//           _location = await location.getLocation();
-//
-//           print(_location.latitude.toString() + " " + _location.longitude.toString());
-//
-//
-//           print('user allowed');
-//
-//         }else{
-//
-//           SystemNavigator.pop();
-//
-//         }
-//
-//       }
-//
-//     }else{
-//
-//       serviceEnabled = await location.requestService();
-//
-//       if(serviceEnabled)
-//       {
-//
-//         _permissionGranted = await location.hasPermission();
-//
-//         if(_permissionGranted == PermissionStatus.granted)
-//         {
-//
-//           print('user allowed before');
-//
-//         }else{
-//
-//           _permissionGranted = await location.requestPermission();
-//
-//           if(_permissionGranted == PermissionStatus.granted)
-//           {
-//
-//             print('user allowed');
-//
-//           }else{
-//
-//             SystemNavigator.pop();
-//
-//           }
-//
-//         }
-//
-//
-//       }else{
-//
-//         SystemNavigator.pop();
-//
-//       }
-//
-//     }
-//
-//   }
-//
-//   double calculateDistance(lat1, lon1, lat2, lon2){
-//     print("distance calculation ");
-//     var p = 0.017453292519943295;
-//     var c = cos;
-//     var a = 0.5 - c((lat2 - lat1) * p)/2 +
-//         c(lat1 * p) * c(lat2 * p) *
-//             (1 - c((lon2 - lon1) * p))/2;
-//     print(12742 * asin(sqrt(a)));
-//     double distance=12742 * asin(sqrt(a));
-//     if(distance<12000){
-//       List_Worker.add(widget.Location[i]);
-//       var random = new Random();
-//       int id =random.nextInt(100000);
-//       Marker m=new Marker(markerId: MarkerId(id.toString()), infoWindow: InfoWindow(title:widget.Location[i]['namefirst']+" "+widget.Location[i]['namelast']+"على بعد "+distance.toString()), position: LatLng(double.parse(widget.Location[i]['lat']),double.parse(widget.Location[i]['lng'])),);
-//       markers.add(m);
-//       print("marker=================================================");
-//     }
-//     return distance;
-//   }
-//   Widget showgooglemap(List<Marker>mark){
-//     print(mark.length);print("=========================================================================================================");
-//     return Container(
-//       height: 700,
-//       child:Stack(
-//         children: <Widget>[
-//           GoogleMap(initialCameraPosition: CameraPosition(target:
-//           LatLng(31.9474,35.2272),
-//               zoom: 12),
-//             markers:markers.toSet(),
-//           ),
-//         ],
-//       ),
-//     );
-//
-//   }
-//
-// }
-//
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui' as ui;
@@ -561,17 +296,16 @@ class _MyHomePageState extends State<w> {
     return json.decode(ressponse.body);
   }
 
-  Container order_user(int index,String namefirst,String namelast,String image,String timestart,String timeend,String Am_Pm,String id){
-    return Container(
+  Directionality order_user(int index,String namefirst,String namelast,String image,String timestart,String timeend,String Am_Pm,String id){
+    return Directionality( textDirection: ui.TextDirection.rtl,
+    child:Container(
       height: 100,
-      margin: EdgeInsets.only(top:20),
+      margin: EdgeInsets.only(bottom:20),
       decoration: BoxDecoration(
         color:Colors.grey[50],
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Directionality(
-        textDirection: ui.TextDirection.rtl,
-        child:Column(
+      child: Column(
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -627,7 +361,7 @@ class _MyHomePageState extends State<w> {
                                       color: Colors.black87,
                                       fontFamily: 'Changa',
                                     ),),
-                                    Text(timeend +" - " +timestart, style: TextStyle(
+                                    Text(timestart +" - " +timeend, style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.black54,
@@ -678,27 +412,35 @@ class _MyHomePageState extends State<w> {
                     });
                   },
                   child:Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.greenAccent[700],
-                    child: Icon(Icons.check,color:Colors.white,size:30,),
+                    height: 50,
+                    width: 120,
+                    child:FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: BorderSide(color: Colors.transparent)
+                        ),
+                        // padding: EdgeInsets.symmetric(vertical: 0, horizontal: 40),
+                        color:Colors.green,
+                        onPressed: (){
+                        },
+                        child:Row(
+                          children: [
+                            Text('تم الانتهاء',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                fontFamily: 'Changa',
+                                //fontStyle: FontStyle.italic,
+                              ),),
+                            SizedBox(width:5,),
+                            Icon(Icons.check,color:Colors.white,size:24,),
+                          ],
+                        )
+                    ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () async{
-                    await delete_order(id);
-                    widget.Location.removeAt(index);
-                    setState(() {
-
-                    });
-                  },
-                  child:Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.red,
-                    child: Icon(Icons.delete,color:Colors.white,size:30),
-                  ),
-                ),
+                SizedBox(width:15,),
               ],
             ),),
         ],),

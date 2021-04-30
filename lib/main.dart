@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterphone/screens/welcome.dart';
 import 'package:flutterphone/constants.dart';
-import 'package:flutterphone/screens/welcome_screen.dart';
 import 'dart:io';
 
 import 'Localnotification.dart';

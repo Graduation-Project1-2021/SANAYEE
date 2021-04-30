@@ -350,7 +350,7 @@ class  _State_order_accept extends State<State_order_accept> {
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:delete_order(chooseDate:widget.ChooseDate,phoneuser:widget.phoneuser,phoneworker:widget.phoneworker,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
+            child:delete_order(token:widget.token,name:widget.name,work:widget.work,lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,chooseDate:widget.ChooseDate,phoneuser:widget.phoneuser,phoneworker:widget.phoneworker,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
         });
   }
 }
@@ -554,14 +554,15 @@ class  _accept extends State<accept> {
                       ],
                     ),
                   ),
-                  image!=null && !press?Container(
+                  widget.orderimage!=null && !press?Container(
                     // print(_image[index].id+"");
                     width: 200,
                     height: 150,
                     transform: Matrix4.translationValues(0.0, 0.0, 0.0),
-                    margin: EdgeInsets.only(left: 165,top:20,bottom: 15),
+                    margin: EdgeInsets.only(left: 165,top:20,bottom: 5),
                     decoration: BoxDecoration(
-                      color:Colors.white,
+                      // color:Colors.white,
+                      color:Colors.red,
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(image: NetworkImage('https://'+IP4+'/testlocalhost/upload/'+widget.orderimage),
                         fit: BoxFit.cover,
@@ -569,6 +570,7 @@ class  _accept extends State<accept> {
                     ),
                   ):Container(),
                   Container(
+                    height: 40,
                     // transform: Matrix4.translationValues(0.0, -25, 0.0),
                     margin: EdgeInsets.only(top: 0,right:10),
                     child:Row(
@@ -577,12 +579,12 @@ class  _accept extends State<accept> {
                         !press?GestureDetector(
                           onTap: (){
                             press=!press;
-                            h=200;
+                            h=180;
                             setState(() {
                             });
                           },
                           child: Container(
-                            margin: EdgeInsets.only(top: 70,),
+                            margin: EdgeInsets.only(top: 0,),
                             child: Row(
                               children: [
                                 // Text('عرض أقل',
@@ -600,7 +602,7 @@ class  _accept extends State<accept> {
                         GestureDetector(
                           onTap: (){
                             press=!press;
-                            if(image==null)h=190;
+                            if(widget.orderimage==null)h=200;
                             else h=370;
                             setState(() {
 
@@ -628,7 +630,7 @@ class  _accept extends State<accept> {
                   Container(
                     height: 300,
                     width: 450,
-                    margin: press?EdgeInsets.only(top:10):EdgeInsets.only(top:30),
+                    margin: press && widget.orderimage==null?EdgeInsets.only(top:10):EdgeInsets.only(top:10),
                     padding:EdgeInsets.only(right:0,left: 0),
                     decoration: BoxDecoration(
 
@@ -931,7 +933,7 @@ class  _accept extends State<accept> {
         context: context,
         builder: (BuildContext context) {
           return Directionality(textDirection: ui.TextDirection.rtl,
-            child:delete_order(chooseDate:widget.ChooseDate,phoneuser:widget.phoneuser,phoneworker:widget.phoneworker,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
+            child:delete_order(name:widget.name,work:widget.work,token:widget.token,lng:widget.lng,lat:widget.lat,Information:widget.Information,Experiance:widget.Experiance,chooseDate:widget.ChooseDate,phoneuser:widget.phoneuser,phoneworker:widget.phoneworker,image:widget.image,description:widget.description,datesend:widget.datesend,timesend:widget.timesend,id:widget.id,phone:widget.phoneworker,date:widget.date,namefirst: widget.namefirst,namelast:widget.namelast,time:widget.time,),);
         });
   }
 }
@@ -956,7 +958,13 @@ class delete_order extends StatefulWidget {
   final timeend;
   final chooseDate;
   final name;
-  delete_order({this.name,this.chooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
+  final lat;
+  final lng;
+  final Information;
+  final Experiance;
+  final token;
+  final work;
+  delete_order({this.work,this.token,this.lat,this.lng,this.Information,this.Experiance,this.name,this.chooseDate,this.timeend,this.timestart,this.id,this.phone,this.time,this.date,this.phoneworker,this.phoneuser,this.timesend,this.datesend,this.namelast,this.namefirst,this.description,this.image,this.country});
   _delete_order createState() => new _delete_order();
 
 }
@@ -988,7 +996,7 @@ class _delete_order extends State<delete_order> {
                         await delete_Order();
                         print('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                         DateTime date =DateTime.now();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => accept_order(time: widget.chooseDate,phone: widget.phoneworker,name: widget.name,),),);
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => accept_order(time: widget.chooseDate,lat:widget.lat,lng:widget.lng,Information:widget.Information,Experiance:widget.Experiance,Work:widget.work,namelast:widget.namelast,image:widget.image,token:widget.token,namefirst:widget.namefirst,name:widget.name,phone: widget.phone,)));
                         print('=========================================================================');
 
                        // Navigator.push(context, MaterialPageRoute(builder: (context) => user_reserve_order(phoneuser:widget.phoneuser,username:widget.name,),),);
@@ -1035,19 +1043,17 @@ class _delete_order extends State<delete_order> {
   }
 
   Future delete_Order() async {
-    print(widget.id);
     DateTime date=DateTime.now();
     var formattedDate = DateFormat('yyyy-MM-dd').format(date);
     var formattedTime = DateFormat('HH:mm:ss').format(date);
-    var url = 'https://' + IP4 + '/testlocalhost/delete_accept_order.php';
+    print(widget.id);
+    var url = 'https://' + IP4 + '/testlocalhost/delete_order.php';
     var ressponse = await http.post(url, body: {
       "id": widget.id,
-      "datecancel":formattedDate,
-      "timecancel":formattedTime,
       "who":'worker',
     });
     // ignore: deprecated_member_use
-    return json.decode(ressponse.body);
+    //return json.decode(ressponse.body);
   }
 }
 
